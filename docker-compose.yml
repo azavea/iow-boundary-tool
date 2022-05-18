@@ -1,0 +1,24 @@
+# As of yet, more modern compose file versions (v3) do not support waiting for another container to be "healthy"
+version: "2.4"
+services:
+  app:
+    image: node:12-slim
+    stdin_open: true
+    working_dir: /usr/local/src
+    environment:
+      - REACT_APP_GIT_COMMIT=${REACT_APP_GIT_COMMIT:-latest}
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
+      - PORT=4545
+    volumes:
+        - ./src/app:/usr/local/src
+        - ./dist:/usr/local/src/build
+        # Ensure node_modules cache doesn't clash with other jobs on CI.
+        - /var/cache/iow-boundary-tool-node-modules:/usr/local/src/node_modules
+    command: yarn start
+
+  shellcheck:
+    image: koalaman/shellcheck:stable
+    volumes:
+      - ./:/usr/local/src
+    working_dir: /usr/local/src

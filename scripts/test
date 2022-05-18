@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${PROJECT_NAME_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Run tests.
+"
+}
+
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+    if [[ "${1:-}" = "--help" ]]; then
+        usage
+    else
+        # Execute React test suite
+        docker-compose \
+            run --rm --no-deps -e CI app \
+            yarn test --watchAll=false
+
+        # Execute Django test suite
+        ./scripts/manage test core
+    fi
+fi

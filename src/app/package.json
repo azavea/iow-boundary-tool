@@ -1,0 +1,59 @@
+{
+  "name": "iow-boundary-tool",
+  "version": "0.1.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azavea/iow-boundary-tool.git"
+  },
+  "author": "Azavea",
+  "bugs": {
+    "url": "https://github.com/azavea/iow-boundary-tool/issues"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "react-use": "^17.2.4",
+    "redux": "^4.0.5",
+    "redux-act": "^1.8.0",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@craco/craco": "^6.2.0",
+    "@hot-loader/react-dom": "^17.0.1",
+    "babel-jest": "26.6.3",
+    "craco-plugin-react-hot-reload": "^0.1.0",
+    "prettier": "^2.0.5",
+    "prettier-loader": "^3.3.0",
+    "react-hot-loader": "^4.13.0"
+  }
+}

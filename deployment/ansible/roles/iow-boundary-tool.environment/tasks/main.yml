@@ -1,0 +1,12 @@
+---
+- name: Set AWS_PROFILE
+  lineinfile:
+    path: "/etc/environment"
+    regexp: "^AWS_PROFILE="
+    line: "AWS_PROFILE={{ aws_profile }}"
+
+- name: Set PROJECT_NAME_SETTINGS_BUCKET
+  lineinfile:
+    path: "/etc/environment"
+    regexp: "^PROJECT_NAME_SETTINGS_BUCKET="
+    line: "PROJECT_NAME_SETTINGS_BUCKET={{ project_name_settings_bucket }}"
