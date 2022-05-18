@@ -4,17 +4,29 @@
 *Project description*
 
 ### Requirements
+The app is built using Docker. On Intel Macs, Docker can be used natively or
+from within a Linux environment, which can be virtualized using Vagrant,
+VirtualBox, and Ansible:
 
 * Vagrant 2.2+
 * VirtualBox 6.0+
 * Ansible 2.9+
 
+On Apple Silicon Macs, and on Linux hosts, all you need is Docker.
+
 ### Getting Started
 
 Install the application and all required dependencies.
+For Vagrant-based development, use:
 
-```sh
-./scripts/setup
+```console
+./scripts/setup --vagrant
+```
+
+For Docker-based development, use:
+
+```console
+./scripts/setup --docker
 ```
 
 #### Development
@@ -32,7 +44,7 @@ vagrant ssh
 
 | Service            | Port                            |
 | ------------------ | ------------------------------- |
-| Webpack Dev Server | [`4545`](http://localhost:4567) |
+| Webpack Dev Server | [`4545`](http://localhost:4545) |
 
 ### Testing
 
@@ -41,6 +53,9 @@ vagrant ssh
 ```
 
 ### Scripts
+For Vagrant-based development environments, run `setup` on your host, and all
+other scripts inside the Vagrant VM. For Docker-based development environments,
+all scripts should be run from the host.
 
 | Name           | Description                                                   |
 | -------------- | ------------------------------------------------------------- |

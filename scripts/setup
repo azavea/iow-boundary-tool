@@ -2,24 +2,31 @@
 
 set -e
 
-if [[ -n "${PROJECT_NAME_DEBUG}" ]]; then
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
     set -x
 fi
 
 function usage() {
-    echo -n "Usage: $(basename "$0")
+    echo -n \
+        "Usage: $(basename "$0") (--docker|--vagrant)
+Provision a development environment.
 
-Attempts to setup the project's development environment.
+Use --docker to setup a Docker based environment (recommended for Linux, Apple Silcon)
+Use --vagrant to setup a Vagrant based environment (recommended for Intel Mac)
 "
 }
 
-if [ "${BASH_SOURCE[0]}" = "${0}" ]
-then
-    if [ "${1:-}" = "--help" ]
-    then
-        usage
-    else
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    if [[ "${1:-}" == "--vagrant" ]]; then
         vagrant up --provision
-        vagrant ssh -c "cd /vagrant && ./scripts/update"
+    elif [[ "${1:-}" == "--docker" ]]; then
+        export AWS_PROFILE=iow-boundary-tool
+        export IOW_BOUNDARY_TOOL_SETTINGS_BUCKET=iow-boundary-tool-development-config-us-east-1
+
+        ./scripts/bootstrap
+        ./scripts/update
+        ./scripts/resetdb
+    else
+        usage
     fi
 fi
