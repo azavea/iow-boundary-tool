@@ -1,8 +1,8 @@
 # As of yet, more modern compose file versions (v3) do not support waiting for another container to be "healthy"
-version: "2.4"
+version : "3.8"
 services:
   app:
-    image: node:12-slim
+    image: node:16-slim
     stdin_open: true
     working_dir: /usr/local/src
     environment:
