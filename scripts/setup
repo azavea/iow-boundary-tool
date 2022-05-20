@@ -23,9 +23,8 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
         export AWS_PROFILE=iow-boundary-tool
         export IOW_BOUNDARY_TOOL_SETTINGS_BUCKET=iow-boundary-tool-development-config-us-east-1
 
-        ./scripts/bootstrap
+        #./scripts/bootstrap
         ./scripts/update
-        ./scripts/resetdb
     else
         usage
     fi
