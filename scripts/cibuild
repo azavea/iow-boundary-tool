@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -n "${PROJECT_NAME_DEBUG}" ]]; then
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
     set -x
 fi
 
