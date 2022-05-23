@@ -11,20 +11,20 @@
     "url": "https://github.com/azavea/iow-boundary-tool/issues"
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "axios": "^0.19.2",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^14.2.0",
+    "axios": "^0.27.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3",
-    "react-use": "^17.2.4",
-    "redux": "^4.0.5",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "^5.0.1",
+    "react-use": "^17.3.2",
+    "redux": "^4.2.0",
     "redux-act": "^1.8.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.4.1"
   },
   "scripts": {
     "start": "craco start",
@@ -47,12 +47,12 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.14.8",
-    "@craco/craco": "^6.2.0",
-    "@hot-loader/react-dom": "^17.0.1",
-    "babel-jest": "26.6.3",
+    "@babel/core": "^7.17.12",
+    "@craco/craco": "^6.4.3",
+    "@hot-loader/react-dom": "^17.0.2",
+    "babel-jest": "28.1.0",
     "craco-plugin-react-hot-reload": "^0.1.0",
-    "prettier": "^2.0.5",
+    "prettier": "^2.6.2",
     "prettier-loader": "^3.3.0",
     "react-hot-loader": "^4.13.0"
   }
