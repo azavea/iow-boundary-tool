@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_commit:
+        description: 'Short Git commit hash to deploy to production'
+        required: true
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      GIT_COMMIT: ${{ github.event.inputs.git_commit }}
+      IOW_BOUNDARY_TOOL_SETTINGS_BUCKET: iow-boundary-tool-production-config-us-east-1
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up environment
+        run: ./scripts/bootstrap
+
+      - run: |
+          docker-compose -f docker-compose.ci.yml run --rm terraform -c "
+            # Unset this to avoid a ProfileNotFound exception from the AWS CLI.
+            unset AWS_PROFILE
+            ./scripts/infra plan
+            ./scripts/infra apply
+          "
+
+      # Kick off an ECS task to display any outstanding migrations.
+      - run: ./scripts/manage ecsmanage -e production showmigrations
