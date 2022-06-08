@@ -1,6 +1,18 @@
 # As of yet, more modern compose file versions (v3) do not support waiting for another container to be "healthy"
 version : "2.4"
 services:
+  database:
+    image: quay.io/azavea/postgis:3-postgres12.4-slim
+    environment:
+      - POSTGRES_USER=iow-aboutus
+      - POSTGRES_PASSWORD=iow-aboutus
+      - POSTGRES_DB=iow-aboutus
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "iow-aboutus"]
+      interval: 3s
+      timeout: 3s
+      retries: 3
+
   app:
     image: node:16-slim
     stdin_open: true
@@ -16,6 +28,38 @@ services:
         # Ensure node_modules cache doesn't clash with other jobs on CI.
         - /var/cache/iow-boundary-tool-node-modules:/usr/local/src/node_modules
     command: yarn start
+
+  django:
+    image: iow-django
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-iow-aboutus}
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=iow-aboutus
+      - POSTGRES_PASSWORD=iow-aboutus
+      - POSTGRES_DB=iow-aboutus
+      - DJANGO_ENV=Development
+      - DJANGO_SECRET_KEY=secret
+      - DJANGO_LOG_LEVEL=INFO
+      - DJANGO_ALLOWED_HOSTS=localhost,django
+    build:
+      context: ./src/django
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/django:/usr/local/src
+      - $HOME/.aws:/root/.aws:ro
+    working_dir: /usr/local/src
+    command:
+      - "-b :8181"
+      - "--reload"
+      - "--timeout=90"
+      - "--access-logfile=-"
+      - "--error-logfile=-"
+      - "--log-level=debug"
+      - "iow.wsgi"
+    depends_on:
+      database:
+        condition: service_healthy
 
   shellcheck:
     image: koalaman/shellcheck:stable
