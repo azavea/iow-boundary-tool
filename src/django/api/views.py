@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 # TODO: Replace this with api views
 
-def index(request):
+def example(request):
 
     return HttpResponse(
 
