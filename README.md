@@ -43,8 +43,9 @@ vagrant ssh
 ### Ports
 
 | Service            | Port                            |
-| ------------------ | ------------------------------- |
-| Webpack Dev Server | [`4545`](http://localhost:4545) |
+| --------------------------| ------------------------------- |
+| Webpack Dev Server        | [`4545`](http://localhost:4545) |
+| Gunicorn for Django app   | [`8181`](http://localhost:8181) |
 
 ### Testing
 
