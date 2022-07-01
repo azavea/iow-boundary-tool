@@ -23,8 +23,35 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
             scripts/*
 
         # Lint JavaScript
-        docker-compose \
-            run --rm --entrypoint ./node_modules/.bin/eslint \
-            app src/ --ext .js --ext .jsx
+        # TODO turn this back on when there's javascript to check
+        # docker-compose \
+        #     run --rm --entrypoint ./node_modules/.bin/eslint \
+        #     app src/ --ext .js --ext .jsx
+
+        if [[ -n "${CI}" ]]; then
+            # Lint Django app
+            GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+                -f docker-compose.yml \
+                -f docker-compose.ci.yml \
+                run --rm --no-deps --entrypoint flake8 django \
+                --exclude settings.py,manage.py,*.pyc,api/migrations/*
+
+            GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+                -f docker-compose.yml \
+                -f docker-compose.ci.yml \
+                run --rm --no-deps --entrypoint black django \
+                --skip-string-normalization --check --diff \
+                --extend-exclude migrations .
+        else
+            # Lint Django app
+            docker-compose \
+                run --rm --no-deps --entrypoint flake8 django \
+                --exclude settings.py,manage.py,*.pyc,api/migrations/*
+
+            docker-compose \
+                run --rm --no-deps --entrypoint black django \
+                --skip-string-normalization --check --diff \
+                --extend-exclude migrations .
+        fi
     fi
 fi

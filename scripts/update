@@ -23,5 +23,21 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         docker-compose \
             run --rm --no-deps app \
             yarn install
+
+        # Build static asset bundle for React frontend
+        docker-compose \
+            run --rm --no-deps app \
+            yarn run build
+
+        # Bring up PostgreSQL and Django in a way that respects
+        # configured service health checks.
+        docker-compose up -d database django
+
+        # Apply any outstanding Django migrations
+        ./scripts/manage migrate
+
+        # Collect Django static files
+        # TODO enable this after static file hosting is corrected
+        # ./scripts/manage collectstatic --no-input
     fi
 fi

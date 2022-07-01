@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#TODO: move this to .env
+# TODO: move this to .env
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "secret")
 
@@ -213,6 +213,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+# TODO enable static file hosting
 
 # STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, "static")
@@ -234,4 +235,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 WATCHMAN_ERROR_CODE = 503
 WATCHMAN_CHECKS = ('watchman.checks.databases',)
-
