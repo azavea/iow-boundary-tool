@@ -1,5 +1,5 @@
 # As of yet, more modern compose file versions (v3) do not support waiting for another container to be "healthy"
-version : "2.4"
+# version : "2.4"
 services:
   database:
     image: quay.io/azavea/postgis:3-postgres12.4-slim

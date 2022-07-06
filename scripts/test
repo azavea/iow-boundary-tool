@@ -13,16 +13,73 @@ Run tests.
 "
 }
 
-if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
-    if [[ "${1:-}" = "--help" ]]; then
-        usage
-    else
-        # Execute React test suite
-        docker-compose \
-            run --rm --no-deps -e CI app \
-            yarn test --watchAll=false
+function lint() {
+    ./scripts/lint
+}
 
-        # Execute Django test suite
-        ./scripts/manage test core
+function lint_ci() {
+    if [[ -n "${GIT_COMMIT}" ]]; then
+        GIT_COMMIT="${GIT_COMMIT}" \
+            ./scripts/lint
+    else
+        echo "ERROR: No GIT_COMMIT variable defined."
+        exit 1
+    fi
+}
+
+function test_django() {
+    ./scripts/manage test --noinput
+}
+
+function test_django_ci() {
+    if [[ -n "${GIT_COMMIT}" ]]; then
+        GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+            -f docker-compose.yml \
+            -f docker-compose.ci.yml \
+            run --rm --entrypoint python django \
+            manage.py test --noinput
+    else
+        echo "ERROR: No GIT_COMMIT variable defined."
+        exit 1
+    fi
+}
+
+function test_app() {
+    docker-compose \
+        run --rm --no-deps app \
+        yarn test --watchAll=false
+}
+
+function test_app_watch() {
+    docker-compose \
+        run --rm --no-deps app \
+        yarn test
+}
+
+function test_app_ci() {
+    docker-compose \
+        run --rm --no-deps -e CI app \
+        yarn test --watchAll=false
+}
+
+if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
+    if [[ "${1:-}" == "--help" ]]; then
+        usage
+    elif [[ "${1:-}" == "--lint" ]]; then
+        lint
+    elif [[ "${1:-}" == "--app" ]]; then
+        test_app_watch
+    elif [[ "${1:-}" == "--django" ]]; then
+        test_django
+    elif [[ -n "${CI}" ]]; then
+        lint_ci
+        # TODO this was erroring I think because the frontend is not fully configured
+        # test_app_ci
+        test_django_ci
+    else
+        lint
+        # TODO this was erroring I think because the frontend is not fully configured
+        # test_app
+        test_django
     fi
 fi

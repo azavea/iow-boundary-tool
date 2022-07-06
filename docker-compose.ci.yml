@@ -1,0 +1,27 @@
+services:
+  django:
+    image: "iow:${GIT_COMMIT:-latest}"
+    environment:
+      - AWS_PROFILE
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_DEFAULT_REGION
+      - AWS_REGION
+
+  terraform:
+    image: quay.io/azavea/terraform:1.0.0
+    volumes:
+      - ./:/usr/local/src
+      - $HOME/.aws:/root/.aws:ro
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-ever}
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_DEFAULT_REGION
+      - AWS_REGION
+      - GIT_COMMIT
+      - EVER_DEBUG=1
+      - IOW_BOUNDARY_TOOL_SETTINGS_BUCKET=${IOW_BOUNDARY_TOOL_SETTINGS_BUCKET:-iow-staging-config-us-east-1}
+      - IOW_BOUNDARY_TOOL_DEPLOYMENT_ENVIRONMENT=${IOW_BOUNDARY_TOOL_DEPLOYMENT_ENVIRONMENT:-staging}
+    working_dir: /usr/local/src
+    entrypoint: bash
