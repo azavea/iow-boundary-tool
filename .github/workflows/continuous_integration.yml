@@ -30,33 +30,33 @@ jobs:
 
       - run: ./scripts/cibuild
 
-#       - run: ./scripts/cipublish
-#         if: |
-#           github.ref == 'refs/heads/develop' ||
-#           startsWith(github.ref, 'refs/heads/hotfix/') ||
-#           startsWith(github.ref, 'refs/heads/release/') ||
-#           startsWith(github.ref, 'refs/heads/test/')
-#
-#       - run: |
-#           docker-compose -f docker-compose.ci.yml run --rm terraform -c "
-#             # Unset this to avoid a ProfileNotFound exception from the AWS CLI.
-#             unset AWS_PROFILE
-#             ./scripts/infra plan
-#             ./scripts/infra apply
-#           "
-#         env:
-#           IOW_BOUNDARY_TOOL_ROLLBAR_ACCESS_TOKEN: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
-#           IOW_BOUNDARY_TOOL_DEPLOYMENT_ENVIRONMENT: staging
-#         if: |
-#           github.ref == 'refs/heads/develop' ||
-#           startsWith(github.ref, 'refs/heads/hotfix/') ||
-#           startsWith(github.ref, 'refs/heads/release/') ||
-#           startsWith(github.ref, 'refs/heads/test/')
-#
-#       # Kick off an ECS task to display any outstanding migrations.
-#       - run: ./scripts/manage ecsmanage showmigrations
-#         if: |
-#           github.ref == 'refs/heads/develop' ||
-#           startsWith(github.ref, 'refs/heads/hotfix/') ||
-#           startsWith(github.ref, 'refs/heads/release/') ||
-#           startsWith(github.ref, 'refs/heads/test/')
+      - run: ./scripts/cipublish
+        if: |
+          github.ref == 'refs/heads/develop' ||
+          startsWith(github.ref, 'refs/heads/hotfix/') ||
+          startsWith(github.ref, 'refs/heads/release/') ||
+          startsWith(github.ref, 'refs/heads/test/')
+
+      - run: |
+          docker-compose -f docker-compose.ci.yml run --rm terraform -c "
+            # Unset this to avoid a ProfileNotFound exception from the AWS CLI.
+            unset AWS_PROFILE
+            ./scripts/infra plan
+            ./scripts/infra apply
+          "
+        env:
+          IOW_BOUNDARY_TOOL_ROLLBAR_ACCESS_TOKEN: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+          IOW_BOUNDARY_TOOL_DEPLOYMENT_ENVIRONMENT: staging
+        if: |
+          github.ref == 'refs/heads/develop' ||
+          startsWith(github.ref, 'refs/heads/hotfix/') ||
+          startsWith(github.ref, 'refs/heads/release/') ||
+          startsWith(github.ref, 'refs/heads/test/')
+
+      # Kick off an ECS task to display any outstanding migrations.
+      - run: ./scripts/manage ecsmanage showmigrations
+        if: |
+          github.ref == 'refs/heads/develop' ||
+          startsWith(github.ref, 'refs/heads/hotfix/') ||
+          startsWith(github.ref, 'refs/heads/release/') ||
+          startsWith(github.ref, 'refs/heads/test/')
