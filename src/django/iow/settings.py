@@ -246,32 +246,13 @@ ECSMANAGE_ENVIRONMENTS = {
         'SECURITY_GROUP_TAGS': {
             'Name': 'sgStagingAppEcsService',
             'Environment': 'Staging',
-            'Project': 'iow'
+            'Project': 'iow',
         },
         'SUBNET_TAGS': {
             'Name': 'PrivateSubnet',
             'Environment': 'Staging',
-            'Project': 'iow'
+            'Project': 'iow',
         },
         'AWS_REGION': 'us-east-1',
-    # },
-    # 'production': {
-    #     'TASK_DEFINITION_NAME': 'OpenSupplyHubProductionAppCLI',
-    #     'CONTAINER_NAME': 'django',
-    #     'CLUSTER_NAME': 'ecsOpenSupplyHubProductionCluster',
-    #     'LAUNCH_TYPE': 'FARGATE',
-    #     'PLATFORM_VERSION': '1.4.0',
-    #     'SECURITY_GROUP_TAGS': {
-    #         'Name': 'sgAppEcsService',
-    #         'Environment': 'Production',
-    #         'Project': 'OpenSupplyHub'
-    #     },
-    #     'SUBNET_TAGS': {
-    #         'Name': 'PrivateSubnet',
-    #         'Environment': 'Production',
-    #         'Project': 'OpenSupplyHub'
-    #     },
-    #     'AWS_REGION': 'eu-west-1',
     }
 }
-
