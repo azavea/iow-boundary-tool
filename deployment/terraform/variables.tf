@@ -69,10 +69,6 @@ variable "bastion_ebs_optimized" {
   type    = bool
 }
 
-# variable "bastion_public_key" {
-#   type = string
-# }
-
 variable "rds_allocated_storage" {
   default = 32
   type    = number
