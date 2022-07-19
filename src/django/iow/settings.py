@@ -235,3 +235,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 WATCHMAN_ERROR_CODE = 503
 WATCHMAN_CHECKS = ('watchman.checks.databases',)
+
+ECSMANAGE_ENVIRONMENTS = {
+    'default': {
+        'TASK_DEFINITION_NAME': 'StagingAppCLI',
+        'CONTAINER_NAME': 'django',
+        'CLUSTER_NAME': 'ecsStagingCluster',
+        'LAUNCH_TYPE': 'FARGATE',
+        'PLATFORM_VERSION': '1.4.0',
+        'SECURITY_GROUP_TAGS': {
+            'Name': 'sgStagingAppEcsService',
+            'Environment': 'Staging',
+            'Project': 'iow',
+        },
+        'SUBNET_TAGS': {
+            'Name': 'PrivateSubnet',
+            'Environment': 'Staging',
+            'Project': 'iow',
+        },
+        'AWS_REGION': 'us-east-1',
+    }
+}
