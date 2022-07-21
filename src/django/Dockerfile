@@ -34,4 +34,4 @@ CMD ["-b :8080", \
 "--error-logfile=-", \
 "--log-level=info", \
 "--capture-output", \
-"tankmagic.wsgi"]
+"iow.wsgi"]
