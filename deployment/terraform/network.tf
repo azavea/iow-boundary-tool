@@ -1,15 +1,6 @@
 #
 # VPC resources
 #
-# resource "aws_key_pair" "bastion" {
-#   key_name_prefix = "keypairBastion"
-#   public_key      = var.bastion_public_key
-#
-#   tags = {
-#     Project     = var.project
-#     Environment = var.environment
-#   }
-# }
 
 module "vpc" {
   source = "github.com/azavea/terraform-aws-vpc?ref=6.0.1"
