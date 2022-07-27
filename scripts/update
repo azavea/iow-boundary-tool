@@ -38,6 +38,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 
         # Collect Django static files
         # TODO enable this after static file hosting is corrected
-        # ./scripts/manage collectstatic --no-input
+        ./scripts/manage collectstatic --no-input
     fi
 fi
