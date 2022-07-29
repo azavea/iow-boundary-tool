@@ -24,7 +24,7 @@ services:
       - PORT=4545
     volumes:
         - ./src/app:/usr/local/src
-        - ./dist:/usr/local/src/build
+        - ./src/django/static:/usr/local/src/build
         # Ensure node_modules cache doesn't clash with other jobs on CI.
         - /var/cache/iow-boundary-tool-node-modules:/usr/local/src/node_modules
     command: yarn start

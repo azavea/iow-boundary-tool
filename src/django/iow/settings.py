@@ -22,9 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# TODO: move this to .env
-
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "secret")
 
 ENVIRONMENT = os.getenv("DJANGO_ENV", "Development")
@@ -92,7 +89,7 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     'django.contrib.sessions',
     'django.contrib.messages',
-    # 'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     'django_extensions',
     "rest_framework",
     "rest_framework_gis",
@@ -214,11 +211,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-# TODO enable static file hosting
 
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# STATICFILES_DIRS = ((os.path.join(STATIC_ROOT, "static")),)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = ((os.path.join(STATIC_ROOT, "static")),)
 
 # From the django-spa README
 # https://github.com/metakermit/django-spa/tree/418fd20e0cf1339ac259d16ce3d6f78c2868d1cd
