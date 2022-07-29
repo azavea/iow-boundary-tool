@@ -214,6 +214,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = ((os.path.join(STATIC_ROOT, "static")),)
 
 # From the django-spa README
 # https://github.com/metakermit/django-spa/tree/418fd20e0cf1339ac259d16ce3d6f78c2868d1cd
