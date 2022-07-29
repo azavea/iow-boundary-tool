@@ -23,7 +23,6 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
             scripts/*
 
         # Lint JavaScript
-        # TODO turn this back on when there's javascript to check
         docker-compose \
             run --rm --entrypoint ./node_modules/.bin/eslint \
             app src/ --ext .js --ext .jsx
