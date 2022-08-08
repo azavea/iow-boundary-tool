@@ -14,7 +14,7 @@ services:
       retries: 3
 
   app:
-    image: node:16-slim
+    image: node:18-slim
     stdin_open: true
     working_dir: /usr/local/src
     environment:
@@ -22,6 +22,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=100
       - PORT=4545
+      - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
         - ./src/app:/usr/local/src
         - ./src/django/static:/usr/local/src/build
