@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 -   Upgrade app container to use Node version 18
+-   Upgrade React to version 18 and add Chakra UI version 2
 
 ### Fixed
 
