@@ -14,7 +14,7 @@ services:
       retries: 3
 
   app:
-    image: node:16-slim
+    image: node:18-slim
     stdin_open: true
     working_dir: /usr/local/src
     environment:
