@@ -6,6 +6,8 @@ import '@fontsource/quicksand/700.css';
 import '@fontsource/quicksand/500.css';
 import '@fontsource/inter/400.css';
 
+import '../node_modules/leaflet/dist/leaflet.css';
+
 import './index.css';
 import App from './App';
 import theme from './theme';

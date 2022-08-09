@@ -1,4 +1,3 @@
-import '../node_modules/leaflet/dist/leaflet.css';
 
 import './App.css';
 import Welcome from './pages/Welcome';
