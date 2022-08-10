@@ -1,31 +1,57 @@
-import {
-    Button,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalBody,
-    ModalHeader,
-    Heading,
-    Text,
-} from '@chakra-ui/react';
+import { useState } from 'react';
+import { Button, Modal, ModalOverlay } from '@chakra-ui/react';
+
+import HowItWorks from './ModalSections/HowItWorks';
+import Introduction from './ModalSections/Introduction';
+import FileUpload from './ModalSections/FileUpload';
+
+const sections = [Introduction, HowItWorks, FileUpload];
+const firstSection = 0;
+const lastSection = sections.length - 1;
 
 export default function WelcomeModal() {
+    const [currentSection, setCurrentSection] = useState(0);
+
+    const goToNextSection = () => {
+        setCurrentSection(previousSection =>
+            Math.min(previousSection + 1, lastSection)
+        );
+    };
+
+    const goToPreviousSection = () => {
+        setCurrentSection(previousSection =>
+            Math.max(previousSection - 1, firstSection)
+        );
+    };
+
+    const PreviousButton = (
+        <Button onClick={goToPreviousSection}>Previous</Button>
+    );
+
+    const ContinueButton = (
+        <Button
+            bg='gray.900'
+            color='white'
+            boxShadow='base'
+            onClick={goToNextSection}
+        >
+            Continue
+        </Button>
+    );
+
+    const Section = sections[currentSection];
+
     return (
         <Modal isOpen isCentered size={'5xl'}>
             <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>
-                    <Heading size='lg'>Welcome to BoundarySync</Heading>
-                </ModalHeader>
-                <ModalBody>
-                    <Text>
-                        Build a digital map of your service area boundary in
-                        minutes for free. No complex software or training
-                        needed.
-                    </Text>
-                    <Button variant='link'>Learn more &gt;</Button>
-                </ModalBody>
-            </ModalContent>
+            <Section
+                {...{
+                    goToNextSection,
+                    goToPreviousSection,
+                    PreviousButton,
+                    ContinueButton,
+                }}
+            />
         </Modal>
     );
 }
