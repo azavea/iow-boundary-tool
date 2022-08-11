@@ -5,3 +5,12 @@ export function heroToChakraIcon(icon) {
         return <Icon as={icon} />;
     };
 }
+
+export function convertIndexedObjectToArray(obj) {
+    const array = [];
+    for (let i = 0; i < obj.length; i++) {
+        array.push(obj[i]);
+    }
+
+    return array;
+}
