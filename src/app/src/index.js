@@ -2,14 +2,21 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChakraProvider } from '@chakra-ui/react';
 
+import '@fontsource/quicksand/700.css';
+import '@fontsource/quicksand/500.css';
+import '@fontsource/inter/400.css';
+
+import '../node_modules/leaflet/dist/leaflet.css';
+
 import './index.css';
 import App from './App';
+import theme from './theme';
 import * as serviceWorker from './serviceWorker';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
             <App />
         </ChakraProvider>
     </React.StrictMode>
