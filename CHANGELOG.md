@@ -9,13 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add Prototype Skeleton [#21](https://github.com/azavea/iow-boundary-tool/pull/21)
+
 ### Changed
--   Upgrade app container to use Node version 18
--   Upgrade React to version 18 and add Chakra UI version 2
+
+- Upgrade app container to use Node version 18 [#19](https://github.com/azavea/iow-boundary-tool/pull/19)
+- Upgrade React to version 18 and add Chakra UI version 2 [#20](https://github.com/azavea/iow-boundary-tool/pull/20)
 
 ### Fixed
 
+### Deprecated
+
 ### Removed
 
+### Security
 
 [Unreleased]: https://github.com/azavea/iow-boundary-tool/tree/HEAD
