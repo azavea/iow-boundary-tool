@@ -25,16 +25,13 @@ export default function WelcomeModal() {
     };
 
     const PreviousButton = (
-        <Button onClick={goToPreviousSection}>Previous</Button>
+        <Button variant='secondary' onClick={goToPreviousSection}>
+            Previous
+        </Button>
     );
 
     const ContinueButton = (
-        <Button
-            bg='gray.900'
-            color='white'
-            boxShadow='base'
-            onClick={goToNextSection}
-        >
+        <Button variant='cta' onClick={goToNextSection}>
             Continue
         </Button>
     );

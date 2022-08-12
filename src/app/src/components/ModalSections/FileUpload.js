@@ -84,8 +84,7 @@ function UploadBox({ setFiles }) {
                 </Text>
                 <Button
                     mb={6}
-                    color='gray.600'
-                    bg='gray.200'
+                    variant='primary'
                     maxW='162px'
                     onClick={openFileDialog}
                 >
