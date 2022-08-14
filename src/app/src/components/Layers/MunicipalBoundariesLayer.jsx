@@ -22,7 +22,7 @@ export default function MunicipalBoundariesLayer() {
     });
 
     useEffect(() => {
-        fetch(`${process.env.PUBLIC_URL}/data/muni.geo.json`)
+        fetch(new URL('../../../data/muni.geo.json', import.meta.url).href)
             .then(response => response.json())
             .then(setLayerData);
     }, []);
