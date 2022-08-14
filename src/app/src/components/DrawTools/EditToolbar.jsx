@@ -19,18 +19,18 @@ import {
 } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 
-import AddPolygonIcon from '../../img/AddPolygonIcon.js';
-import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
-import { useDialogController } from '../../hooks.js';
-import EditPolygonModal from './EditPolygonModal.js';
+import AddPolygonIcon from '../../img/AddPolygonIcon';
+import DeletePolygonConfirmModal from './DeletePolygonConfirmModal';
+import { useDialogController } from '../../hooks';
+import EditPolygonModal from './EditPolygonModal';
 import {
     disableAddCursor,
     enableAddCursor,
     toggleEditMode,
     togglePolygonVisibility,
-} from '../../store/mapSlice.js';
-import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
-import { BOUNDARY_STATUS } from '../../constants.js';
+} from '../../store/mapSlice';
+import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
+import { BOUNDARY_STATUS } from '../../constants';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
