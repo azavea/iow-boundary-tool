@@ -59,6 +59,11 @@ const Heading = {
             fontFamily: 'body',
             fontSize: 'md',
         },
+        sidebar: {
+            color: 'white',
+            fontFamily: `'Inter', sans-serif`,
+            size: 'md',
+        },
     },
 };
 

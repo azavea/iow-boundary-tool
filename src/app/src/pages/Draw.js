@@ -6,7 +6,7 @@ import Sidebar from '../components/Sidebar';
 export default function Main() {
     return (
         <Flex>
-            <Container maxW='xs' bg='gray.700'>
+            <Container maxW='xs' bg='gray.700' p={0}>
                 <Sidebar />
             </Container>
             <Box flex={1}>
