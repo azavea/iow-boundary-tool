@@ -1,6 +1,6 @@
 import { Box, Container, Flex } from '@chakra-ui/react';
 
-import Map from '../components/Map';
+import DrawMap from '../components/DrawMap';
 import Sidebar from '../components/Sidebar';
 
 export default function Main() {
@@ -9,8 +9,8 @@ export default function Main() {
             <Container maxW='xs' bg='gray.700' p={0}>
                 <Sidebar />
             </Container>
-            <Box flex={1}>
-                <Map />
+            <Box flex={1} position='relative'>
+                <DrawMap />
             </Box>
         </Flex>
     );
