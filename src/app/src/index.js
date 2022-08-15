@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import '@fontsource/quicksand/700.css';
 import '@fontsource/quicksand/500.css';
 import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
 
 import '../node_modules/leaflet/dist/leaflet.css';
 
