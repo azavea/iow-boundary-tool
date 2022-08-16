@@ -2,7 +2,7 @@ import { Box, Icon, IconButton, VStack } from '@chakra-ui/react';
 
 import { SearchIcon, PlusIcon, MinusIcon } from '@heroicons/react/outline';
 import { useMap, useMapEvent } from 'react-leaflet';
-import { DRAW_MAP_ID } from '../constants';
+import { DRAW_MAP_ID } from '../../constants';
 
 export default function MapControlButtons() {
     const map = useMap();

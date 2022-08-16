@@ -3,8 +3,8 @@ import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
 import Map from './Map';
-import EditToolbar from './EditToolbar';
-import MapControlButtons from './MapControlButtons';
+import EditToolbar from './DrawMapUIComponents/EditToolbar';
+import MapControlButtons from './DrawMapUIComponents/MapControlButtons';
 
 export default function DrawMap() {
     return (

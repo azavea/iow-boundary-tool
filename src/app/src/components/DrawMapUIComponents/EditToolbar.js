@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
     Box,
     Button,
@@ -7,21 +7,16 @@ import {
     Divider,
     Icon,
     IconButton,
-    Spacer,
-    AlertDialog,
-    AlertDialogOverlay,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogFooter,
 } from '@chakra-ui/react';
 
 import { EyeIcon, TrashIcon, EyeOffIcon } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 import { useMap } from 'react-leaflet';
 
-import AddPolygonIcon from '../img/AddPolygonIcon.js';
-import { INITIAL_POLYGON_SCALE_FACTOR } from '../constants';
-import EditingPolygon from './EditingPolygon';
+import AddPolygonIcon from '../../img/AddPolygonIcon.js';
+import { INITIAL_POLYGON_SCALE_FACTOR } from '../../constants';
+import EditingPolygon from '../EditingPolygon';
+import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 
 export default function EditToolbar() {
     const [polygon, setPolygon] = useState();
@@ -128,49 +123,6 @@ export default function EditToolbar() {
             </Box>
             <EditingPolygon polygon={polygon} editMode={editMode} />
         </>
-    );
-}
-
-function DeletePolygonConfirmModal({ isOpen, onConfirm, onClose }) {
-    const cancelRef = useRef();
-
-    return (
-        <AlertDialog
-            size='sm'
-            isOpen={isOpen}
-            onClose={onClose}
-            isCentered
-            leastDestructiveRef={cancelRef}
-        >
-            <AlertDialogOverlay>
-                <AlertDialogContent>
-                    <AlertDialogHeader textAlign='center' m={4} mb={2}>
-                        Are you sure you want to delete the current polygon?
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <Flex w='100%' m={4} mt={2}>
-                            <Button
-                                variant='secondary'
-                                onClick={onClose}
-                                ref={cancelRef}
-                            >
-                                Back
-                            </Button>
-                            <Spacer />
-                            <Button
-                                variant='cta'
-                                onClick={() => {
-                                    onConfirm();
-                                    onClose();
-                                }}
-                            >
-                                Yes, Delete
-                            </Button>
-                        </Flex>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialogOverlay>
-        </AlertDialog>
     );
 }
 
