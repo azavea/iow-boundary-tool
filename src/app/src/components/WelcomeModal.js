@@ -39,7 +39,14 @@ export default function WelcomeModal() {
     const Section = sections[currentSection];
 
     return (
-        <Modal isOpen isCentered size={'5xl'}>
+        <Modal
+            isOpen
+            isCentered
+            size={'5xl'}
+            // Fix react-remove-scroll-bar warning seen with multiple modals
+            // https://github.com/chakra-ui/chakra-ui/issues/6213
+            blockScrollOnMount={currentSection === firstSection}
+        >
             <ModalOverlay />
             <Section
                 {...{
