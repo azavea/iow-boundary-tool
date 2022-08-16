@@ -1,10 +1,11 @@
 import { MapContainer, TileLayer } from 'react-leaflet';
 
-import { MAP_CENTER, MAP_INITIAL_ZOOM } from '../constants';
+import { DRAW_MAP_ID, MAP_CENTER, MAP_INITIAL_ZOOM } from '../constants';
 
 export default function Map({ children }) {
     return (
         <MapContainer
+            id={DRAW_MAP_ID}
             center={MAP_CENTER}
             zoom={MAP_INITIAL_ZOOM}
             zoomControl={false}
