@@ -79,10 +79,19 @@ const Heading = {
     },
 };
 
+const Tooltip = {
+    baseStyle: {
+        fontFamily: `'Inter', sans-serif`,
+        fontWeight: 600,
+        color: 'white',
+    },
+};
+
 const theme = extendTheme({
     components: {
         Button,
         Heading,
+        Tooltip,
     },
     fonts: {
         heading: `'Quicksand', sans-serif`,

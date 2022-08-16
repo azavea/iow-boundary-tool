@@ -7,6 +7,7 @@ import {
     Divider,
     Icon,
     IconButton,
+    Tooltip,
 } from '@chakra-ui/react';
 
 import {
@@ -126,16 +127,19 @@ export default function EditToolbar() {
                             }
                             onClick={toggleVisibility}
                             disabled={!polygon}
+                            tooltip='Show/Hide'
                         />
                         <EditToolbarButton
                             icon={CursorClickIcon}
                             onClick={toggleEditMode}
                             disabled={!polygon}
+                            tooltip='Edit Points'
                         />
                         <EditToolbarButton
                             icon={TrashIcon}
                             onClick={confirmDeleteDialogController.open}
                             disabled={!polygon}
+                            tooltip='Delete Polygon'
                         />
                     </ButtonGroup>
                 </Flex>
@@ -160,12 +164,14 @@ function scaleRange(center, limit) {
     return center + INITIAL_POLYGON_SCALE_FACTOR * (limit - center);
 }
 
-function EditToolbarButton({ icon, onClick, disabled }) {
+function EditToolbarButton({ icon, onClick, disabled, tooltip }) {
     return (
-        <IconButton
-            onClick={onClick}
-            icon={<Icon as={icon} fontSize='xl' strokeWidth={1} />}
-            disabled={disabled}
-        />
+        <Tooltip label={tooltip} hasArrow>
+            <IconButton
+                onClick={onClick}
+                icon={<Icon as={icon} fontSize='xl' strokeWidth={1} />}
+                disabled={disabled}
+            />
+        </Tooltip>
     );
 }
