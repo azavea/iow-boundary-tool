@@ -15,18 +15,59 @@ import {
     AlertDialogFooter,
 } from '@chakra-ui/react';
 
-import { EyeIcon, TrashIcon } from '@heroicons/react/outline';
+import { EyeIcon, TrashIcon, EyeOffIcon } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
+import { useMap } from 'react-leaflet';
 
 import AddPolygonIcon from '../img/AddPolygonIcon.js';
 import { INITIAL_POLYGON_SCALE_FACTOR } from '../constants';
+import EditingPolygon from './EditingPolygon';
 
 export default function EditToolbar() {
+    const [polygon, setPolygon] = useState();
+    const [editMode, setEditMode] = useState(false);
     const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] =
         useState(false);
 
+    const map = useMap();
+
     const openConfirmDeleteDialog = () => setShowConfirmDeleteDialog(true);
     const closeConfirmDeleteDialog = () => setShowConfirmDeleteDialog(false);
+
+    const getDefaultPolygon = () => {
+        const bounds = map.getBounds();
+        const center = bounds.getCenter();
+        const west = scaleRange(center.lng, bounds.getWest());
+        const east = scaleRange(center.lng, bounds.getEast());
+        const north = scaleRange(center.lat, bounds.getNorth());
+        const south = scaleRange(center.lat, bounds.getSouth());
+
+        return [
+            [north, west],
+            [north, east],
+            [south, east],
+            [south, west],
+        ];
+    };
+
+    const startPolygon = () => {
+        setEditMode(true);
+        setPolygon({ points: getDefaultPolygon(), visible: true });
+    };
+
+    const deletePolygon = () => {
+        setPolygon(null);
+    };
+
+    const toggleVisibility = () => {
+        setPolygon(polygon =>
+            polygon ? { ...polygon, visible: !polygon.visible } : null
+        );
+    };
+
+    const toggleEditMode = () => {
+        setEditMode(editMode => !editMode);
+    };
 
     return (
         <>
@@ -58,19 +99,34 @@ export default function EditToolbar() {
                         opacity={1}
                     />
                     <ButtonGroup variant='toolbar'>
-                        <EditToolbarButton icon={EyeIcon} />
-                        <EditToolbarButton icon={CursorClickIcon} />
+                        <EditToolbarButton
+                            icon={
+                                !polygon || polygon?.visible
+                                    ? EyeIcon
+                                    : EyeOffIcon
+                            }
+                            onClick={toggleVisibility}
+                            disabled={!polygon}
+                        />
+                        <EditToolbarButton
+                            icon={CursorClickIcon}
+                            onClick={toggleEditMode}
+                            disabled={!polygon}
+                        />
                         <EditToolbarButton
                             icon={TrashIcon}
                             onClick={openConfirmDeleteDialog}
+                            disabled={!polygon}
                         />
                     </ButtonGroup>
                 </Flex>
                 <DeletePolygonConfirmModal
                     isOpen={showConfirmDeleteDialog}
+                    onConfirm={deletePolygon}
                     onClose={closeConfirmDeleteDialog}
                 />
             </Box>
+            <EditingPolygon polygon={polygon} editMode={editMode} />
         </>
     );
 }
@@ -116,6 +172,10 @@ function DeletePolygonConfirmModal({ isOpen, onConfirm, onClose }) {
             </AlertDialogOverlay>
         </AlertDialog>
     );
+}
+
+function scaleRange(center, limit) {
+    return center + INITIAL_POLYGON_SCALE_FACTOR * (limit - center);
 }
 
 function EditToolbarButton({ icon, onClick, disabled }) {
