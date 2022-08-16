@@ -9,7 +9,12 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 
-import { EyeIcon, TrashIcon, EyeOffIcon } from '@heroicons/react/outline';
+import {
+    EyeIcon,
+    TrashIcon,
+    EyeOffIcon,
+    PencilIcon,
+} from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 import { useMap } from 'react-leaflet';
 
@@ -17,17 +22,16 @@ import AddPolygonIcon from '../../img/AddPolygonIcon.js';
 import { INITIAL_POLYGON_SCALE_FACTOR } from '../../constants';
 import EditingPolygon from '../EditingPolygon';
 import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
+import { useDialogController } from '../../hooks.js';
+import EditPolygonModal from './EditPolygonModal.js';
 
 export default function EditToolbar() {
     const [polygon, setPolygon] = useState();
     const [editMode, setEditMode] = useState(false);
-    const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] =
-        useState(false);
-
     const map = useMap();
 
-    const openConfirmDeleteDialog = () => setShowConfirmDeleteDialog(true);
-    const closeConfirmDeleteDialog = () => setShowConfirmDeleteDialog(false);
+    const confirmDeleteDialogController = useDialogController();
+    const editDialogController = useDialogController();
 
     const getDefaultPolygon = () => {
         const bounds = map.getBounds();
@@ -47,7 +51,18 @@ export default function EditToolbar() {
 
     const startPolygon = () => {
         setEditMode(true);
-        setPolygon({ points: getDefaultPolygon(), visible: true });
+        setPolygon({
+            points: getDefaultPolygon(),
+            visible: true,
+            label: 'New Polygon',
+        });
+    };
+
+    const editPolygon = newLabel => {
+        setPolygon(polygon => ({
+            ...polygon,
+            label: newLabel,
+        }));
     };
 
     const deletePolygon = () => {
@@ -79,12 +94,21 @@ export default function EditToolbar() {
                 boxShadow='lg'
             >
                 <Flex>
-                    <Button
-                        onClick={startPolygon}
-                        rightIcon={<AddPolygonIcon />}
-                    >
-                        Draw Polygon
-                    </Button>
+                    {polygon ? (
+                        <Button
+                            onClick={editDialogController.open}
+                            rightIcon={<Icon as={PencilIcon} />}
+                        >
+                            {polygon.label}
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={startPolygon}
+                            rightIcon={<AddPolygonIcon />}
+                        >
+                            Draw Polygon
+                        </Button>
+                    )}
                     <Divider
                         // TODO: Figure out why this divider does not show up
                         orientation='vertical'
@@ -110,17 +134,23 @@ export default function EditToolbar() {
                         />
                         <EditToolbarButton
                             icon={TrashIcon}
-                            onClick={openConfirmDeleteDialog}
+                            onClick={confirmDeleteDialogController.open}
                             disabled={!polygon}
                         />
                     </ButtonGroup>
                 </Flex>
-                <DeletePolygonConfirmModal
-                    isOpen={showConfirmDeleteDialog}
-                    onConfirm={deletePolygon}
-                    onClose={closeConfirmDeleteDialog}
-                />
             </Box>
+            <DeletePolygonConfirmModal
+                isOpen={confirmDeleteDialogController.isOpen}
+                onConfirm={deletePolygon}
+                onClose={confirmDeleteDialogController.close}
+            />
+            <EditPolygonModal
+                isOpen={editDialogController.isOpen}
+                onSubmit={editPolygon}
+                onClose={editDialogController.close}
+                defaultLabel={polygon?.label}
+            />
             <EditingPolygon polygon={polygon} editMode={editMode} />
         </>
     );
