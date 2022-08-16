@@ -134,6 +134,7 @@ export default function EditToolbar() {
                             onClick={toggleEditMode}
                             disabled={!polygon}
                             tooltip='Edit Points'
+                            active={editMode}
                         />
                         <EditToolbarButton
                             icon={TrashIcon}
@@ -164,13 +165,14 @@ function scaleRange(center, limit) {
     return center + INITIAL_POLYGON_SCALE_FACTOR * (limit - center);
 }
 
-function EditToolbarButton({ icon, onClick, disabled, tooltip }) {
+function EditToolbarButton({ icon, onClick, disabled, tooltip, active }) {
     return (
         <Tooltip label={tooltip} hasArrow>
             <IconButton
                 onClick={onClick}
                 icon={<Icon as={icon} fontSize='xl' strokeWidth={1} />}
                 disabled={disabled}
+                bg={active ? 'gray.100' : undefined}
             />
         </Tooltip>
     );
