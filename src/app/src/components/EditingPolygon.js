@@ -22,6 +22,53 @@ function customize(prototype) {
 customize(L.Draw.Polyline.prototype);
 customize(L.Edit.PolyVerticesEdit.prototype);
 
+const markerElements = document.getElementsByClassName('edit-poly-marker');
+
+function initializeStyleMarkers() {
+    return styleMarkers(markerElements);
+}
+
+function styleMarkers(markers) {
+    for (const element of markers) {
+        if (elementIsMidpointMarker(element)) {
+            styleMidpointElement(element);
+            addMidpointConversionTrigger(element);
+        }
+    }
+}
+
+function elementIsMidpointMarker(element) {
+    return element.style.opacity !== '';
+}
+
+function styleMidpointElement(element) {
+    element.className += ' edit-poly-marker-midpoint';
+}
+
+function removeMidpointStyle(element) {
+    element.className = element.className.replace(
+        'edit-poly-marker-midpoint',
+        ''
+    );
+}
+
+function addMidpointConversionTrigger(element) {
+    element.addEventListener('click', () => {
+        removeMidpointStyle(element);
+        styleMarkers(getNewMidpoints());
+    });
+}
+
+function getNewMidpoints() {
+    // Dragging a midpoint creates two more midpoints.
+    // getElementsByClassName should sort items by their
+    // order in the DOM, so the last two are the new ones.
+    return [
+        markerElements[markerElements.length - 2],
+        markerElements[markerElements.length - 1],
+    ];
+}
+
 // TODO: Convert this to use state instead of receiving it as a prop
 export default function EditingPolygon({ polygon, editMode }) {
     const map = useMap();
@@ -38,6 +85,8 @@ export default function EditingPolygon({ polygon, editMode }) {
             }
 
             polygonLayer.addTo(map);
+
+            initializeStyleMarkers();
 
             return () => {
                 if (map.hasLayer(polygonLayer)) {
