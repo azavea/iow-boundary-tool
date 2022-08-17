@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgrade app container to use Node version 18 [#19](https://github.com/azavea/iow-boundary-tool/pull/19)
 - Upgrade React to version 18 and add Chakra UI version 2 [#20](https://github.com/azavea/iow-boundary-tool/pull/20)
+- Incorporated changes in app template [#31](https://github.com/azavea/iow-boundary-tool/pull/31)
 
 ### Fixed
 

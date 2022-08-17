@@ -8,7 +8,7 @@ services:
       - POSTGRES_PASSWORD=iow-aboutus
       - POSTGRES_DB=iow-aboutus
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "iow-aboutus"]
+      test: [ "CMD", "pg_isready", "-U", "iow-aboutus" ]
       interval: 3s
       timeout: 3s
       retries: 3
@@ -24,10 +24,10 @@ services:
       - PORT=4545
       - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
-        - ./src/app:/usr/local/src
-        - ./src/django/static:/usr/local/src/build
-        # Ensure node_modules cache doesn't clash with other jobs on CI.
-        - /var/cache/iow-boundary-tool-node-modules:/usr/local/src/node_modules
+      - ./src/app:/usr/local/src
+      - ./src/django/static:/usr/local/src/build
+      # Ensure node_modules cache doesn't clash with other jobs on CI.
+      - node-modules-volume:/usr/local/src/node_modules
     command: yarn start
 
   django:
@@ -67,3 +67,6 @@ services:
     volumes:
       - ./:/usr/local/src
     working_dir: /usr/local/src
+
+volumes:
+  node-modules-volume:
