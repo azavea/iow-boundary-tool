@@ -70,7 +70,7 @@ function getNewMidpoints() {
 }
 
 // TODO: Convert this to use state instead of receiving it as a prop
-export default function EditingPolygon({ polygon, editMode }) {
+export default function useEditingPolygon({ polygon, editMode }) {
     const map = useMap();
 
     useEffect(() => {
@@ -95,6 +95,4 @@ export default function EditingPolygon({ polygon, editMode }) {
             };
         }
     }, [polygon, editMode, map]);
-
-    return null;
 }

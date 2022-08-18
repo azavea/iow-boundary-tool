@@ -21,7 +21,7 @@ import { useMap } from 'react-leaflet';
 
 import AddPolygonIcon from '../../img/AddPolygonIcon.js';
 import { INITIAL_POLYGON_SCALE_FACTOR } from '../../constants';
-import EditingPolygon from './EditingPolygon';
+import useEditingPolygon from './useEditingPolygon';
 import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
@@ -29,6 +29,8 @@ import EditPolygonModal from './EditPolygonModal.js';
 export default function EditToolbar() {
     const [polygon, setPolygon] = useState();
     const [editMode, setEditMode] = useState(false);
+    useEditingPolygon({ polygon, editMode });
+
     const map = useMap();
 
     const confirmDeleteDialogController = useDialogController();
@@ -156,7 +158,6 @@ export default function EditToolbar() {
                 onClose={editDialogController.close}
                 defaultLabel={polygon?.label}
             />
-            <EditingPolygon polygon={polygon} editMode={editMode} />
         </>
     );
 }
