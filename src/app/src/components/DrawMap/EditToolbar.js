@@ -21,7 +21,7 @@ import { useMap } from 'react-leaflet';
 
 import AddPolygonIcon from '../../img/AddPolygonIcon.js';
 import { INITIAL_POLYGON_SCALE_FACTOR } from '../../constants';
-import EditingPolygon from '../EditingPolygon';
+import EditingPolygon from './EditingPolygon';
 import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
