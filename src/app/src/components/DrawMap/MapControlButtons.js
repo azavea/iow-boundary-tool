@@ -1,26 +1,13 @@
+import { useRef } from 'react';
 import { Box, Icon, IconButton, VStack } from '@chakra-ui/react';
 
 import { SearchIcon, PlusIcon, MinusIcon } from '@heroicons/react/outline';
-import { useMap, useMapEvent } from 'react-leaflet';
-import { DRAW_MAP_ID } from '../../constants';
+import { useMap } from 'react-leaflet';
+
+import { usePreventMapDoubleClick } from '../../hooks';
 
 export default function MapControlButtons() {
     const map = useMap();
-
-    useMapEvent('dblclick', event => {
-        if (event.originalEvent.target.id === DRAW_MAP_ID) {
-            // TODO: Find some way to prevent map recentering
-            return false;
-        }
-    });
-
-    const zoomIn = event => {
-        map.zoomIn();
-    };
-
-    const zoomOut = event => {
-        map.zoomOut();
-    };
 
     return (
         <Box
@@ -32,16 +19,27 @@ export default function MapControlButtons() {
         >
             <VStack direction='column' spacing='6px'>
                 <MapControlButton icon={SearchIcon} />
-                <MapControlButton icon={PlusIcon} onClick={zoomIn} />
-                <MapControlButton icon={MinusIcon} onClick={zoomOut} />
+                <MapControlButton
+                    icon={PlusIcon}
+                    onClick={() => map.zoomIn()}
+                />
+                <MapControlButton
+                    icon={MinusIcon}
+                    onClick={() => map.zoomOut()}
+                />
             </VStack>
         </Box>
     );
 }
 
 function MapControlButton({ icon, onClick }) {
+    const ref = useRef();
+
+    usePreventMapDoubleClick(ref);
+
     return (
         <IconButton
+            ref={ref}
             onClick={onClick}
             variant='toolbar'
             icon={<Icon as={icon} fontSize='xl' strokeWidth={1} />}
