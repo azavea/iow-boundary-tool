@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ChakraProvider } from '@chakra-ui/react';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import '@fontsource/quicksand/700.css';
 import '@fontsource/quicksand/500.css';
@@ -13,13 +14,16 @@ import './index.css';
 import App from './App';
 import theme from './theme';
 import * as serviceWorker from './serviceWorker';
+import store from './store';
 
 const root = createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <ChakraProvider theme={theme}>
-            <App />
-        </ChakraProvider>
+        <ReduxProvider store={store}>
+            <ChakraProvider theme={theme}>
+                <App />
+            </ChakraProvider>
+        </ReduxProvider>
     </React.StrictMode>
 );
 
