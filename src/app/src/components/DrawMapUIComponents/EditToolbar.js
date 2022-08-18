@@ -99,6 +99,7 @@ export default function EditToolbar() {
                         <Button
                             onClick={editDialogController.open}
                             rightIcon={<Icon as={PencilIcon} />}
+                            variant='toolbar'
                         >
                             {polygon.label}
                         </Button>
@@ -111,12 +112,11 @@ export default function EditToolbar() {
                         </Button>
                     )}
                     <Divider
-                        // TODO: Figure out why this divider does not show up
                         orientation='vertical'
-                        ml={2}
-                        mr={2}
-                        color='gray.100'
+                        mx={4}
+                        bgColor='gray.100'
                         opacity={1}
+                        h='auto'
                     />
                     <ButtonGroup variant='toolbar'>
                         <EditToolbarButton
