@@ -1,38 +1,19 @@
-.App {
-  text-align: center;
+.edit-poly-marker {
+    margin-left: -4px !important;
+    margin-top: -4px !important;
+    width: 8px !important;
+    height: 8px !important;
+    background-color: var(--chakra-colors-black);
+    border: none;
+    border-radius: 50%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.edit-poly-marker-midpoint {
+    opacity: 1 !important;
+    background-color: var(--chakra-colors-gray-500);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Prevent pointer from showing up on polygon path hover */
+.leaflet-overlay-pane g path.leaflet-interactive {
+    cursor: inherit;
 }

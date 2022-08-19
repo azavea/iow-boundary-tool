@@ -44,6 +44,18 @@ const Button = {
                 color: 'gray.700',
             },
         },
+        toolbar: {
+            bg: 'white',
+            borderRadius: '6px',
+            strokeWidth: '1px',
+            _hover: {
+                bg: 'gray.100',
+                textDecoration: 'underline',
+            },
+            _disabled: {
+                color: 'gray.700',
+            },
+        },
         link: {
             fontWeight: 400,
             textDecoration: 'underline',
@@ -67,10 +79,19 @@ const Heading = {
     },
 };
 
+const Tooltip = {
+    baseStyle: {
+        fontFamily: `'Inter', sans-serif`,
+        fontWeight: 600,
+        color: 'white',
+    },
+};
+
 const theme = extendTheme({
     components: {
         Button,
         Heading,
+        Tooltip,
     },
     fonts: {
         heading: `'Quicksand', sans-serif`,

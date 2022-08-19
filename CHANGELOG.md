@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Prototype Skeleton [#21](https://github.com/azavea/iow-boundary-tool/pull/21)
 - Add Welcome page [#25](https://github.com/azavea/iow-boundary-tool/pull/25)
 - Add Sidebar UI [#26](https://github.com/azavea/iow-boundary-tool/pull/26)
+- Add Draw Map UI and base polygon functionality [#30](https://github.com/azavea/iow-boundary-tool/pull/30)
 
 ### Changed
 
