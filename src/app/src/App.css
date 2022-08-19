@@ -17,3 +17,7 @@
 .leaflet-overlay-pane g path.leaflet-interactive {
     cursor: inherit;
 }
+
+.leaflet-container.crosshair-cursor-enabled {
+    cursor: crosshair;
+}
