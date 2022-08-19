@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Box,
     Button,
@@ -20,14 +19,9 @@ import {
 
 import BasemapDefaultImage from '../img/basemap-default.png';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
-
-const basemapLayers = [
-    'Streets',
-    'Parcel data',
-    'Municipal boundaries',
-    'Land & water',
-    'Points of interest',
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { setBasemapType, toggleLayer } from '../store/mapSlice';
+import { BASE_MAP_LAYERS } from '../constants';
 
 const marginLeft = 4;
 
@@ -76,22 +70,11 @@ function ReferenceLayers() {
 }
 
 function BasemapLayers() {
-    const [satelliteMode, setSatelliteMode] = useState(false);
-    const [visibility, setVisibility] = useState(() =>
-        basemapLayers.reduce(
-            (visibility, layer) => ({
-                ...visibility,
-                [layer]: true,
-            }),
-            {}
-        )
-    );
+    const dispatch = useDispatch();
+    const { layers, basemapType } = useSelector(state => state.map);
 
     const toggleVisibility = layer => {
-        setVisibility(visibility => ({
-            ...visibility,
-            [layer]: !visibility[layer],
-        }));
+        dispatch(toggleLayer(layer));
     };
 
     return (
@@ -100,10 +83,10 @@ function BasemapLayers() {
                 Basemap Layers
             </Heading>
             <Flex direction='column' align='flex-start' mt={4}>
-                {basemapLayers.map(layer => (
+                {BASE_MAP_LAYERS.map(layer => (
                     <VisibilityButton
                         key={layer}
-                        visible={visibility[layer]}
+                        visible={layers.includes(layer)}
                         onChange={() => toggleVisibility(layer)}
                         label={layer}
                     />
@@ -113,14 +96,14 @@ function BasemapLayers() {
                 <ImageButton
                     image={BasemapDefaultImage}
                     label='Default'
-                    selected={!satelliteMode}
-                    onClick={() => setSatelliteMode(false)}
+                    selected={basemapType === 'default'}
+                    onClick={() => dispatch(setBasemapType('default'))}
                 />
                 <ImageButton
                     image={BasemapSatelliteImage}
                     label='Satellite'
-                    selected={satelliteMode}
-                    onClick={() => setSatelliteMode(true)}
+                    selected={basemapType === 'satellite'}
+                    onClick={() => dispatch(setBasemapType('satellite'))}
                 />
             </Flex>
         </Box>
