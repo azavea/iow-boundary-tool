@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 
 import L from 'leaflet';
 import 'leaflet-draw';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePolygon } from '../../store/mapSlice';
 
 const POLYGON_LAYER_OPTIONS = {
     color: 'black',
@@ -24,15 +26,10 @@ customize(L.Edit.PolyVerticesEdit.prototype);
 
 const markerElements = document.getElementsByClassName('edit-poly-marker');
 
-function initializeStyleMarkers() {
-    return styleMarkers(markerElements);
-}
-
-function styleMarkers(markers) {
-    for (const element of markers) {
+function styleMarkers() {
+    for (const element of markerElements) {
         if (elementIsMidpointMarker(element)) {
             styleMidpointElement(element);
-            addMidpointConversionTrigger(element);
         }
     }
 }
@@ -45,33 +42,23 @@ function styleMidpointElement(element) {
     element.className += ' edit-poly-marker-midpoint';
 }
 
-function removeMidpointStyle(element) {
-    element.className = element.className.replace(
-        'edit-poly-marker-midpoint',
-        ''
-    );
-}
-
-function addMidpointConversionTrigger(element) {
-    element.addEventListener('click', () => {
-        removeMidpointStyle(element);
-        styleMarkers(getNewMidpoints());
-    });
-}
-
-function getNewMidpoints() {
-    // Dragging a midpoint creates two more midpoints.
-    // getElementsByClassName should sort items by their
-    // order in the DOM, so the last two are the new ones.
-    return [
-        markerElements[markerElements.length - 2],
-        markerElements[markerElements.length - 1],
-    ];
-}
-
-// TODO: Convert this to use state instead of receiving it as a prop
-export default function useEditingPolygon({ polygon, editMode }) {
+export default function useEditingPolygon() {
+    const dispatch = useDispatch();
     const map = useMap();
+    const { polygon, editMode } = useSelector(state => state.map);
+
+    const updatePolygonFromDrawEvent = useCallback(
+        event => {
+            dispatch(
+                updatePolygon({
+                    points: event.poly
+                        .getLatLngs()[0]
+                        .map(point => [point.lat, point.lng]),
+                })
+            );
+        },
+        [dispatch]
+    );
 
     useEffect(() => {
         if (polygon && polygon.visible) {
@@ -85,14 +72,17 @@ export default function useEditingPolygon({ polygon, editMode }) {
             }
 
             polygonLayer.addTo(map);
+            styleMarkers();
 
-            initializeStyleMarkers();
+            map.on(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);
 
             return () => {
+                map.off(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);
+
                 if (map.hasLayer(polygonLayer)) {
                     map.removeLayer(polygonLayer);
                 }
             };
         }
-    }, [polygon, editMode, map]);
+    }, [polygon, editMode, map, updatePolygonFromDrawEvent]);
 }

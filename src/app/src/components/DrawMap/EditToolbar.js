@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Box,
     Button,
@@ -20,67 +20,23 @@ import { CursorClickIcon } from '@heroicons/react/solid';
 import { useMap } from 'react-leaflet';
 
 import AddPolygonIcon from '../../img/AddPolygonIcon.js';
-import { INITIAL_POLYGON_SCALE_FACTOR } from '../../constants';
-import useEditingPolygon from './useEditingPolygon';
 import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
+import {
+    addPolygon,
+    toggleEditMode,
+    togglePolygonVisibility,
+} from '../../store/mapSlice.js';
+import { generateDefaultRectangle } from '../../utils.js';
 
 export default function EditToolbar() {
-    const [polygon, setPolygon] = useState();
-    const [editMode, setEditMode] = useState(false);
-    useEditingPolygon({ polygon, editMode });
-
+    const dispatch = useDispatch();
     const map = useMap();
+    const { polygon, editMode } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
     const editDialogController = useDialogController();
-
-    const getDefaultPolygon = () => {
-        const bounds = map.getBounds();
-        const center = bounds.getCenter();
-        const west = scaleRange(center.lng, bounds.getWest());
-        const east = scaleRange(center.lng, bounds.getEast());
-        const north = scaleRange(center.lat, bounds.getNorth());
-        const south = scaleRange(center.lat, bounds.getSouth());
-
-        return [
-            [north, west],
-            [north, east],
-            [south, east],
-            [south, west],
-        ];
-    };
-
-    const startPolygon = () => {
-        setEditMode(true);
-        setPolygon({
-            points: getDefaultPolygon(),
-            visible: true,
-            label: 'New Polygon',
-        });
-    };
-
-    const editPolygon = newLabel => {
-        setPolygon(polygon => ({
-            ...polygon,
-            label: newLabel,
-        }));
-    };
-
-    const deletePolygon = () => {
-        setPolygon(null);
-    };
-
-    const toggleVisibility = () => {
-        setPolygon(polygon =>
-            polygon ? { ...polygon, visible: !polygon.visible } : null
-        );
-    };
-
-    const toggleEditMode = () => {
-        setEditMode(editMode => !editMode);
-    };
 
     return (
         <>
@@ -107,7 +63,16 @@ export default function EditToolbar() {
                         </Button>
                     ) : (
                         <Button
-                            onClick={startPolygon}
+                            onClick={() =>
+                                dispatch(
+                                    addPolygon({
+                                        points: generateDefaultRectangle({
+                                            bounds: map.getBounds(),
+                                            center: map.getCenter(),
+                                        }),
+                                    })
+                                )
+                            }
                             rightIcon={<AddPolygonIcon />}
                         >
                             Draw Polygon
@@ -127,13 +92,13 @@ export default function EditToolbar() {
                                     ? EyeIcon
                                     : EyeOffIcon
                             }
-                            onClick={toggleVisibility}
+                            onClick={() => dispatch(togglePolygonVisibility())}
                             disabled={!polygon}
                             tooltip='Show/Hide'
                         />
                         <EditToolbarButton
                             icon={CursorClickIcon}
-                            onClick={toggleEditMode}
+                            onClick={() => dispatch(toggleEditMode())}
                             disabled={!polygon}
                             tooltip='Edit Points'
                             active={editMode}
@@ -149,21 +114,15 @@ export default function EditToolbar() {
             </Box>
             <DeletePolygonConfirmModal
                 isOpen={confirmDeleteDialogController.isOpen}
-                onConfirm={deletePolygon}
                 onClose={confirmDeleteDialogController.close}
             />
             <EditPolygonModal
                 isOpen={editDialogController.isOpen}
-                onSubmit={editPolygon}
                 onClose={editDialogController.close}
                 defaultLabel={polygon?.label}
             />
         </>
     );
-}
-
-function scaleRange(center, limit) {
-    return center + INITIAL_POLYGON_SCALE_FACTOR * (limit - center);
 }
 
 function EditToolbarButton({ icon, onClick, disabled, tooltip, active }) {
