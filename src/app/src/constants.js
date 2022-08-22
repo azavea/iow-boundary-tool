@@ -16,3 +16,9 @@ export const DEFAULT_BASEMAP_URL =
     'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}.png';
 export const SATELLITE_BASEMAP_URL =
     'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png';
+
+// Bounding box data from https://observablehq.com/@rdmurphy/u-s-state-bounding-boxes
+export const NC_WEST = -84.321782;
+export const NC_EAST = -75.459815;
+export const NC_NORTH = 36.588133;
+export const NC_SOUTH = 33.851169;
