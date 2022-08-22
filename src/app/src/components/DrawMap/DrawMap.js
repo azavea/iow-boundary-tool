@@ -8,11 +8,13 @@ import Map from '../Map';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 import MapFeatures from './MapFeatures';
+import MunicipalBoundariesLayer from './MunicipalBoundariesLayer';
 
 export default function DrawMap() {
     return (
         <Map>
             <Basemap />
+            <MunicipalBoundariesLayer />
             <MapFeatures />
             <EditToolbar />
             <SaveAndBackButton />
