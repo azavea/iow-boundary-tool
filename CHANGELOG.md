@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Sidebar UI [#26](https://github.com/azavea/iow-boundary-tool/pull/26)
 - Add Draw Map UI and base polygon functionality [#30](https://github.com/azavea/iow-boundary-tool/pull/30)
 - Add Redux state [#37](https://github.com/azavea/iow-boundary-tool/pull/37)
+- Add transition to draw page [#43](https://github.com/azavea/iow-boundary-tool/pull/43)
 
 ### Changed
 
