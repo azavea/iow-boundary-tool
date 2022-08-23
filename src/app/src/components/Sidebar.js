@@ -147,6 +147,8 @@ function ImageButton({ image, label, selected, onClick }) {
                 border='2px solid'
                 borderColor={selected ? 'gray.400' : 'transparent'}
                 borderRadius='10px'
+                width='150px'
+                height='80px'
             />
             <Text color='white'>{label}</Text>
         </Box>
