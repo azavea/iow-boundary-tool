@@ -10,12 +10,15 @@ import {
     Progress,
     Text,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 
 import { convertIndexedObjectToArray } from '../../utils';
 import ModalSection from './ModalSection';
 
-export default function FileUpload({ PreviousButton, ContinueButton }) {
+export default function FileUpload({ PreviousButton }) {
+    const navigate = useNavigate();
+
     const [files, setFiles] = useState([]);
 
     const addFiles = newFiles => setFiles(files => [...files, ...newFiles]);
@@ -25,7 +28,11 @@ export default function FileUpload({ PreviousButton, ContinueButton }) {
             preHeading='Optional'
             heading='Would you like to add your current map?'
             prevButton={PreviousButton}
-            nextButton={ContinueButton}
+            nextButton={
+                <Button variant='cta' onClick={() => navigate('/draw')}>
+                    Continue
+                </Button>
+            }
         >
             <Text>
                 If you would like to look at a reference or start from an
