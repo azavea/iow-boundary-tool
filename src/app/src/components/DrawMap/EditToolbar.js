@@ -17,23 +17,25 @@ import {
     PencilIcon,
 } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
-import { useMap } from 'react-leaflet';
 
 import AddPolygonIcon from '../../img/AddPolygonIcon.js';
 import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
 import {
-    addPolygon,
+    cancelAddPolygon,
+    startAddPolygon,
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
-import { generateDefaultRectangle } from '../../utils.js';
+
+const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
-    const map = useMap();
-    const { polygon, editMode } = useSelector(state => state.map);
+    const { polygon, editMode, addPolygonMode } = useSelector(
+        state => state.map
+    );
 
     const confirmDeleteDialogController = useDialogController();
     const editDialogController = useDialogController();
@@ -51,29 +53,30 @@ export default function EditToolbar() {
                 borderColor='gray.50'
                 borderRadius='6px'
                 boxShadow='lg'
+                cursor='default'
             >
                 <Flex>
-                    {polygon ? (
+                    {addPolygonMode ? (
+                        <Button
+                            onClick={() => dispatch(cancelAddPolygon())}
+                            w={POLYGON_BUTTON_WIDTH}
+                        >
+                            Cancel
+                        </Button>
+                    ) : polygon ? (
                         <Button
                             onClick={editDialogController.open}
                             rightIcon={<Icon as={PencilIcon} />}
                             variant='toolbar'
+                            minW={POLYGON_BUTTON_WIDTH}
                         >
                             {polygon.label}
                         </Button>
                     ) : (
                         <Button
-                            onClick={() =>
-                                dispatch(
-                                    addPolygon({
-                                        points: generateDefaultRectangle({
-                                            bounds: map.getBounds(),
-                                            center: map.getCenter(),
-                                        }),
-                                    })
-                                )
-                            }
+                            onClick={() => dispatch(startAddPolygon())}
                             rightIcon={<AddPolygonIcon />}
+                            w={POLYGON_BUTTON_WIDTH}
                         >
                             Draw Polygon
                         </Button>

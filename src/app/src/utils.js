@@ -17,20 +17,29 @@ export function convertIndexedObjectToArray(obj) {
     return array;
 }
 
-export function generateDefaultRectangle({ bounds, center }) {
-    const west = scaleRange(center.lng, bounds.getWest());
-    const east = scaleRange(center.lng, bounds.getEast());
-    const north = scaleRange(center.lat, bounds.getNorth());
-    const south = scaleRange(center.lat, bounds.getSouth());
+export function generateInitialPolygonPoints({ mapBounds, center }) {
+    const polygonBounds = center.toBounds(
+        getSmallestBoundsDimension(mapBounds) * INITIAL_POLYGON_SCALE_FACTOR
+    );
+
+    const northWest = polygonBounds.getNorthWest();
+    const northEast = polygonBounds.getNorthEast();
+    const southEast = polygonBounds.getSouthEast();
+    const southWest = polygonBounds.getSouthWest();
 
     return [
-        [north, west],
-        [north, east],
-        [south, east],
-        [south, west],
+        [northWest.lat, northWest.lng],
+        [northEast.lat, northEast.lng],
+        [southEast.lat, southEast.lng],
+        [southWest.lat, southWest.lng],
     ];
 }
 
-function scaleRange(center, limit) {
-    return center + INITIAL_POLYGON_SCALE_FACTOR * (limit - center);
+function getSmallestBoundsDimension(bounds) {
+    const northWidth = bounds.getNorthWest().distanceTo(bounds.getNorthEast());
+    const southWidth = bounds.getSouthWest().distanceTo(bounds.getSouthEast());
+    const westHeight = bounds.getNorthWest().distanceTo(bounds.getSouthWest());
+    const eastHeight = bounds.getNorthEast().distanceTo(bounds.getSouthEast());
+
+    return Math.min(northWidth, southWidth, westHeight, eastHeight);
 }

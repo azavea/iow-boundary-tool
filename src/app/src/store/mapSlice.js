@@ -57,6 +57,9 @@ export const mapSlice = createSlice({
         startAddPolygon: state => {
             state.addPolygonMode = true;
         },
+        cancelAddPolygon: state => {
+            state.addPolygonMode = false;
+        },
         toggleEditMode: state => {
             state.editMode = !state.editMode;
         },
@@ -81,6 +84,8 @@ export const {
     deletePolygon,
     togglePolygonVisibility,
     renamePolygon,
+    startAddPolygon,
+    cancelAddPolygon,
     toggleEditMode,
     toggleLayer,
     setBasemapType,
