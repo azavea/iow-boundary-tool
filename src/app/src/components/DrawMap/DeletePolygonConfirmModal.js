@@ -9,12 +9,11 @@ import {
     Flex,
     Spacer,
 } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { deletePolygon } from '../../store/mapSlice';
 
-export default function DeletePolygonConfirmModal({
-    isOpen,
-    onConfirm,
-    onClose,
-}) {
+export default function DeletePolygonConfirmModal({ isOpen, onClose }) {
+    const dispatch = useDispatch();
     const cancelRef = useRef();
 
     return (
@@ -43,7 +42,7 @@ export default function DeletePolygonConfirmModal({
                             <Button
                                 variant='cta'
                                 onClick={() => {
-                                    onConfirm();
+                                    dispatch(deletePolygon());
                                     onClose();
                                 }}
                             >

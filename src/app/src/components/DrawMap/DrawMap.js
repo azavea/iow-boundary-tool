@@ -5,17 +5,17 @@ import { ArrowRightIcon } from '@heroicons/react/outline';
 import Map from '../Map';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
+import MapFeatures from './MapFeatures';
 
 export default function DrawMap() {
     return (
-        <>
-            <Map>
-                <EditToolbar />
-                <SaveAndBackButton />
-                <ReviewAndSaveButton />
-                <MapControlButtons />
-            </Map>
-        </>
+        <Map>
+            <MapFeatures />
+            <EditToolbar />
+            <SaveAndBackButton />
+            <ReviewAndSaveButton />
+            <MapControlButtons />
+        </Map>
     );
 }
 

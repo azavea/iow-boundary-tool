@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +13,9 @@ export function useDialogController() {
     };
 }
 
-export function usePreventMapDoubleClick(ref) {
+export function usePreventMapDoubleClick() {
+    const ref = useRef();
+
     useEffect(() => {
         if (ref.current) {
             const thisWasClicked = event =>
@@ -38,4 +40,6 @@ export function usePreventMapDoubleClick(ref) {
                 );
         }
     }, [ref]);
+
+    return ref;
 }

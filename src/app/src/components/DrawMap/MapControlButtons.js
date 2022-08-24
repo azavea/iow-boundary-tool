@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { Box, Icon, IconButton, VStack } from '@chakra-ui/react';
 
 import { SearchIcon, PlusIcon, MinusIcon } from '@heroicons/react/outline';
@@ -33,9 +32,7 @@ export default function MapControlButtons() {
 }
 
 function MapControlButton({ icon, onClick }) {
-    const ref = useRef();
-
-    usePreventMapDoubleClick(ref);
+    const ref = usePreventMapDoubleClick();
 
     return (
         <IconButton
