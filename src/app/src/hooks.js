@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMap } from 'react-leaflet';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -42,4 +43,12 @@ export function usePreventMapDoubleClick() {
     }, [ref]);
 
     return ref;
+}
+
+export function useSetMaxZoomLevel(maxZoomLevel) {
+    const map = useMap();
+
+    useEffect(() => {
+        map.setMaxZoom(maxZoomLevel);
+    }, [maxZoomLevel, map]);
 }

@@ -1,6 +1,8 @@
 import { Button, Icon } from '@chakra-ui/react';
-
+import { useSelector } from 'react-redux';
 import { ArrowRightIcon } from '@heroicons/react/outline';
+
+import { DefaultBasemap, SatelliteBasemap } from '../Basemaps';
 
 import Map from '../Map';
 import EditToolbar from './EditToolbar';
@@ -10,6 +12,7 @@ import MapFeatures from './MapFeatures';
 export default function DrawMap() {
     return (
         <Map>
+            <Basemap />
             <MapFeatures />
             <EditToolbar />
             <SaveAndBackButton />
@@ -17,6 +20,19 @@ export default function DrawMap() {
             <MapControlButtons />
         </Map>
     );
+}
+
+function Basemap() {
+    const basemapType = useSelector(state => state.map.basemapType);
+
+    switch (basemapType) {
+        case 'default':
+            return <DefaultBasemap />;
+        case 'satellite':
+            return <SatelliteBasemap />;
+        default:
+            throw Error(`Invalid basemap type: ${basemapType}`);
+    }
 }
 
 function SaveAndBackButton() {
