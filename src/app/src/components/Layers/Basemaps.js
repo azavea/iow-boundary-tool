@@ -1,11 +1,11 @@
 import L from 'leaflet';
 
-import { useSetMaxZoomLevel, useMapLayer } from '../hooks';
+import { useSetMaxZoomLevel, useMapLayer } from '../../hooks';
 import {
     DEFAULT_BASEMAP_URL,
     ESRI_ATTRIBUTION,
     SATELLITE_BASEMAP_URL,
-} from '../constants';
+} from '../../constants';
 
 export function DefaultBasemap() {
     return (
