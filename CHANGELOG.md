@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Redux state [#37](https://github.com/azavea/iow-boundary-tool/pull/37)
 - Add transition to draw page [#43](https://github.com/azavea/iow-boundary-tool/pull/43)
 - Add user polygon start location feature [#38](https://github.com/azavea/iow-boundary-tool/pull/38)
+- Add satellite basemap [#39](https://github.com/azavea/iow-boundary-tool/pull/39)
 
 ### Changed
 
