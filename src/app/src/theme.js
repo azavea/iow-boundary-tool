@@ -79,6 +79,18 @@ const Heading = {
     },
 };
 
+const Input = {
+    baseStyle: {
+        fontFamily: `'Inter', san-serif`,
+    },
+};
+
+const ListItem = {
+    baseStyle: {
+        fontFamily: `'Inter', san-serif`,
+    },
+};
+
 const Tooltip = {
     baseStyle: {
         fontFamily: `'Inter', sans-serif`,
@@ -91,6 +103,8 @@ const theme = extendTheme({
     components: {
         Button,
         Heading,
+        Input,
+        ListItem,
         Tooltip,
     },
     fonts: {

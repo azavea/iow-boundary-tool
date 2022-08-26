@@ -1,6 +1,12 @@
 import { Icon } from '@chakra-ui/react';
 
-import { INITIAL_POLYGON_SCALE_FACTOR } from './constants';
+import {
+    INITIAL_POLYGON_SCALE_FACTOR,
+    NC_EAST,
+    NC_NORTH,
+    NC_SOUTH,
+    NC_WEST,
+} from './constants';
 
 export function heroToChakraIcon(icon) {
     return function ConvertedIcon() {
@@ -43,3 +49,12 @@ function getSmallestBoundsDimension(bounds) {
 
     return Math.min(northWidth, southWidth, westHeight, eastHeight);
 }
+
+export const getGeocodeSuggestUrl = text =>
+    'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest' +
+    `?text=${text}&searchExtent=${NC_WEST},${NC_SOUTH},${NC_EAST},${NC_NORTH}&countryCode=USA&f=json`;
+
+export const getGeocodeUrl = ({ text, magicKey }) =>
+    'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates' +
+    `?SingleLine=${text}${magicKey ? `&magicKey=${magicKey}` : ''}` +
+    '&countryCode=usa&f=json';

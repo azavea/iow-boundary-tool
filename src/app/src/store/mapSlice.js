@@ -7,6 +7,7 @@ const initialState = {
     editMode: false,
     layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
+    geocodeResult: null,
 };
 
 const DEFAULT_POLYGON = {
@@ -75,6 +76,12 @@ export const mapSlice = createSlice({
         setBasemapType: (state, { payload: basemapType }) => {
             state.basemapType = basemapType;
         },
+        setGeocodeResult: (state, { payload: result }) => {
+            state.geocodeResult = result;
+        },
+        clearGeocodeResult: state => {
+            state.geocodeResult = null;
+        },
     },
 });
 
@@ -89,6 +96,8 @@ export const {
     toggleEditMode,
     toggleLayer,
     setBasemapType,
+    setGeocodeResult,
+    clearGeocodeResult,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;
