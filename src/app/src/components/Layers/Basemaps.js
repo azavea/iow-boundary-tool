@@ -1,13 +1,11 @@
-import { useEffect } from 'react';
-import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-import { useSetMaxZoomLevel } from '../hooks';
+import { useSetMaxZoomLevel, useMapLayer } from '../../hooks';
 import {
     DEFAULT_BASEMAP_URL,
     ESRI_ATTRIBUTION,
     SATELLITE_BASEMAP_URL,
-} from '../constants';
+} from '../../constants';
 
 export function DefaultBasemap() {
     return (
@@ -31,16 +29,7 @@ export function SatelliteBasemap() {
 
 function Basemap({ url, attribution, maxZoomLevel }) {
     useSetMaxZoomLevel(maxZoomLevel);
-    const map = useMap();
+    useMapLayer(L.tileLayer(url, { attribution }));
 
-    useEffect(() => {
-        const layer = L.tileLayer(url, { attribution });
-        map.addLayer(layer);
-
-        return () => {
-            if (map.hasLayer(layer)) {
-                map.removeLayer(layer);
-            }
-        };
-    }, [map, url, attribution]);
+    return null;
 }

@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BASE_MAP_LAYERS } from '../constants';
+import { DATA_LAYERS } from '../constants';
 
 const initialState = {
     polygon: null,
     addPolygonMode: false,
     editMode: false,
-    layers: BASE_MAP_LAYERS,
+    layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
 };
 

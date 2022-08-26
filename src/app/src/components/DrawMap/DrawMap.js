@@ -2,17 +2,19 @@ import { Button, Icon } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
-import { DefaultBasemap, SatelliteBasemap } from '../Basemaps';
-
 import Map from '../Map';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 import MapFeatures from './MapFeatures';
 
+import { DefaultBasemap, SatelliteBasemap } from '../Layers/Basemaps';
+import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
+
 export default function DrawMap() {
     return (
         <Map>
             <Basemap />
+            <MunicipalBoundariesLayer />
             <MapFeatures />
             <EditToolbar />
             <SaveAndBackButton />

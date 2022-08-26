@@ -52,3 +52,17 @@ export function useSetMaxZoomLevel(maxZoomLevel) {
         map.setMaxZoom(maxZoomLevel);
     }, [maxZoomLevel, map]);
 }
+
+export function useMapLayer(layer) {
+    const map = useMap();
+
+    useEffect(() => {
+        map.addLayer(layer);
+
+        return () => {
+            if (map.hasLayer(layer)) {
+                map.removeLayer(layer);
+            }
+        };
+    }, [map, layer]);
+}

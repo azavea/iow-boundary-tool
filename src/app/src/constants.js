@@ -1,13 +1,14 @@
 export const MAP_CENTER = [35.7596, -79.0193]; // North Carolina
 export const MAP_INITIAL_ZOOM = 13;
 export const INITIAL_POLYGON_SCALE_FACTOR = 0.5;
-export const BASE_MAP_LAYERS = [
-    'Streets',
-    'Parcel data',
-    'Municipal boundaries',
-    'Land & water',
-    'Points of interest',
-];
+
+export const DATA_LAYERS = {
+    STREETS: 'Streets',
+    PARCELS: 'Parcel data',
+    MUNICIPAL_BOUNDARIES: 'Municipal boundaries',
+    LAND_AND_WATER: 'Land & water',
+    POINTS_OF_INTEREST: 'Points of interest',
+};
 
 export const ESRI_ATTRIBUTION =
     'Powered by <a href="https://www.esri.com/">ESRI</a>';

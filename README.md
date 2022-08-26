@@ -29,6 +29,12 @@ For Docker-based development, use:
 ./scripts/setup --docker
 ```
 
+Municipal data can be downloaded with a script:
+
+```console
+./scripts/fetch-data
+```
+
 #### Development
 
 Rebuild Docker images and run application.

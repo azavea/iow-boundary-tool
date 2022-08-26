@@ -21,7 +21,7 @@ import BasemapDefaultImage from '../img/basemap-default.png';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBasemapType, toggleLayer } from '../store/mapSlice';
-import { BASE_MAP_LAYERS } from '../constants';
+import { DATA_LAYERS } from '../constants';
 
 const marginLeft = 4;
 
@@ -83,12 +83,12 @@ function BasemapLayers() {
                 Basemap Layers
             </Heading>
             <Flex direction='column' align='flex-start' mt={4}>
-                {BASE_MAP_LAYERS.map(layer => (
+                {Object.entries(DATA_LAYERS).map(([layer, label]) => (
                     <VisibilityButton
                         key={layer}
                         visible={layers.includes(layer)}
                         onChange={() => toggleVisibility(layer)}
-                        label={layer}
+                        label={label}
                     />
                 ))}
             </Flex>

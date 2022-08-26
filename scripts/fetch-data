@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
+    set -x
+fi
+
+MUNICIPAL_BOUNDARIES_DATA_LOCATION="https://linc.osbm.nc.gov/explore/dataset/municipalities-2020/download/?format=geojson&lang=en"
+MUNICIPAL_BOUNDARIES_FILENAME=muni.geo.json
+DATA_DIR=src/app/public/data
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Execute Yarn CLI commands.
+"
+}
+
+function fetchData() {
+    if [ ! -d "$DATA_DIR" ]; then
+        mkdir -p "$DATA_DIR"
+    fi
+
+    echo "Fetching municipal data from: $MUNICIPAL_BOUNDARIES_DATA_LOCATION"
+    curl "${MUNICIPAL_BOUNDARIES_DATA_LOCATION}" -o "$DATA_DIR/$MUNICIPAL_BOUNDARIES_FILENAME"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    if [ "${1:-}" = "--help" ]; then
+        usage
+    else
+        if [[ -f "$DATA_DIR/$MUNICIPAL_BOUNDARIES_FILENAME" ]]; then
+            if [ "${1:-}" = "--force" ]; then
+                echo "Warning: forcing data refetching!"
+                rm "$DATA_DIR/$MUNICIPAL_BOUNDARIES_FILENAME"
+                fetchData
+            else
+                echo "Skipping data fetching: file exists."
+            fi
+        else
+            fetchData
+        fi
+    fi
+fi
