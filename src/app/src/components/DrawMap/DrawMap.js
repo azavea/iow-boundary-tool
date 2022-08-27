@@ -7,7 +7,11 @@ import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 import MapFeatures from './MapFeatures';
 
-import { DefaultBasemap, SatelliteBasemap } from '../Layers/Basemaps';
+import {
+    DefaultBasemap,
+    SatelliteBasemap,
+    TopographicBasemap,
+} from '../Layers/Basemaps';
 import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
 import ParcelLayer from '../Layers/ParcelLayer';
 import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
@@ -29,11 +33,15 @@ export default function DrawMap() {
 }
 
 function Basemap() {
-    const basemapType = useSelector(state => state.map.basemapType);
+    const { basemapType, layers } = useSelector(state => state.map);
 
     switch (basemapType) {
         case 'default':
-            return <DefaultBasemap />;
+            return layers.includes('LAND_AND_WATER') ? (
+                <TopographicBasemap />
+            ) : (
+                <DefaultBasemap />
+            );
         case 'satellite':
             return <SatelliteBasemap />;
         default:
