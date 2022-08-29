@@ -71,7 +71,7 @@ function ReferenceLayers() {
 
 function BasemapLayers() {
     const dispatch = useDispatch();
-    const { layers, basemapType } = useSelector(state => state.map);
+    const { layers, basemapType, mapZoom } = useSelector(state => state.map);
 
     const toggleVisibility = layer => {
         dispatch(toggleLayer(layer));
@@ -83,14 +83,17 @@ function BasemapLayers() {
                 Basemap Layers
             </Heading>
             <Flex direction='column' align='flex-start' mt={4}>
-                {Object.entries(DATA_LAYERS).map(([layer, label]) => (
-                    <VisibilityButton
-                        key={layer}
-                        visible={layers.includes(layer)}
-                        onChange={() => toggleVisibility(layer)}
-                        label={label}
-                    />
-                ))}
+                {Object.entries(DATA_LAYERS).map(
+                    ([layer, { label, minZoom }]) => (
+                        <VisibilityButton
+                            key={layer}
+                            visible={layers.includes(layer)}
+                            onChange={() => toggleVisibility(layer)}
+                            label={label}
+                            disabled={!!minZoom && mapZoom < minZoom}
+                        />
+                    )
+                )}
             </Flex>
             <Flex mt={2}>
                 <ImageButton
@@ -110,7 +113,7 @@ function BasemapLayers() {
     );
 }
 
-function VisibilityButton({ label, visible, onChange }) {
+function VisibilityButton({ label, visible, onChange, disabled = false }) {
     return (
         <Button
             mb={1}
@@ -133,6 +136,7 @@ function VisibilityButton({ label, visible, onChange }) {
             color={visible ? 'gray.300' : 'gray.500'}
             textDecoration='none'
             fontWeight={600}
+            disabled={disabled}
         >
             {label}
         </Button>

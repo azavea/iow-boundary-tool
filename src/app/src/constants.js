@@ -3,11 +3,11 @@ export const MAP_INITIAL_ZOOM = 13;
 export const INITIAL_POLYGON_SCALE_FACTOR = 0.5;
 
 export const DATA_LAYERS = {
-    STREETS: 'Streets',
-    PARCELS: 'Parcel data',
-    MUNICIPAL_BOUNDARIES: 'Municipal boundaries',
-    LAND_AND_WATER: 'Land & water',
-    POINTS_OF_INTEREST: 'Points of interest',
+    STREETS: { label: 'Streets' },
+    PARCELS: { label: 'Parcel data', minZoom: 16 },
+    MUNICIPAL_BOUNDARIES: { label: 'Municipal boundaries' },
+    LAND_AND_WATER: { label: 'Land & water' },
+    POINTS_OF_INTEREST: { label: 'Points of interest' },
 };
 
 export const ESRI_ATTRIBUTION =
