@@ -22,3 +22,6 @@ export const NC_WEST = -84.321782;
 export const NC_EAST = -75.459815;
 export const NC_NORTH = 36.588133;
 export const NC_SOUTH = 33.851169;
+
+export const PARCELS_LAYER_URL =
+    'https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/FeatureServer/1';

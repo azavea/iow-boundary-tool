@@ -9,12 +9,14 @@ import MapFeatures from './MapFeatures';
 
 import { DefaultBasemap, SatelliteBasemap } from '../Layers/Basemaps';
 import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
+import ParcelLayer from '../Layers/ParcelLayer';
 
 export default function DrawMap() {
     return (
         <Map>
             <Basemap />
             <MunicipalBoundariesLayer />
+            <ParcelLayer />
             <MapFeatures />
             <EditToolbar />
             <SaveAndBackButton />
