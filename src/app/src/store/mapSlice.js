@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DATA_LAYERS } from '../constants';
+import { DATA_LAYERS, MAP_INITIAL_ZOOM } from '../constants';
 
 const initialState = {
     polygon: null,
@@ -8,6 +8,7 @@ const initialState = {
     layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
     geocodeResult: null,
+    mapZoom: MAP_INITIAL_ZOOM,
 };
 
 const DEFAULT_POLYGON = {
@@ -82,6 +83,9 @@ export const mapSlice = createSlice({
         clearGeocodeResult: state => {
             state.geocodeResult = null;
         },
+        setMapZoom: (state, { payload: mapZoom }) => {
+            state.mapZoom = mapZoom;
+        },
     },
 });
 
@@ -98,6 +102,7 @@ export const {
     setBasemapType,
     setGeocodeResult,
     clearGeocodeResult,
+    setMapZoom,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;
