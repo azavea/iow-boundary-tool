@@ -6,6 +6,12 @@ import { FeatureLayer } from 'esri-leaflet';
 import { useMapLayer } from '../../hooks';
 import { PARCELS_LAYER_URL } from '../../constants';
 
+const PARCELS_LAYER_STYLE = {
+    color: 'var(--chakra-colors-yellow-600)',
+    weight: 1,
+    fill: false,
+};
+
 export default function ParcelLayer() {
     const layers = useSelector(state => state.map.layers);
     const showLayer = useMemo(() => layers.includes('PARCELS'), [layers]);
@@ -17,7 +23,10 @@ function RenderEsriLayer() {
     useMapLayer(
         new FeatureLayer({
             url: PARCELS_LAYER_URL,
-            minZoom: 14,
+            minZoom: 16, // Only enable on high zooms for performance
+            style: PARCELS_LAYER_STYLE,
+            simplifyFactor: 0.8, // Simplify parcel shapes for performance
+            fields: ['OBJECTID'], // Only fetch smallest field for performance
         })
     );
 }
