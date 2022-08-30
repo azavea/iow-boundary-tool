@@ -1,9 +1,6 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-
 import { DynamicMapLayer } from 'esri-leaflet';
 
-import { useMapLayer } from '../../hooks';
+import { useLayerVisibility, useMapLayer } from '../../hooks';
 import { PARCELS_LAYER_URL, DATA_LAYERS } from '../../constants';
 
 const PARCELS_LAYER_STYLE = [
@@ -50,8 +47,7 @@ const PARCELS_LAYER_STYLE = [
 ];
 
 export default function ParcelLayer() {
-    const layers = useSelector(state => state.map.layers);
-    const showLayer = useMemo(() => layers.includes('PARCELS'), [layers]);
+    const showLayer = useLayerVisibility('PARCELS');
 
     return showLayer ? <RenderEsriLayer /> : null;
 }
