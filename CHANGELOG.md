@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add satellite basemap [#39](https://github.com/azavea/iow-boundary-tool/pull/39)
 - Add municipal boundaries data layer [#40](https://github.com/azavea/iow-boundary-tool/pull/40)
 - Add geocoder [#44](https://github.com/azavea/iow-boundary-tool/pull/44)
+- Add Parcel Layer [#50](https://github.com/azavea/iow-boundary-tool/pull/50)
 
 ### Changed
 

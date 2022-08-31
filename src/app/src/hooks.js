@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
+import { useSelector } from 'react-redux';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -65,4 +66,8 @@ export function useMapLayer(layer) {
             }
         };
     }, [map, layer]);
+}
+
+export function useLayerVisibility(layer) {
+    return useSelector(state => state.map.layers).includes(layer);
 }

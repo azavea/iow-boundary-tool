@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import L from 'leaflet';
 
-import { useMapLayer } from '../../hooks';
+import { useLayerVisibility, useMapLayer } from '../../hooks';
 
 const MUNICIPAL_BOUNDARIES_LAYER_STYLE = {
     color: 'purple',
@@ -12,11 +11,7 @@ const MUNICIPAL_BOUNDARIES_LAYER_STYLE = {
 };
 
 export default function MunicipalBoundariesLayer() {
-    const layers = useSelector(state => state.map.layers);
-    const showLayer = useMemo(
-        () => layers.includes('MUNICIPAL_BOUNDARIES'),
-        [layers]
-    );
+    const showLayer = useLayerVisibility('MUNICIPAL_BOUNDARIES');
 
     const [layerData, setLayerData] = useState({
         type: 'FeatureCollection',

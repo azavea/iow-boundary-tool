@@ -3,11 +3,11 @@ export const MAP_INITIAL_ZOOM = 13;
 export const INITIAL_POLYGON_SCALE_FACTOR = 0.5;
 
 export const DATA_LAYERS = {
-    STREETS: 'Streets',
-    PARCELS: 'Parcel data',
-    MUNICIPAL_BOUNDARIES: 'Municipal boundaries',
-    LAND_AND_WATER: 'Land & water',
-    POINTS_OF_INTEREST: 'Points of interest',
+    STREETS: { label: 'Streets' },
+    PARCELS: { label: 'Parcel data', minZoom: 14 },
+    MUNICIPAL_BOUNDARIES: { label: 'Municipal boundaries' },
+    LAND_AND_WATER: { label: 'Land & water' },
+    POINTS_OF_INTEREST: { label: 'Points of interest' },
 };
 
 export const ESRI_ATTRIBUTION =
@@ -22,3 +22,6 @@ export const NC_WEST = -84.321782;
 export const NC_EAST = -75.459815;
 export const NC_NORTH = 36.588133;
 export const NC_SOUTH = 33.851169;
+
+export const PARCELS_LAYER_URL =
+    'https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/MapServer';
