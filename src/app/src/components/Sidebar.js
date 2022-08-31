@@ -17,8 +17,8 @@ import {
     EyeOffIcon,
 } from '@heroicons/react/outline';
 
-import BasemapDefaultImage from '../img/basemap-default.png';
-import BasemapLandWaterImage from '../img/basemap-landwater.png';
+import BasemapDefaultImage from '../img/basemap-default.jpg';
+import BasemapLandWaterImage from '../img/basemap-landwater.jpg';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import {
