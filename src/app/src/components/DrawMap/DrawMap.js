@@ -33,15 +33,13 @@ export default function DrawMap() {
 }
 
 function Basemap() {
-    const { basemapType, layers } = useSelector(state => state.map);
+    const basemapType = useSelector(state => state.map.basemapType);
 
     switch (basemapType) {
         case 'default':
-            return layers.includes('LAND_AND_WATER') ? (
-                <TopographicBasemap />
-            ) : (
-                <DefaultBasemap />
-            );
+            return <DefaultBasemap />;
+        case 'landwater':
+            return <TopographicBasemap />;
         case 'satellite':
             return <SatelliteBasemap />;
         default:
