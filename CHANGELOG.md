@@ -21,12 +21,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add geocoder [#44](https://github.com/azavea/iow-boundary-tool/pull/44)
 - Add Parcel Layer [#50](https://github.com/azavea/iow-boundary-tool/pull/50)
 - Add distorable reference image layer [#46](https://github.com/azavea/iow-boundary-tool/pull/46)
+- Add Land & water basemap [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 
 ### Changed
 
 - Upgrade app container to use Node version 18 [#19](https://github.com/azavea/iow-boundary-tool/pull/19)
 - Upgrade React to version 18 and add Chakra UI version 2 [#20](https://github.com/azavea/iow-boundary-tool/pull/20)
 - Incorporated changes in app template [#31](https://github.com/azavea/iow-boundary-tool/pull/31)
+- Update styles for Polygon and Municipal Boundary layers [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
+- Update tiles for all basemaps [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 
 ### Fixed
 
