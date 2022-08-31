@@ -14,7 +14,7 @@ export const ESRI_ATTRIBUTION =
     'Powered by <a href="https://www.esri.com/">ESRI</a>';
 export const DEFAULT_BASEMAP_URL =
     'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}.png';
-export const TOPOGRAPHIC_BASEMAP_URL =
+export const LANDWATER_BASEMAP_URL =
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png';
 export const SATELLITE_BASEMAP_URL =
     'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png';

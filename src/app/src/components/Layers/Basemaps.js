@@ -3,7 +3,7 @@ import L from 'leaflet';
 import { useSetMaxZoomLevel, useMapLayer } from '../../hooks';
 import {
     DEFAULT_BASEMAP_URL,
-    TOPOGRAPHIC_BASEMAP_URL,
+    LANDWATER_BASEMAP_URL,
     ESRI_ATTRIBUTION,
     SATELLITE_BASEMAP_URL,
 } from '../../constants';
@@ -18,10 +18,10 @@ export function DefaultBasemap() {
     );
 }
 
-export function TopographicBasemap() {
+export function LandWaterBasemap() {
     return (
         <Basemap
-            url={TOPOGRAPHIC_BASEMAP_URL}
+            url={LANDWATER_BASEMAP_URL}
             attribution={ESRI_ATTRIBUTION}
             maxZoomLevel={16}
         />

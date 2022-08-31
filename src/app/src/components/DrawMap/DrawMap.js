@@ -10,7 +10,7 @@ import MapFeatures from './MapFeatures';
 import {
     DefaultBasemap,
     SatelliteBasemap,
-    TopographicBasemap,
+    LandWaterBasemap,
 } from '../Layers/Basemaps';
 import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
 import ParcelLayer from '../Layers/ParcelLayer';
@@ -39,7 +39,7 @@ function Basemap() {
         case 'default':
             return <DefaultBasemap />;
         case 'landwater':
-            return <TopographicBasemap />;
+            return <LandWaterBasemap />;
         case 'satellite':
             return <SatelliteBasemap />;
         default:
