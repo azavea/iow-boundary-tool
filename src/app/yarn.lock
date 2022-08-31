@@ -6464,6 +6464,11 @@ execa@^5.0.0:
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
 
+exif-js@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/exif-js/-/exif-js-2.3.0.tgz#9d10819bf571f873813e7640241255ab9ce1a814"
+  integrity sha512-1Og9pAzG2FZRVlaavH8bB8BTeHcjMdJhKmeQITkX+uLRCD0xPtKAdZ2clZmQdJ56p9adXtJ8+jwrGp/4505lYg==
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -6891,6 +6896,11 @@ get-symbol-description@^1.0.0:
   dependencies:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
+
+glfx@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/glfx/-/glfx-0.0.4.tgz#1b776dc748c081994624b0af3b5638403de78f4d"
+  integrity sha512-CmcUjZP/DARqtOC+MoNqClu2wKGWFbEGqAuiGsTZaZTLDC8a/VW/nqtcLfpPimC8ihgv60tGHRV4O3SmFYneRw==
 
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
@@ -8356,10 +8366,25 @@ language-tags@^1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
+leaflet-distortableimage@^0.21.7:
+  version "0.21.7"
+  resolved "https://registry.yarnpkg.com/leaflet-distortableimage/-/leaflet-distortableimage-0.21.7.tgz#3b78227d51615bff17b0e5269e7b9563c067ca7e"
+  integrity sha512-hy6MGbbJTic/iDjTvmn/hAVrZ9wkJ6Vs1yXOxk066YxC4675kswkTfmMKGllO8wYxEadoSCD+Xqgqwq0Xyce7A==
+  dependencies:
+    exif-js "^2.3.0"
+    glfx "0.0.4"
+    leaflet-toolbar "0.4.0-alpha.2"
+    webgl-distort "0.0.2"
+
 leaflet-draw@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/leaflet-draw/-/leaflet-draw-1.0.4.tgz#45be92f378ed253e7202fdeda1fcc71885198d46"
   integrity sha512-rsQ6saQO5ST5Aj6XRFylr5zvarWgzWnrg46zQ1MEOEIHsppdC/8hnN8qMoFvACsPvTioAuysya/TVtog15tyAQ==
+
+leaflet-toolbar@0.4.0-alpha.2:
+  version "0.4.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/leaflet-toolbar/-/leaflet-toolbar-0.4.0-alpha.2.tgz#ab58092d65b3dd158fb874c3f7e36b7ebdb994f8"
+  integrity sha512-g1KeU3DYGUOwXTS0vKIgJ8KgY0h/2B0qENNQUSYMFtSY2yzwaHWMbDyhDbk+aO8LgJ1iOX4fUt2bh1sYZbpmmQ==
 
 leaflet@^1.8.0:
   version "1.8.0"
@@ -11746,6 +11771,11 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   integrity sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==
   dependencies:
     minimalistic-assert "^1.0.0"
+
+webgl-distort@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/webgl-distort/-/webgl-distort-0.0.2.tgz#80d2f61efc4aece28e7a1ff1375e14aac6d06f36"
+  integrity sha512-ega1ErSsqQ7MXWreYkxwxs5TTBYXJb538Gsqyi+aknwHE9bUZx31EoWuUJWD2jfiOV5BMdmrmfqYGrTTAvrO6Q==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"

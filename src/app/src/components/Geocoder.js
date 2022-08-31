@@ -106,7 +106,7 @@ export default function Geocoder({ isOpen, onClose }) {
     const hasSuggestions = suggestions.length > 0;
 
     return (
-        <ScaleFade in={isOpen}>
+        <ScaleFade in={isOpen} unmountOnExit>
             <Input
                 position='relative'
                 ref={ref}

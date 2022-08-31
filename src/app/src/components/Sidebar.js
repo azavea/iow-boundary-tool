@@ -20,7 +20,11 @@ import {
 import BasemapDefaultImage from '../img/basemap-default.png';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
-import { setBasemapType, toggleLayer } from '../store/mapSlice';
+import {
+    setBasemapType,
+    toggleLayer,
+    toggleReferenceImageVisibility,
+} from '../store/mapSlice';
 import { DATA_LAYERS } from '../constants';
 
 const marginLeft = 4;
@@ -49,6 +53,11 @@ function TitleBar() {
 }
 
 function ReferenceLayers() {
+    const dispatch = useDispatch();
+    const referenceImageVisible = useSelector(
+        state => state.map.referenceImage.visible
+    );
+
     return (
         <Box ml={marginLeft} mt={6} mb={6}>
             <Flex mb={4} align='center'>
@@ -62,9 +71,15 @@ function ReferenceLayers() {
                 color='white'
                 variant='button'
                 leftIcon={<Icon as={PlusIcon} />}
+                mb={4}
             >
                 Upload file
             </Button>
+            <VisibilityButton
+                visible={referenceImageVisible}
+                onChange={() => dispatch(toggleReferenceImageVisibility())}
+                label='Reference image'
+            />
         </Box>
     );
 }

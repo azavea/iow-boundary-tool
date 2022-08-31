@@ -10,6 +10,7 @@ import MapFeatures from './MapFeatures';
 import { DefaultBasemap, SatelliteBasemap } from '../Layers/Basemaps';
 import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
 import ParcelLayer from '../Layers/ParcelLayer';
+import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
 
 export default function DrawMap() {
     return (
@@ -18,6 +19,7 @@ export default function DrawMap() {
             <MunicipalBoundariesLayer />
             <ParcelLayer />
             <MapFeatures />
+            <ReferenceImageLayer />
             <EditToolbar />
             <SaveAndBackButton />
             <ReviewAndSaveButton />

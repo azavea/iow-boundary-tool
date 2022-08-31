@@ -9,6 +9,9 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/600.css';
 
 import '../node_modules/leaflet/dist/leaflet.css';
+import '../node_modules/leaflet-toolbar/dist/leaflet.toolbar.css';
+import '../node_modules/leaflet-draw/dist/leaflet.draw.css';
+import '../node_modules/leaflet-distortableimage/dist/leaflet.distortableimage.css';
 
 import './index.css';
 import App from './App';

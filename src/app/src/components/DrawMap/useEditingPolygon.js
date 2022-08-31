@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePolygon } from '../../store/mapSlice';
+import { customizePrototypeIcon } from '../../utils';
 
 const POLYGON_LAYER_OPTIONS = {
     color: 'black',
@@ -14,15 +15,8 @@ const POLYGON_LAYER_OPTIONS = {
     dashArray: '2 3',
 };
 
-function customize(prototype) {
-    prototype.options.icon = new L.DivIcon({
-        className: 'edit-poly-marker',
-    });
-    prototype.options.touchIcon = prototype.options.icon;
-}
-
-customize(L.Draw.Polyline.prototype);
-customize(L.Edit.PolyVerticesEdit.prototype);
+customizePrototypeIcon(L.Draw.Polyline.prototype, 'edit-poly-marker');
+customizePrototypeIcon(L.Edit.PolyVerticesEdit.prototype, 'edit-poly-marker');
 
 const markerElements = document.getElementsByClassName('edit-poly-marker');
 

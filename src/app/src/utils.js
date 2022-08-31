@@ -1,4 +1,5 @@
 import { Icon } from '@chakra-ui/react';
+import L from 'leaflet';
 
 import {
     INITIAL_POLYGON_SCALE_FACTOR,
@@ -58,3 +59,8 @@ export const getGeocodeUrl = ({ text, magicKey }) =>
     'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates' +
     `?SingleLine=${text}${magicKey ? `&magicKey=${magicKey}` : ''}` +
     '&countryCode=usa&f=json';
+
+export function customizePrototypeIcon(prototype, className) {
+    prototype.options.icon = new L.DivIcon({ className });
+    prototype.options.touchIcon = prototype.options.icon;
+}

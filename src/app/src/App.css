@@ -25,3 +25,34 @@
 .leaflet-container {
     font-family: 'Inter', sans-serif;
 }
+
+/* Leaflet.DistortableImage overrides */
+.ldi-icon {
+    display: inline;
+}
+
+.leaflet-toolbar-icon.selected-mode {
+    background-color: var(--chakra-colors-gray-500) !important;
+}
+
+.ldi .leaflet-popup-toolbar {
+    border: 0;
+}
+
+.ldi .leaflet-popup-toolbar svg {
+    fill: var(--chakra-colors-black);
+}
+
+.ldi .leaflet-toolbar-tip {
+    display: none;
+}
+
+.ldi .ref-handle {
+    margin-left: -4px !important;
+    margin-top: -4px !important;
+    width: 8px !important;
+    height: 8px !important;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--chakra-colors-black);
+}
