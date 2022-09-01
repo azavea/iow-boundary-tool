@@ -11,7 +11,7 @@ const POLYGON_LAYER_OPTIONS = {
     color: 'black',
     weight: 1,
     fillColor: 'black',
-    fillOpacity: '.1',
+    fillOpacity: '.3',
     dashArray: '2 3',
 };
 

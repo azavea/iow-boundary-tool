@@ -17,7 +17,8 @@ import {
     EyeOffIcon,
 } from '@heroicons/react/outline';
 
-import BasemapDefaultImage from '../img/basemap-default.png';
+import BasemapDefaultImage from '../img/basemap-default.jpg';
+import BasemapLandWaterImage from '../img/basemap-landwater.jpg';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -110,7 +111,7 @@ function BasemapLayers() {
                     )
                 )}
             </Flex>
-            <Flex mt={2}>
+            <Box mt={2}>
                 <ImageButton
                     image={BasemapDefaultImage}
                     label='Default'
@@ -118,12 +119,18 @@ function BasemapLayers() {
                     onClick={() => dispatch(setBasemapType('default'))}
                 />
                 <ImageButton
+                    image={BasemapLandWaterImage}
+                    label='Land & water'
+                    selected={basemapType === 'landwater'}
+                    onClick={() => dispatch(setBasemapType('landwater'))}
+                />
+                <ImageButton
                     image={BasemapSatelliteImage}
                     label='Satellite'
                     selected={basemapType === 'satellite'}
                     onClick={() => dispatch(setBasemapType('satellite'))}
                 />
-            </Flex>
+            </Box>
         </Box>
     );
 }
@@ -160,16 +167,18 @@ function VisibilityButton({ label, visible, onChange, disabled = false }) {
 
 function ImageButton({ image, label, selected, onClick }) {
     return (
-        <Box onClick={onClick} p={2} cursor='pointer'>
+        <Box onClick={onClick} p={2} cursor='pointer' display='inline-block'>
             <Image
                 src={image}
                 border='2px solid'
                 borderColor={selected ? 'gray.400' : 'transparent'}
                 borderRadius='10px'
-                width='150px'
+                width='120px'
                 height='80px'
             />
-            <Text color='white'>{label}</Text>
+            <Text color='white' fontSize='sm'>
+                {label}
+            </Text>
         </Box>
     );
 }

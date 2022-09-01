@@ -4,10 +4,10 @@ import L from 'leaflet';
 import { useLayerVisibility, useMapLayer } from '../../hooks';
 
 const MUNICIPAL_BOUNDARIES_LAYER_STYLE = {
-    color: 'purple',
+    color: '#553C9A', // var(--chakra-colors-purple-700)
     weight: 1,
-    fill: false,
-    dashArray: '4 8',
+    fillOpacity: '0.1',
+    dashArray: '4',
 };
 
 export default function MunicipalBoundariesLayer() {

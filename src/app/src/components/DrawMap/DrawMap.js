@@ -7,7 +7,11 @@ import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 import MapFeatures from './MapFeatures';
 
-import { DefaultBasemap, SatelliteBasemap } from '../Layers/Basemaps';
+import {
+    DefaultBasemap,
+    SatelliteBasemap,
+    LandWaterBasemap,
+} from '../Layers/Basemaps';
 import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
 import ParcelLayer from '../Layers/ParcelLayer';
 import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
@@ -34,6 +38,8 @@ function Basemap() {
     switch (basemapType) {
         case 'default':
             return <DefaultBasemap />;
+        case 'landwater':
+            return <LandWaterBasemap />;
         case 'satellite':
             return <SatelliteBasemap />;
         default:

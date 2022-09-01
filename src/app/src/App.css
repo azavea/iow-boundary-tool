@@ -1,16 +1,19 @@
 .edit-poly-marker {
     margin-left: -4px !important;
     margin-top: -4px !important;
-    width: 8px !important;
-    height: 8px !important;
+    width: 10px !important;
+    height: 10px !important;
     background-color: var(--chakra-colors-black);
-    border: none;
+    border: 1px solid var(--chakra-colors-gray-200);
     border-radius: 50%;
 }
 
 .edit-poly-marker-midpoint {
     opacity: 1 !important;
-    background-color: var(--chakra-colors-gray-500);
+    width: 8px !important;
+    height: 8px !important;
+    background-color: var(--chakra-colors-gray-600);
+    border: 1px solid var(--chakra-colors-gray-200);
 }
 
 /* Prevent pointer from showing up on polygon path hover */
