@@ -9,13 +9,17 @@ export default function MapPanes({ children }) {
 
     useEffect(() => {
         if (!panesCreated) {
-            for (const { label, zIndex } of Object.values(PANES)) {
-                const pane = map.createPane(label);
-                pane.style.zIndex = zIndex;
-            }
-        }
+            const mapPaneDoesNotExist = label => !map.getPane(label);
 
-        setPanesCreated(true);
+            for (const { label, zIndex } of Object.values(PANES)) {
+                if (mapPaneDoesNotExist(label)) {
+                    const pane = map.createPane(label);
+                    pane.style.zIndex = zIndex;
+                }
+            }
+
+            setPanesCreated(true);
+        }
     }, [map, panesCreated]);
 
     if (panesCreated) {
