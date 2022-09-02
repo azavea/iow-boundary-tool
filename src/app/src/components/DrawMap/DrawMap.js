@@ -7,6 +7,7 @@ import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 import MapFeatures from './MapFeatures';
 
+import MapPanes from './MapPanes';
 import {
     DefaultBasemap,
     SatelliteBasemap,
@@ -19,15 +20,17 @@ import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
 export default function DrawMap() {
     return (
         <Map>
-            <Basemap />
-            <MunicipalBoundariesLayer />
-            <ParcelLayer />
-            <MapFeatures />
-            <ReferenceImageLayer />
-            <EditToolbar />
-            <SaveAndBackButton />
-            <ReviewAndSaveButton />
-            <MapControlButtons />
+            <MapPanes>
+                <Basemap />
+                <MunicipalBoundariesLayer />
+                <ParcelLayer />
+                <MapFeatures />
+                <ReferenceImageLayer />
+                <EditToolbar />
+                <SaveAndBackButton />
+                <ReviewAndSaveButton />
+                <MapControlButtons />
+            </MapPanes>
         </Map>
     );
 }

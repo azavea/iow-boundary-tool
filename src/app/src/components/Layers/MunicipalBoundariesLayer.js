@@ -4,6 +4,7 @@ import L from 'leaflet';
 import { useLayerVisibility, useMapLayer } from '../../hooks';
 import { useSelector } from 'react-redux';
 import { MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL } from '../../constants';
+import { PANES } from '../../constants';
 
 const MUNICIPAL_BOUNDARIES_LAYER_STYLE = {
     color: '#553C9A', // var(--chakra-colors-purple-700)
@@ -43,6 +44,7 @@ function RenderGeoJson({ json }) {
         () =>
             L.geoJSON(json, {
                 style: () => MUNICIPAL_BOUNDARIES_LAYER_STYLE,
+                pane: PANES.MUNICIPAL_BOUNDARIES.label,
                 onEachFeature: shouldShowLabels
                     ? (feature, layer) => {
                           layer.bindTooltip(feature.properties.name20, {

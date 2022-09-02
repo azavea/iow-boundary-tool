@@ -1,7 +1,7 @@
 import { DynamicMapLayer } from 'esri-leaflet';
 
 import { useLayerVisibility, useMapLayer } from '../../hooks';
-import { PARCELS_LAYER_URL, DATA_LAYERS } from '../../constants';
+import { PARCELS_LAYER_URL, DATA_LAYERS, PANES } from '../../constants';
 
 const PARCELS_LAYER_STYLE = {
     id: 1,
@@ -41,6 +41,7 @@ function RenderEsriLayer() {
             layers: [0, 1],
             minZoom: DATA_LAYERS['PARCELS'].minZoom, // Only enable on high zooms for performance
             dynamicLayers: JSON.stringify([PARCELS_LAYER_STYLE]),
+            pane: PANES.PARCELS.label,
         })
     );
 }
