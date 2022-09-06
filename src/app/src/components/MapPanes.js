@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 
-import { PANES } from '../../constants';
+import { PANES } from '../constants';
 
 export default function MapPanes({ children }) {
     const map = useMap();

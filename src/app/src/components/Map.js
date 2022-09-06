@@ -1,7 +1,7 @@
 import { MapContainer } from 'react-leaflet';
 
 import { MAP_CENTER, MAP_INITIAL_ZOOM } from '../constants';
-import MapPanes from './DrawMap/MapPanes';
+import MapPanes from './MapPanes';
 
 export default function Map({ children }) {
     return (

@@ -1,5 +1,11 @@
-import DrawMap from '../components/DrawMap';
+import DrawTools from '../components/DrawTools';
+import Layers from '../components/Layers';
 
-export default function Main() {
-    return <DrawMap />;
+export default function Draw() {
+    return (
+        <>
+            <Layers />
+            <DrawTools />
+        </>
+    );
 }
