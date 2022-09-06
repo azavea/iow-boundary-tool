@@ -1,6 +1,7 @@
 import { MapContainer } from 'react-leaflet';
 
 import { MAP_CENTER, MAP_INITIAL_ZOOM } from '../constants';
+import MapPanes from './DrawMap/MapPanes';
 
 export default function Map({ children }) {
     return (
@@ -10,7 +11,7 @@ export default function Map({ children }) {
             zoomControl={false}
             style={{ height: '100vh' }}
         >
-            {children}
+            <MapPanes>{children}</MapPanes>
         </MapContainer>
     );
 }
