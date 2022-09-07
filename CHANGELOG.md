@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix react-remove-scroll-bar warning [#29](https://github.com/azavea/iow-boundary-tool/pull/29)
+- Don't move reference image when panning map [#59](https://github.com/azavea/iow-boundary-tool/pull/59)
 
 ### Deprecated
 
