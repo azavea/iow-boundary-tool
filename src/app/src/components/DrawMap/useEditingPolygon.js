@@ -8,7 +8,6 @@ import { updatePolygon } from '../../store/mapSlice';
 import { customizePrototypeIcon } from '../../utils';
 
 const POLYGON_LAYER_OPTIONS = {
-    color: 'black',
     weight: 1,
     fillColor: 'black',
     fillOpacity: '.3',
@@ -39,7 +38,7 @@ function styleMidpointElement(element) {
 export default function useEditingPolygon() {
     const dispatch = useDispatch();
     const map = useMap();
-    const { polygon, editMode } = useSelector(state => state.map);
+    const { polygon, editMode, basemapType } = useSelector(state => state.map);
 
     const updatePolygonFromDrawEvent = useCallback(
         event => {
@@ -58,7 +57,10 @@ export default function useEditingPolygon() {
         if (polygon && polygon.visible) {
             const polygonLayer = new L.Polygon(
                 polygon.points.map(point => new L.latLng(point[0], point[1])),
-                POLYGON_LAYER_OPTIONS
+                {
+                    ...POLYGON_LAYER_OPTIONS,
+                    color: basemapType === 'satellite' ? 'white' : 'black',
+                }
             );
 
             if (editMode) {
@@ -78,5 +80,5 @@ export default function useEditingPolygon() {
                 }
             };
         }
-    }, [polygon, editMode, map, updatePolygonFromDrawEvent]);
+    }, [polygon, editMode, basemapType, map, updatePolygonFromDrawEvent]);
 }
