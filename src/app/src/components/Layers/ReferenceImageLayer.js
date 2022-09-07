@@ -66,6 +66,27 @@ function ReferenceImageLayer() {
             layer.on('dragend', updateImageHandler);
             layer.on('refresh', updateImageHandler);
 
+            /**
+             * This is handler is added to save the default position of the
+             * reference image. It uses the remove event because the corners
+             * don't always exist on the add event. Also, corners might not
+             * be set for some remove events, so their their existence is
+             * verified before dispatching an update,
+             */
+            if (!corners) {
+                layer.on('remove', ({ target: layer }) => {
+                    if (layer._corners) {
+                        dispatch(
+                            updateReferenceImage({
+                                corners: layer._corners.map(
+                                    convertCornerToStateFormat
+                                ),
+                            })
+                        );
+                    }
+                });
+            }
+
             return layer;
         },
         // TODO: Figure out how to prevent deselect on re-render
