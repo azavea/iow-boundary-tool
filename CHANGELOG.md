@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorporated changes in app template [#31](https://github.com/azavea/iow-boundary-tool/pull/31)
 - Update styles for Polygon and Municipal Boundary layers [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 - Update tiles for all basemaps [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
+- Update Edit Polygon border to be lighter on dark backgrounds [#58](https://github.com/azavea/iow-boundary-tool/pull/58)
 
 ### Fixed
 
