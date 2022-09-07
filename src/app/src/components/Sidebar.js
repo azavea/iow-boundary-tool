@@ -8,6 +8,7 @@ import {
     Icon,
     Text,
     Circle,
+    Tooltip,
 } from '@chakra-ui/react';
 import {
     MenuIcon,
@@ -26,7 +27,8 @@ import {
     toggleLayer,
     toggleReferenceImageVisibility,
 } from '../store/mapSlice';
-import { DATA_LAYERS } from '../constants';
+import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
+import { useAddReferenceImage, useFilePicker } from '../hooks';
 
 const marginLeft = 4;
 
@@ -55,9 +57,10 @@ function TitleBar() {
 
 function ReferenceLayers() {
     const dispatch = useDispatch();
-    const referenceImageVisible = useSelector(
-        state => state.map.referenceImage.visible
-    );
+    const addReferenceImage = useAddReferenceImage();
+    const openFileDialog = useFilePicker(files => files.map(addReferenceImage));
+
+    const images = useSelector(state => state.map.referenceImages);
 
     return (
         <Box ml={marginLeft} mt={6} mb={6}>
@@ -73,14 +76,22 @@ function ReferenceLayers() {
                 variant='button'
                 leftIcon={<Icon as={PlusIcon} />}
                 mb={4}
+                onClick={openFileDialog}
             >
                 Upload file
             </Button>
-            <VisibilityButton
-                visible={referenceImageVisible}
-                onChange={() => dispatch(toggleReferenceImageVisibility())}
-                label='Reference image'
-            />
+            <Flex direction='column' align='flex-start'>
+                {Object.entries(images).map(([url, image]) => (
+                    <VisibilityButton
+                        key={url}
+                        visible={image.visible}
+                        onChange={() =>
+                            dispatch(toggleReferenceImageVisibility(url))
+                        }
+                        label={image.name}
+                    />
+                ))}
+            </Flex>
         </Box>
     );
 }
@@ -137,31 +148,38 @@ function BasemapLayers() {
 
 function VisibilityButton({ label, visible, onChange, disabled = false }) {
     return (
-        <Button
-            mb={1}
-            leftIcon={
-                <Circle
-                    color='white'
-                    bg={visible ? 'gray.500' : 'gray.600'}
-                    mr={2}
-                >
-                    <Icon
-                        as={visible ? EyeIcon : EyeOffIcon}
-                        m={2}
-                        fontSize='lg'
-                        strokeWidth={1}
-                    />
-                </Circle>
-            }
-            onClick={onChange}
-            variant='link'
-            color={visible ? 'gray.300' : 'gray.500'}
-            textDecoration='none'
-            fontWeight={600}
-            disabled={disabled}
+        <Tooltip
+            label={label}
+            bg='gray.500'
+            hasArrow
+            isDisabled={label.length <= SIDEBAR_TEXT_TOOLTIP_THRESHOLD}
         >
-            {label}
-        </Button>
+            <Button
+                mb={1}
+                leftIcon={
+                    <Circle
+                        color='white'
+                        bg={visible ? 'gray.500' : 'gray.600'}
+                        mr={2}
+                    >
+                        <Icon
+                            as={visible ? EyeIcon : EyeOffIcon}
+                            m={2}
+                            fontSize='lg'
+                            strokeWidth={1}
+                        />
+                    </Circle>
+                }
+                onClick={onChange}
+                variant='link'
+                color={visible ? 'gray.300' : 'gray.500'}
+                textDecoration='none'
+                fontWeight={600}
+                disabled={disabled}
+            >
+                {label}
+            </Button>
+        </Tooltip>
     );
 }
 

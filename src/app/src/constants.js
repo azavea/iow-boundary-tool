@@ -25,3 +25,5 @@ export const NC_SOUTH = 33.851169;
 
 export const PARCELS_LAYER_URL =
     'https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/MapServer';
+
+export const SIDEBAR_TEXT_TOOLTIP_THRESHOLD = 30;
