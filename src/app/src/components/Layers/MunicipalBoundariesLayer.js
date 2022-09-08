@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import L from 'leaflet';
 
 import { useLayerVisibility, useMapLayer } from '../../hooks';
+import { useSelector } from 'react-redux';
+import { MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL } from '../../constants';
 
 const MUNICIPAL_BOUNDARIES_LAYER_STYLE = {
     color: '#553C9A', // var(--chakra-colors-purple-700)
@@ -28,7 +30,35 @@ export default function MunicipalBoundariesLayer() {
 }
 
 function RenderGeoJson({ json }) {
-    useMapLayer(
-        L.geoJSON(json, { style: () => MUNICIPAL_BOUNDARIES_LAYER_STYLE })
+    const { basemapType, mapZoom } = useSelector(state => state.map);
+
+    // Separating this condition to its own memoized value prevents
+    // re-creation of the layer on every zoom change
+    const shouldShowLabels = useMemo(
+        () => mapZoom > MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL,
+        [mapZoom]
     );
+
+    const layer = useMemo(
+        () =>
+            L.geoJSON(json, {
+                style: () => MUNICIPAL_BOUNDARIES_LAYER_STYLE,
+                onEachFeature: shouldShowLabels
+                    ? (feature, layer) => {
+                          layer.bindTooltip(feature.properties.name20, {
+                              permanent: true,
+                              direction: 'center',
+                              className: `muni-label${
+                                  basemapType === 'satellite'
+                                      ? ' muni-label-light'
+                                      : ''
+                              }`,
+                          });
+                      }
+                    : null,
+            }),
+        [json, basemapType, shouldShowLabels]
+    );
+
+    useMapLayer(layer);
 }
