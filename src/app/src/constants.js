@@ -35,5 +35,6 @@ export const PANES = {
     BASEMAP: { label: 'basemap', zIndex: 200 },
     PARCELS: { label: 'parcels', zIndex: 210 },
     MUNICIPAL_BOUNDARIES: { label: 'muni', zIndex: 220 },
+    MUNICIPAL_BOUNDARY_LABELS: { label: 'muni-labels', zIndex: 225 },
     USER_POLYGON: { label: 'user-polygon', zIndex: 490 },
 };

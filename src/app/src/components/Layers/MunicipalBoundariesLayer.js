@@ -55,6 +55,7 @@ function RenderGeoJson({ json }) {
                                       ? ' muni-label-light'
                                       : ''
                               }`,
+                              pane: PANES.MUNICIPAL_BOUNDARY_LABELS.label,
                           });
                       }
                     : null,
