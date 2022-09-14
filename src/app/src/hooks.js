@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { convertIndexedObjectToArray } from './utils';
+import {
+    createDefaultReferenceImage,
+    updateReferenceImage,
+} from './store/mapSlice';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -70,4 +76,37 @@ export function useMapLayer(layer) {
 
 export function useLayerVisibility(layer) {
     return useSelector(state => state.map.layers).includes(layer);
+}
+
+export function useAddReferenceImage() {
+    const dispatch = useDispatch();
+
+    return file => {
+        const url = URL.createObjectURL(file);
+        dispatch(
+            updateReferenceImage({
+                url,
+                update: createDefaultReferenceImage(file.name),
+            })
+        );
+    };
+}
+
+export function useFilePicker(onChange) {
+    const openFileDialog = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = true;
+        input.onchange = handlePickFiles;
+        input.accept = 'image/png, image/jpeg, .png, .jpg, .jpeg';
+
+        input.click();
+    };
+
+    const handlePickFiles = event => {
+        onChange(convertIndexedObjectToArray(event.target.files));
+        event.target.remove();
+    };
+
+    return openFileDialog;
 }

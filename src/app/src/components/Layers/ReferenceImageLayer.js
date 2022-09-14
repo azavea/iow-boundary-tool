@@ -1,12 +1,11 @@
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import L from './L.DistortableImage.Edit.fix';
-import ReferenceImage from '../../img/raleigh_sanborn_map.jpg';
 
-import { useMapLayer } from '../../hooks';
 import { customizePrototypeIcon } from '../../utils';
 import { updateReferenceImage } from '../../store/mapSlice';
+import { useMap } from 'react-leaflet';
 
 customizePrototypeIcon(L.DistortHandle.prototype, 'ref-handle');
 customizePrototypeIcon(L.DragHandle.prototype, 'ref-handle');
@@ -20,21 +19,26 @@ const convertCornerFromStateFormat = corner => ({
     lng: corner[1],
 });
 
-export default function ReferenceImageLayerVisbilityWrapper() {
-    const showLayer = useSelector(state => state.map.referenceImage.visible);
-
-    return showLayer ? <ReferenceImageLayer /> : null;
-}
-
-function ReferenceImageLayer() {
+export default function ReferenceImageLayer() {
     const dispatch = useDispatch();
+    const map = useMap();
+    const referenceImageLayers = useRef({});
 
-    // TODO: Find a way to initialize the image with transparent/outlined enabled
-    const { corners, mode } = useSelector(state => state.map.referenceImage);
+    const images = useSelector(state => state.map.referenceImages);
 
-    const layer = useMemo(
-        () => {
-            const layer = new L.distortableImageOverlay(ReferenceImage, {
+    const visibleImages = useMemo(
+        () =>
+            Object.fromEntries(
+                Object.entries(images).filter(
+                    ([, imageInfo]) => imageInfo.visible
+                )
+            ),
+        [images]
+    );
+
+    const createLayer = useCallback(
+        ({ url, corners, mode }) => {
+            const layer = new L.distortableImageOverlay(url, {
                 actions: [
                     L.DragAction,
                     L.ScaleAction,
@@ -55,9 +59,14 @@ function ReferenceImageLayer() {
             const updateImageHandler = ({ target: layer }) => {
                 dispatch(
                     updateReferenceImage({
-                        corners: layer._corners.map(convertCornerToStateFormat),
-                        mode: layer.editing._mode,
-                        transparent: layer.editing._transparent,
+                        url,
+                        update: {
+                            corners: layer._corners.map(
+                                convertCornerToStateFormat
+                            ),
+                            mode: layer.editing._mode,
+                            transparent: layer.editing._transparent,
+                        },
                     })
                 );
             };
@@ -78,9 +87,12 @@ function ReferenceImageLayer() {
                     if (layer._corners) {
                         dispatch(
                             updateReferenceImage({
-                                corners: layer._corners.map(
-                                    convertCornerToStateFormat
-                                ),
+                                url,
+                                update: {
+                                    corners: layer._corners.map(
+                                        convertCornerToStateFormat
+                                    ),
+                                },
                             })
                         );
                     }
@@ -89,14 +101,41 @@ function ReferenceImageLayer() {
 
             return layer;
         },
-        // TODO: Figure out how to prevent deselect on re-render
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [
-            // corners,
-            // mode,
-            dispatch,
-        ]
+        [dispatch]
     );
 
-    useMapLayer(layer);
+    /**
+     * Since the reference image layers are stored in a mutable ref,
+     * they aren't updated when the redux state changes. This useEffect
+     * hook manually performs those updates by listening to changes of
+     * visibleImages.
+     */
+    useEffect(() => {
+        const imageShouldBeAdded = url =>
+            !(url in referenceImageLayers.current);
+
+        const imageShouldBeHidden = url => !(url in visibleImages);
+
+        for (const [url, { corners, mode }] of Object.entries(visibleImages)) {
+            if (imageShouldBeAdded(url)) {
+                referenceImageLayers.current[url] = createLayer({
+                    url,
+                    corners,
+                    mode,
+                });
+
+                map.addLayer(referenceImageLayers.current[url]);
+            }
+        }
+
+        for (const url of Object.keys(referenceImageLayers.current)) {
+            if (imageShouldBeHidden(url)) {
+                if (map.hasLayer(referenceImageLayers.current[url])) {
+                    map.removeLayer(referenceImageLayers.current[url]);
+                }
+
+                delete referenceImageLayers.current[url];
+            }
+        }
+    }, [visibleImages, map, createLayer]);
 }

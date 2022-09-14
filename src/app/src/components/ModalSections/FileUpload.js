@@ -7,7 +7,6 @@ import {
     Icon,
     List,
     ListItem,
-    Progress,
     Text,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -15,13 +14,14 @@ import { CloudUploadIcon } from '@heroicons/react/outline';
 
 import { convertIndexedObjectToArray } from '../../utils';
 import ModalSection from './ModalSection';
+import { useAddReferenceImage, useFilePicker } from '../../hooks';
+import { useSelector } from 'react-redux';
 
 export default function FileUpload({ PreviousButton }) {
     const navigate = useNavigate();
+    const addReferenceImage = useAddReferenceImage();
 
-    const [files, setFiles] = useState([]);
-
-    const addFiles = newFiles => setFiles(files => [...files, ...newFiles]);
+    const addFiles = newFiles => newFiles.forEach(addReferenceImage);
 
     return (
         <ModalSection
@@ -41,18 +41,18 @@ export default function FileUpload({ PreviousButton }) {
             </Text>
 
             <Flex mt={4} w='100%' grow>
-                <UploadBox setFiles={addFiles} />
-                <FilesBox files={files}></FilesBox>
+                <UploadBox addFiles={addFiles} />
+                <FilesBox />
             </Flex>
         </ModalSection>
     );
 }
 
-function UploadBox({ setFiles }) {
+function UploadBox({ addFiles }) {
     const { hovering, handleUpload, startDrag, endDrag } =
-        useFileUpload(setFiles);
+        useFileUpload(addFiles);
 
-    const openFileDialog = useFilePicker(setFiles);
+    const openFileDialog = useFilePicker(addFiles);
 
     const onLeaveDragBox = event => {
         const enteredElement = event.relatedTarget;
@@ -103,7 +103,7 @@ function UploadBox({ setFiles }) {
                 <Text color='gray.400'>
                     <Bold>Shapefiles:</Bold> .SHP, .SHX and .DBF
                     <br />
-                    <Bold>Other map files:</Bold> PDF, JPEG, PNG, TIFF
+                    <Bold>Other map files:</Bold> JPEG, PNG
                 </Text>
             </Flex>
         </Box>
@@ -154,24 +154,6 @@ function usePreventBackgroundUpload() {
     }, []);
 }
 
-function useFilePicker(onChange) {
-    const openFileDialog = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.multiple = true;
-        input.onchange = handlePickFiles;
-
-        input.click();
-    };
-
-    const handlePickFiles = event => {
-        onChange(convertIndexedObjectToArray(event.target.files));
-        event.target.remove();
-    };
-
-    return openFileDialog;
-}
-
 function CloudIconWithBackground() {
     return (
         <Flex
@@ -202,8 +184,12 @@ function Bold({ children }) {
     );
 }
 
-function FilesBox({ files }) {
-    if (files.length === 0) return null;
+function FilesBox() {
+    const imageEntries = Object.entries(
+        useSelector(state => state.map.referenceImages)
+    );
+
+    if (imageEntries.length === 0) return null;
 
     return (
         <Box w='50%' pl={4}>
@@ -211,16 +197,11 @@ function FilesBox({ files }) {
                 Uploaded Files
             </Heading>
             <List>
-                {files.map(file => (
-                    <ListItem key={file.name} mb={6}>
+                {imageEntries.map(([url, { name }]) => (
+                    <ListItem key={url} mb={6}>
                         <Text mb={2} p={2} color='gray.700' bg='gray.50'>
-                            {file.name}
+                            {name}
                         </Text>
-                        <Progress
-                            colorScheme='gray'
-                            size='xs'
-                            isIndeterminate
-                        />
                     </ListItem>
                 ))}
             </List>
