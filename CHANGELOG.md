@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Land & water basemap [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 - Add user reference image upload [#60](https://github.com/azavea/iow-boundary-tool/pull/60)
 - Add labels to municipal boundary layer [#61](https://github.com/azavea/iow-boundary-tool/pull/61)
+- Add panes for layer [#57](https://github.com/azavea/iow-boundary-tool/pull/57)
 
 ### Changed
 
@@ -33,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update styles for Polygon and Municipal Boundary layers [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 - Update tiles for all basemaps [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 - Update Edit Polygon border to be lighter on dark backgrounds [#58](https://github.com/azavea/iow-boundary-tool/pull/58)
+- Split DrawMap commponents into Layers and DrawTools [#57](https://github.com/azavea/iow-boundary-tool/pull/57)
 
 ### Fixed
 
