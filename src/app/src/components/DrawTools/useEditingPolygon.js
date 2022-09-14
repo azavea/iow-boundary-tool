@@ -6,6 +6,7 @@ import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePolygon } from '../../store/mapSlice';
 import { customizePrototypeIcon } from '../../utils';
+import { PANES } from '../../constants';
 
 const POLYGON_LAYER_OPTIONS = {
     weight: 1,
@@ -67,7 +68,11 @@ export default function useEditingPolygon() {
                 polygonLayer.editing.enable();
             }
 
-            polygonLayer.addTo(map);
+            const featureGroup = L.featureGroup([polygonLayer], {
+                pane: PANES.USER_POLYGON.label,
+            });
+
+            featureGroup.addTo(map);
             styleMarkers();
 
             map.on(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);

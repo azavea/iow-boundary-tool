@@ -29,3 +29,12 @@ export const PARCELS_LAYER_URL =
 export const SIDEBAR_TEXT_TOOLTIP_THRESHOLD = 30;
 
 export const MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL = 9;
+
+// https://leafletjs.com/reference.html#map-mappane
+export const PANES = {
+    BASEMAP: { label: 'basemap', zIndex: 200 },
+    PARCELS: { label: 'parcels', zIndex: 210 },
+    MUNICIPAL_BOUNDARIES: { label: 'muni', zIndex: 220 },
+    MUNICIPAL_BOUNDARY_LABELS: { label: 'muni-labels', zIndex: 225 },
+    USER_POLYGON: { label: 'user-polygon', zIndex: 490 },
+};

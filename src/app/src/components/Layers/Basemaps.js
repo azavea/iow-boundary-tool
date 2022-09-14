@@ -6,6 +6,7 @@ import {
     LANDWATER_BASEMAP_URL,
     ESRI_ATTRIBUTION,
     SATELLITE_BASEMAP_URL,
+    PANES,
 } from '../../constants';
 
 export function DefaultBasemap() {
@@ -40,7 +41,7 @@ export function SatelliteBasemap() {
 
 function Basemap({ url, attribution, maxZoomLevel }) {
     useSetMaxZoomLevel(maxZoomLevel);
-    useMapLayer(L.tileLayer(url, { attribution }));
+    useMapLayer(L.tileLayer(url, { attribution, pane: PANES.BASEMAP.label }));
 
     return null;
 }

@@ -1,17 +1,11 @@
-import { Box, Container, Flex } from '@chakra-ui/react';
+import DrawTools from '../components/DrawTools';
+import Layers from '../components/Layers';
 
-import DrawMap from '../components/DrawMap';
-import Sidebar from '../components/Sidebar';
-
-export default function Main() {
+export default function Draw() {
     return (
-        <Flex>
-            <Container maxW='xs' bg='gray.700' p={0}>
-                <Sidebar />
-            </Container>
-            <Box flex={1} position='relative'>
-                <DrawMap />
-            </Box>
-        </Flex>
+        <>
+            <Layers />
+            <DrawTools />
+        </>
     );
 }

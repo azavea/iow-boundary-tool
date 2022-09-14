@@ -1,50 +1,28 @@
 import { Button, Icon } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
-import Map from '../Map';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
-import MapFeatures from './MapFeatures';
 
-import {
-    DefaultBasemap,
-    SatelliteBasemap,
-    LandWaterBasemap,
-} from '../Layers/Basemaps';
-import MunicipalBoundariesLayer from '../Layers/MunicipalBoundariesLayer';
-import ParcelLayer from '../Layers/ParcelLayer';
-import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
+import useAddPolygonCursor from './useAddPolygonCursor';
+import useEditingPolygon from './useEditingPolygon';
+import useGeocoderResult from './useGeocoderResult';
+import useTrackMapZoom from './useTrackMapZoom';
 
-export default function DrawMap() {
+export default function DrawTools() {
+    useEditingPolygon();
+    useAddPolygonCursor();
+    useGeocoderResult();
+    useTrackMapZoom();
+
     return (
-        <Map>
-            <Basemap />
-            <MunicipalBoundariesLayer />
-            <ParcelLayer />
-            <MapFeatures />
-            <ReferenceImageLayer />
+        <>
             <EditToolbar />
             <SaveAndBackButton />
             <ReviewAndSaveButton />
             <MapControlButtons />
-        </Map>
+        </>
     );
-}
-
-function Basemap() {
-    const basemapType = useSelector(state => state.map.basemapType);
-
-    switch (basemapType) {
-        case 'default':
-            return <DefaultBasemap />;
-        case 'landwater':
-            return <LandWaterBasemap />;
-        case 'satellite':
-            return <SatelliteBasemap />;
-        default:
-            throw Error(`Invalid basemap type: ${basemapType}`);
-    }
 }
 
 function SaveAndBackButton() {

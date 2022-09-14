@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Container,
     Image,
     Divider,
     Flex,
@@ -30,17 +31,19 @@ import {
 import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
 import { useAddReferenceImage, useFilePicker } from '../hooks';
 
-const marginLeft = 4;
+const paddingLeft = 4;
 
 export default function Sidebar() {
     return (
-        <Flex direction='column'>
-            <TitleBar />
-            <Divider />
-            <ReferenceLayers />
-            <Divider />
-            <BasemapLayers />
-        </Flex>
+        <Container pl={paddingLeft} maxW='xs' bg='gray.700' p={0}>
+            <Flex direction='column'>
+                <TitleBar />
+                <Divider />
+                <ReferenceLayers />
+                <Divider />
+                <BasemapLayers />
+            </Flex>
+        </Container>
     );
 }
 
@@ -63,7 +66,7 @@ function ReferenceLayers() {
     const images = useSelector(state => state.map.referenceImages);
 
     return (
-        <Box ml={marginLeft} mt={6} mb={6}>
+        <Box ml={paddingLeft} mt={6} mb={6}>
             <Flex mb={4} align='center'>
                 <Heading variant='sidebar' size='sm'>
                     Reference Layers
@@ -105,7 +108,7 @@ function BasemapLayers() {
     };
 
     return (
-        <Box ml={marginLeft} mr={marginLeft} mt={6}>
+        <Box ml={paddingLeft} mr={paddingLeft} mt={6}>
             <Heading variant='sidebar' size='sm'>
                 Basemap Layers
             </Heading>
