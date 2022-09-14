@@ -59,6 +59,7 @@ function RenderGeoJson({ json }) {
                           });
                       }
                     : null,
+                interactive: false,
             }),
         [json, basemapType, shouldShowLabels]
     );
