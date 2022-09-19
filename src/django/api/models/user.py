@@ -66,20 +66,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=Roles.CONTRIBUTOR.value,
     )
 
-    utility = models.ForeignKey(
+    utilities = models.ManyToManyField(
         Utility,
         blank=True,
-        null=True,
-        related_name="contributors",
-        on_delete=models.PROTECT,
+        related_name="users",
     )
 
     def clean(self):
+        if (
+            self.id
+            and self.role.description == "CONTRIBUTOR"
+            and not self.utilities.exists()
+        ):
+            raise ValidationError("Contributors must be assigned a utility.")
+
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
-
-        if self.utility is None and self.role.description == "CONTRIBUTOR":
-            raise ValidationError("Contributors must be assigned a utility.")
 
     def __str__(self):
         return self.email

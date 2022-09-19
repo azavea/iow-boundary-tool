@@ -25,9 +25,9 @@ class Command(BaseCommand):
             password="password",
             role=Role.objects.get(description="VALIDATOR"),
         )
-        User.objects.create_user(
+        contributor = User.objects.create_user(
             email="c1@azavea.com",
             password="password",
             role=Role.objects.get(description="CONTRIBUTOR"),
-            utility=test_utility,
         )
+        contributor.utilities.add(test_utility)
