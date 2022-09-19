@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models.user import User
+from .models.user import User, Utility
 
 
 class EmailAsUsernameUserAdmin(UserAdmin):
@@ -33,3 +33,4 @@ class EmailAsUsernameUserAdmin(UserAdmin):
 
 
 admin.site.register(User, EmailAsUsernameUserAdmin)
+admin.site.register(Utility)

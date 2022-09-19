@@ -4,10 +4,12 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from django.utils import timezone
 
 from .role import Role, Roles
+from .utility import Utility
 
 __all__ = ["EmailAsUsernameUserManager", "User"]
 
@@ -64,9 +66,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=Roles.CONTRIBUTOR.value,
     )
 
+    utility = models.ForeignKey(
+        Utility,
+        blank=True,
+        null=True,
+        related_name="contributors",
+        on_delete=models.PROTECT,
+    )
+
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
+
+        if self.utility is None and self.role.description == "CONTRIBUTOR":
+            raise ValidationError("Contributors must be assigned a utility.")
 
     def __str__(self):
         return self.email
