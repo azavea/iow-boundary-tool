@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.utils import timezone
 
-from .role import Role
+from .role import Role, Roles
 
 __all__ = ["EmailAsUsernameUserManager", "User"]
 
@@ -41,7 +41,7 @@ class EmailAsUsernameUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        admin_role = Role.objects.get(description="ADMINISTRATOR")
+        admin_role = Role.objects.get(pk=Roles.ADMINISTRATOR.value)
         return self._create_user(email, admin_role, password, **extra_fields)
 
 
@@ -60,6 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Role,
         related_name="actors",
         on_delete=models.PROTECT,
+        default=Roles.CONTRIBUTOR.value,
     )
 
     def clean(self):
