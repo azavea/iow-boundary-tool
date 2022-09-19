@@ -4,7 +4,7 @@ pip_version: "20.3.*"
 aws_cli_version: "1.18.*"
 aws_profile: "iow-boundary-tool"
 
-project_name_settings_bucket: "iow-boundary-tool-development-config-us-east-1"
+iow_boundary_tool_settings_bucket: "iow-boundary-tool-development-config-us-east-1"
 
 docker_version: "5:19.*"
 docker_compose_version: "1.27.4"

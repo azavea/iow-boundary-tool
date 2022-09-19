@@ -9,4 +9,4 @@
   lineinfile:
     path: "/etc/environment"
     regexp: "^IOW_BOUNDARY_TOOL_SETTINGS_BUCKET="
-    line: "IOW_BOUNDARY_TOOL_SETTINGS_BUCKET={{ iow-boundary-tool-development-config-us-east-1 }}"
+    line: "IOW_BOUNDARY_TOOL_SETTINGS_BUCKET={{ iow_boundary_tool_settings_bucket }}"
