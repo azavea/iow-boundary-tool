@@ -9,7 +9,7 @@ class EmailAsUsernameUserAdmin(UserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("email", "password", "role")}),
+        (None, {"fields": ("email", "password", "role", "utility")}),
         (
             "Permissions",
             {
@@ -26,7 +26,13 @@ class EmailAsUsernameUserAdmin(UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2", "role"),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "role",
+                    "utility",
+                ),
             },
         ),
     )
