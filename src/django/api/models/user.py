@@ -44,7 +44,7 @@ class EmailAsUsernameUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        admin_role = Role.objects.get(pk=Roles.ADMINISTRATOR.value)
+        admin_role = Role.objects.get(pk=Roles.ADMINISTRATOR)
         return self._create_user(email, admin_role, password, **extra_fields)
 
 
@@ -63,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Role,
         related_name="actors",
         on_delete=models.PROTECT,
-        default=Roles.CONTRIBUTOR.value,
+        default=Roles.CONTRIBUTOR,
     )
 
     utilities = models.ManyToManyField(
@@ -75,7 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         if (
             self.id
-            and self.role.description == "CONTRIBUTOR"
+            and self.role.pk == Roles.CONTRIBUTOR
             and not self.utilities.exists()
         ):
             raise ValidationError("Contributors must be assigned a utility.")
