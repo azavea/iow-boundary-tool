@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django.core.validators import EmailValidator
 from django.utils import timezone
 
 from .role import Role, Roles
@@ -51,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     objects = EmailAsUsernameUserManager()
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, validators=[EmailValidator])
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
