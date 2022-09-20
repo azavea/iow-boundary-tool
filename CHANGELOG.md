@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add labels to municipal boundary layer [#61](https://github.com/azavea/iow-boundary-tool/pull/61)
 - Add panes for layer [#57](https://github.com/azavea/iow-boundary-tool/pull/57)
 - Add custom user model and define roles [#72](https://github.com/azavea/iow-boundary-tool/pull/72)
+- Add utility model and test development users [#73](https://github.com/azavea/iow-boundary-tool/pull/73)
 
 ### Changed
 

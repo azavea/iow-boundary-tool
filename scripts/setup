@@ -25,6 +25,7 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
 
         ./scripts/bootstrap
         ./scripts/update
+        ./scripts/resetdb
     else
         usage
     fi

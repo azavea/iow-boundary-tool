@@ -4,10 +4,12 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from django.utils import timezone
 
 from .role import Role, Roles
+from .utility import Utility
 
 __all__ = ["EmailAsUsernameUserManager", "User"]
 
@@ -64,7 +66,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=Roles.CONTRIBUTOR.value,
     )
 
+    utilities = models.ManyToManyField(
+        Utility,
+        blank=True,
+        related_name="users",
+    )
+
     def clean(self):
+        if (
+            self.id
+            and self.role.description == "CONTRIBUTOR"
+            and not self.utilities.exists()
+        ):
+            raise ValidationError("Contributors must be assigned a utility.")
+
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 

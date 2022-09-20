@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models.user import User
+from .models.user import User, Utility
 
 
 class EmailAsUsernameUserAdmin(UserAdmin):
@@ -9,7 +9,7 @@ class EmailAsUsernameUserAdmin(UserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("email", "password", "role")}),
+        (None, {"fields": ("email", "password", "role", "utilities")}),
         (
             "Permissions",
             {
@@ -26,10 +26,17 @@ class EmailAsUsernameUserAdmin(UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2", "role"),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "role",
+                    "utilities",
+                ),
             },
         ),
     )
 
 
 admin.site.register(User, EmailAsUsernameUserAdmin)
+admin.site.register(Utility)

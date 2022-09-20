@@ -71,9 +71,10 @@ all scripts should be run from the host.
 | `console`      | Run interactive shell inside application container            |
 | `lint`         | Lint source code                                              |
 | `server`       | Run Docker Compose services                                   |
-| `setup`        | Provision Vagrant VM and run `update`                         |
+| `setup`        | Provision Vagrant VM and run `update` and `resetdb`           |
 | `test`         | Run unit tests                                                |
 | `update`       | Build Docker images                                           |
+| `resetdb`      | Restore development database to defaults (with test data)     |
 
 ### Adding NPM Packages
 
