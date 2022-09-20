@@ -1,11 +1,11 @@
-from enum import Enum, unique
+from enum import IntEnum, unique
 from django.db import models
 
 __all__ = ["Role"]
 
 
 @unique
-class Roles(Enum):
+class Roles(IntEnum):
     """Corresponds to the order of pks in initial migration
     0002_create_initial_roles."""
 

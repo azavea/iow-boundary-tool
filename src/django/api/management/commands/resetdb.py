@@ -2,6 +2,7 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from api.models import Role, Utility, User
+from api.models.role import Roles
 
 
 class Command(BaseCommand):
@@ -23,11 +24,11 @@ class Command(BaseCommand):
         User.objects.create_user(
             email="v1@azavea.com",
             password="password",
-            role=Role.objects.get(description="VALIDATOR"),
+            role=Role.objects.get(pk=Roles.VALIDATOR),
         )
         contributor = User.objects.create_user(
             email="c1@azavea.com",
             password="password",
-            role=Role.objects.get(description="CONTRIBUTOR"),
+            role=Role.objects.get(pk=Roles.CONTRIBUTOR),
         )
         contributor.utilities.add(test_utility)

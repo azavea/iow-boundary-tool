@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update tiles for all basemaps [#48](https://github.com/azavea/iow-boundary-tool/pull/48)
 - Update Edit Polygon border to be lighter on dark backgrounds [#58](https://github.com/azavea/iow-boundary-tool/pull/58)
 - Split DrawMap commponents into Layers and DrawTools [#57](https://github.com/azavea/iow-boundary-tool/pull/57)
+- Make `Roles` enum an `IntEnum` subclass [#74](https://github.com/azavea/iow-boundary-tool/pull/74)
 
 ### Fixed
 
