@@ -8,24 +8,44 @@ import Draw from './pages/Draw';
 import Map from './components/Map';
 import Sidebar from './components/Sidebar';
 
+import PrivateRoute from './components/PrivateRoute';
+
 function App() {
     return (
         <BrowserRouter>
-            <Flex>
-                <Routes>
-                    <Route path='/draw' element={<Sidebar />} />
-                </Routes>
-                <Box flex={1} position='relative'>
+            <Routes>
+                <Route path='/login' element={<Login />} />
+            </Routes>
+            <PrivateRoute>
+                <Flex>
                     <Routes>
                         <Route path='/login' element={<Login />} />
                     </Routes>
                     <Map>
                         <Routes>
-                            <Route path='/welcome' element={<Welcome />} />
-                            <Route path='/draw' element={<Draw />} />
+                            <Route
+                                path='/welcome'
+                                element={
+                                    <PrivateRoute>
+                                        <Welcome />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path='/draw'
+                                element={
+                                    <PrivateRoute>
+                                        <Draw />
+                                    </PrivateRoute>
+                                }
+                            />
                             <Route
                                 path='/'
-                                element={<Navigate to='/welcome' replace />}
+                                element={
+                                    <PrivateRoute>
+                                        <Navigate to='/welcome' replace />
+                                    </PrivateRoute>
+                                }
                             />
                         </Routes>
                     </Map>
