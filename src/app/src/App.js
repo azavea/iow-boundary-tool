@@ -2,6 +2,7 @@ import { Box, Flex } from '@chakra-ui/react';
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 
 import './App.css';
+import Login from './pages/Login';
 import Welcome from './pages/Welcome';
 import Draw from './pages/Draw';
 import Map from './components/Map';
@@ -15,6 +16,9 @@ function App() {
                     <Route path='/draw' element={<Sidebar />} />
                 </Routes>
                 <Box flex={1} position='relative'>
+                    <Routes>
+                        <Route path='/login' element={<Login />} />
+                    </Routes>
                     <Map>
                         <Routes>
                             <Route path='/welcome' element={<Welcome />} />

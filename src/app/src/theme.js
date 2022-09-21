@@ -61,6 +61,12 @@ const Button = {
             textDecoration: 'underline',
             color: 'gray.700',
         },
+        minimal: {
+            fontWeight: 400,
+            fontSize: 'sm',
+            textDecoration: 'underline',
+            color: 'gray.800',
+        },
     },
 };
 
@@ -115,6 +121,18 @@ const theme = extendTheme({
         welcomeIntro: {
             fontFamily: 'heading',
             fontSize: 'xl',
+        },
+        loginHeader: {
+            fontFamily: 'heading',
+            fontSize: '3xl',
+            fontWeight: 'bold',
+            alignItems: 'center',
+            bg: 'gray.50',
+        },
+        loginError: {
+            fontSize: 'md',
+            alignItems: 'center',
+            color: 'red.600',
         },
     },
     styles: {
