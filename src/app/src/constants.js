@@ -38,3 +38,8 @@ export const PANES = {
     MUNICIPAL_BOUNDARY_LABELS: { label: 'muni-labels', zIndex: 225 },
     USER_POLYGON: { label: 'user-polygon', zIndex: 490 },
 };
+
+export const API_URLS = {
+    LOGIN: 'api/auth/login/',
+    LOGOUT: 'api/auth/logout/',
+};

@@ -1,15 +1,27 @@
-import React from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-// Inspired by
-// https://jasonwatmore.com/post/2022/06/24/react-router-6-private-route-component-to-restrict-access-to-protected-pages
+import { API } from '../api';
+import { API_URLS } from '../constants';
+import Login from '../pages/Login.js';
+import { login } from '../store/authSlice';
+
 export default function PrivateRoute({ children }) {
-    const signedIn = false; // TODO: useSelector() for actual login state
+    const signedIn = useSelector(state => state.auth.signedIn);
     const location = useLocation();
 
-    if (!signedIn) {
-        return <Navigate to='/login' state={{ from: location }} />;
-    }
+    // Log in this user if they have an authenticated session
+    // Handles losing Redux state on refresh
+    useEffect(() => {
+        if (!signedIn) {
+            API.get(API_URLS.LOGIN)
+                .then(() => {
+                    dispatch(login());
+                })
+                .catch(() => {});
+        }
+    }, [signedIn, navigate, dispatch]);
 
     return children;
 }
