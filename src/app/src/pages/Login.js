@@ -44,6 +44,11 @@ export default function Login({ to }) {
                 bg='white'
                 placeholder='email'
                 onChange={({ target: { value } }) => setEmail(value)}
+                onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                        loginRequest(email, password);
+                    }
+                }}
             />
             <Input
                 htmlSize={32}
@@ -52,6 +57,11 @@ export default function Login({ to }) {
                 type='password'
                 placeholder='password'
                 onChange={({ target: { value } }) => setPassword(value)}
+                onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                        loginRequest(email, password);
+                    }
+                }}
             />
             <VStack spacing={2}>
                 <Button w='320px' variant='cta' onClick={() => loginRequest(email, password)}>
