@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 
 import { API } from '../api';
 import { API_URLS } from '../constants';
 import { login } from '../store/authSlice';
 
-export default function Login({ to }) {
+export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorDetail, setErrorDetail] = useState('');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const loginRequest = () => {
         API.post(API_URLS.LOGIN, {
@@ -27,9 +28,16 @@ export default function Login({ to }) {
     };
 
     const signedIn = useSelector(state => state.auth.signedIn);
-    if (signedIn) {
-        return <Navigate to='/welcome' replace />;
-    }
+    const locationBeforeAuth = useSelector(
+        state => state.auth.locationBeforeAuth
+    );
+
+    // Upon successful sign in, redirect if specified (e.g. by /login route)
+    useEffect(() => {
+        if (signedIn) {
+            navigate(locationBeforeAuth, { replace: true });
+        }
+    }, [navigate, signedIn, locationBeforeAuth]);
 
     return (
         <VStack bg='gray.50' h='100vh' spacing={5}>
@@ -64,7 +72,11 @@ export default function Login({ to }) {
                 }}
             />
             <VStack spacing={2}>
-                <Button w='320px' variant='cta' onClick={() => loginRequest(email, password)}>
+                <Button
+                    w='320px'
+                    variant='cta'
+                    onClick={() => loginRequest(email, password)}
+                >
                     Login
                 </Button>
                 <Button variant='minimal'>Forgot password?</Button>

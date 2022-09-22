@@ -19,38 +19,22 @@ function App() {
             <PrivateRoute>
                 <Flex>
                     <Routes>
-                        <Route path='/login' element={<Login />} />
+                        <Route path='/draw' element={<Sidebar />} />
                     </Routes>
-                    <Map>
-                        <Routes>
-                            <Route
-                                path='/welcome'
-                                element={
-                                    <PrivateRoute>
-                                        <Welcome />
-                                    </PrivateRoute>
-                                }
-                            />
-                            <Route
-                                path='/draw'
-                                element={
-                                    <PrivateRoute>
-                                        <Draw />
-                                    </PrivateRoute>
-                                }
-                            />
-                            <Route
-                                path='/'
-                                element={
-                                    <PrivateRoute>
-                                        <Navigate to='/welcome' replace />
-                                    </PrivateRoute>
-                                }
-                            />
-                        </Routes>
-                    </Map>
-                </Box>
-            </Flex>
+                    <Box flex={1} position='relative'>
+                        <Map>
+                            <Routes>
+                                <Route path='/welcome' element={<Welcome />} />
+                                <Route path='/draw' element={<Draw />} />
+                                <Route
+                                    path='/'
+                                    element={<Navigate to='/welcome' replace />}
+                                />
+                            </Routes>
+                        </Map>
+                    </Box>
+                </Flex>
+            </PrivateRoute>
         </BrowserRouter>
     );
 }

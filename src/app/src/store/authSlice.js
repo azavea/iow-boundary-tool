@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     signedIn: false,
+    locationBeforeAuth: '/welcome',
 };
 
 export const authSlice = createSlice({
@@ -14,9 +15,14 @@ export const authSlice = createSlice({
         logout: state => {
             state.signedIn = false;
         },
+        setLocationBeforeAuth: (state, { payload: location }) => {
+            if (!location.pathname.startsWith('/login')) {
+                state.locationBeforeAuth = location;
+            }
+        },
     },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setLocationBeforeAuth } = authSlice.actions;
 
 export default authSlice.reducer;
