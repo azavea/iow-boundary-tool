@@ -50,6 +50,7 @@ export default function Login() {
                 htmlSize={32}
                 width='auto'
                 bg='white'
+                aria-label='email'
                 placeholder='email'
                 onChange={({ target: { value } }) => setEmail(value)}
                 onKeyPress={e => {
@@ -63,6 +64,7 @@ export default function Login() {
                 width='auto'
                 bg='white'
                 type='password'
+                aria-label='password'
                 placeholder='password'
                 onChange={({ target: { value } }) => setPassword(value)}
                 onKeyPress={e => {
