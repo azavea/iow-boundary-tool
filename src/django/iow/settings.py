@@ -263,3 +263,12 @@ ECSMANAGE_ENVIRONMENTS = {
         'AWS_REGION': 'us-east-1',
     }
 }
+
+# Email
+
+if ENVIRONMENT == 'Development':
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'noreply@iow.test'
+else:
+    EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
+    DEFAULT_FROM_EMAIL = os.getenv('IOW_DEFAULT_FROM_EMAIL')

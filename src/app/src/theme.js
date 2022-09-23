@@ -129,7 +129,7 @@ const theme = extendTheme({
             alignItems: 'center',
             bg: 'gray.50',
         },
-        loginError: {
+        apiError: {
             fontSize: 'md',
             alignItems: 'center',
             color: 'red.600',
