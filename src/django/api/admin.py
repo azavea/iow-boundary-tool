@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from rest_framework.authtoken.models import TokenProxy
 from .models.user import User, Utility
 
 
@@ -40,3 +41,4 @@ class EmailAsUsernameUserAdmin(UserAdmin):
 
 admin.site.register(User, EmailAsUsernameUserAdmin)
 admin.site.register(Utility)
+admin.site.unregister(TokenProxy)

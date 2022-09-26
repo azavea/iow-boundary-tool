@@ -93,11 +93,19 @@ INSTALLED_APPS = [
     'django_extensions',
     "rest_framework",
     "rest_framework_gis",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
     'watchman',
     "ecsmanage",
     "api",
     "simple_history",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
