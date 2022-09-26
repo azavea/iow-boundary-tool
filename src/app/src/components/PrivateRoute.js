@@ -12,6 +12,8 @@ export default function PrivateRoute({ children }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const locationIsLogin = location.pathname.startsWith('/login');
+
     // Log in this user if they have an authenticated session
     // Handles losing Redux state on refresh
     useEffect(() => {
@@ -22,12 +24,12 @@ export default function PrivateRoute({ children }) {
                     dispatch(login());
                 })
                 .catch(() => {
-                    if (!location.pathname.startsWith('/login')) {
+                    if (!locationIsLogin) {
                         navigate('/login');
                     }
                 });
         }
-    }, [signedIn, location, navigate, dispatch]);
+    }, [signedIn, location, locationIsLogin, navigate, dispatch]);
 
-    return children;
+    return locationIsLogin ? null : children;
 }
