@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from .role import Role, Roles
 from .utility import Utility
+from .state import State
 
 __all__ = ["EmailAsUsernameUserManager", "User"]
 
@@ -68,6 +69,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     utilities = models.ManyToManyField(
         Utility,
+        blank=True,
+        related_name="users",
+    )
+
+    states = models.ManyToManyField(
+        State,
         blank=True,
         related_name="users",
     )

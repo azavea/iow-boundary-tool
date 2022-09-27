@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from rest_framework.authtoken.models import TokenProxy
 from .models.user import User, Utility
+from .models.state import State
 
 
 class EmailAsUsernameUserAdmin(UserAdmin):
@@ -10,7 +11,7 @@ class EmailAsUsernameUserAdmin(UserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("email", "password", "role", "utilities")}),
+        (None, {"fields": ("email", "password", "role", "utilities", "states")}),
         (
             "Permissions",
             {
@@ -42,3 +43,4 @@ class EmailAsUsernameUserAdmin(UserAdmin):
 admin.site.register(User, EmailAsUsernameUserAdmin)
 admin.site.register(Utility)
 admin.site.unregister(TokenProxy)
+admin.site.register(State)

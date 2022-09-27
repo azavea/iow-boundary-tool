@@ -24,6 +24,7 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
         export IOW_BOUNDARY_TOOL_SETTINGS_BUCKET=iow-boundary-tool-development-config-us-east-1
 
         ./scripts/bootstrap
+        ./scripts/fetch-data
         ./scripts/update
         ./scripts/resetdb
     else
