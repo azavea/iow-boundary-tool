@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text } from '@chakra-ui/react';
 
@@ -11,17 +11,13 @@ export default function ResetPassword() {
     const [newPassword2, setNewPassword2] = useState('');
     const [success, setSuccess] = useState(false);
     const [errorDetail, setErrorDetail] = useState('');
+    const [invalidToken, setInvalidToken] = useState(false);
     const [disableSubmit, setDisableSubmit] = useState(false);
 
     const location = useLocation();
     const navigate = useNavigate();
     const uid = location.pathname.split('/')[3];
     const token = location.pathname.split('/')[4];
-
-    if ((!uid || !token) && !errorDetail) {
-        setErrorDetail('The link you followed is no longer valid.');
-        setDisableSubmit(true);
-    }
 
     const formatApiError = apiErrorData => {
         var errorDetail = 'An unknown error occurred.';
@@ -65,6 +61,29 @@ export default function ResetPassword() {
             });
     };
 
+    // Find out if the uid and token are valid on first render.
+    // This will require sending a dummy password that will never be valid (too short)
+    // in order to get a response including the token or uid fields.
+    useEffect(() => {
+        API.post(API_URLS.RESET, {
+            uid,
+            token,
+            new_password1: '!', // too short
+            new_password2: '@',
+        }).catch(apiError => {
+            const errorFields = Object.keys(apiError.response?.data);
+            if (errorFields.includes('token') || errorFields.includes('uid')) {
+                setInvalidToken(true);
+                setSuccess(false);
+            }
+        });
+    }, [uid, token]);
+
+    if ((!uid || !token || invalidToken) && !errorDetail) {
+        setErrorDetail('The link you followed is no longer valid.');
+        setDisableSubmit(true);
+    }
+
     function makePasswordInput(setter, placeholder) {
         return (
             <Input
@@ -95,7 +114,7 @@ export default function ResetPassword() {
     if (success) {
         resultOrInstruction = 'Your password has been reset';
     } else {
-        if (disableSubmit) {
+        if (disableSubmit || invalidToken) {
             resultOrInstruction = '';
         } else {
             resultOrInstruction = 'Choose a new password (8+ characters)';
@@ -117,7 +136,7 @@ export default function ResetPassword() {
                     {resultOrInstruction}
                 </Text>
             </Box>
-            {success ? (
+            {success || invalidToken ? (
                 <Button variant='cta' onClick={() => navigate('/login')}>
                     Login
                 </Button>
