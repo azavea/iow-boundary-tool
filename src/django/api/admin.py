@@ -3,6 +3,9 @@ from django.contrib.auth.admin import UserAdmin
 from rest_framework.authtoken.models import TokenProxy
 from .models.user import User, Utility
 from .models.state import State
+from .models.boundary import Boundary
+from .models.submission import Submission, Approval, Review, Annotation
+from .models.reference_image import ReferenceImage
 
 
 class EmailAsUsernameUserAdmin(UserAdmin):
@@ -40,7 +43,17 @@ class EmailAsUsernameUserAdmin(UserAdmin):
     )
 
 
+submission_stage_models = [
+    Boundary,
+    ReferenceImage,
+    Submission,
+    Review,
+    Approval,
+    Annotation,
+]
+
 admin.site.register(User, EmailAsUsernameUserAdmin)
 admin.site.register(Utility)
 admin.site.unregister(TokenProxy)
 admin.site.register(State)
+admin.site.register(submission_stage_models)
