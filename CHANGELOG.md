@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add custom user model and define roles [#72](https://github.com/azavea/iow-boundary-tool/pull/72)
 - Add utility model and test development users [#73](https://github.com/azavea/iow-boundary-tool/pull/73)
 - Add login interface [#77](https://github.com/azavea/iow-boundary-tool/pull/77)
+- Add reset password functionality [#79](https://github.com/azavea/iow-boundary-tool/pull/79)
 
 ### Changed
 

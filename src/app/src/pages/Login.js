@@ -6,11 +6,13 @@ import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 import { API } from '../api';
 import { API_URLS } from '../constants';
 import { login } from '../store/authSlice';
+import LoginForm from '../components/LoginForm';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorDetail, setErrorDetail] = useState('');
+    const [forgotPassword, setForgotPassword] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -37,14 +39,16 @@ export default function Login() {
         if (signedIn) {
             navigate(locationBeforeAuth, { replace: true });
         }
-    }, [navigate, signedIn, locationBeforeAuth]);
+        if (forgotPassword) {
+            navigate('/forgot');
+        }
+    }, [navigate, signedIn, forgotPassword, locationBeforeAuth]);
 
     return (
-        <VStack bg='gray.50' h='100vh' spacing={5}>
-            <Box h='20%'></Box>
+        <LoginForm>
             <Text textStyle='loginHeader'>Boundary Sync</Text>
             <Box>
-                <Text textStyle='loginError'>{errorDetail}</Text>
+                <Text textStyle='apiError'>{errorDetail}</Text>
             </Box>
             <Input
                 htmlSize={32}
@@ -81,8 +85,13 @@ export default function Login() {
                 >
                     Login
                 </Button>
-                <Button variant='minimal'>Forgot password?</Button>
+                <Button
+                    variant='minimal'
+                    onClick={() => setForgotPassword(true)}
+                >
+                    Forgot password?
+                </Button>
             </VStack>
-        </VStack>
+        </LoginForm>
     );
 }

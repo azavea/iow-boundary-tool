@@ -42,4 +42,6 @@ export const PANES = {
 export const API_URLS = {
     LOGIN: 'api/auth/login/',
     LOGOUT: 'api/auth/logout/',
+    FORGOT: 'api/auth/password/reset/',
+    RESET: 'api/auth/password/reset/confirm/',
 };

@@ -64,3 +64,12 @@ export function customizePrototypeIcon(prototype, className) {
     prototype.options.icon = new L.DivIcon({ className });
     prototype.options.touchIcon = prototype.options.icon;
 }
+
+export function formatApiError(apiErrorData) {
+    var errorDetail = '';
+    for (const [field, errorArray] of Object.entries(apiErrorData)) {
+        const formattedField = `${field[0].toUpperCase()}${field.slice(1)}`;
+        errorDetail += `${formattedField}: ${errorArray.join(' ')}`;
+    }
+    return errorDetail || 'An unknown error occurred.';
+}
