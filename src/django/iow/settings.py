@@ -185,6 +185,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'api.User'
 
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'api.serializers.auth.UserChosenPasswordResetConfirmSerializer',
+}
+
 # Logging
 # https://docs.djangoproject.com/en/3.2/topics/logging/
 

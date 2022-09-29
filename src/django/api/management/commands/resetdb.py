@@ -20,15 +20,18 @@ class Command(BaseCommand):
         User.objects.create_superuser(
             email="a1@azavea.com",
             password="password",
+            has_admin_generated_password=False,
         )
         User.objects.create_user(
             email="v1@azavea.com",
             password="password",
+            has_admin_generated_password=False,
             role=Role.objects.get(pk=Roles.VALIDATOR),
         )
         contributor = User.objects.create_user(
             email="c1@azavea.com",
             password="password",
+            has_admin_generated_password=False,
             role=Role.objects.get(pk=Roles.CONTRIBUTOR),
         )
         contributor.utilities.add(test_utility)
