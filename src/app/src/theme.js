@@ -105,6 +105,24 @@ const Tooltip = {
     },
 };
 
+const Table = {
+    variants: {
+        submissions: {
+            table: {
+                borderColor: 'gray.200',
+                borderWidth: '1px',
+            },
+            th: {
+                bg: 'gray.50',
+            },
+            tr: {
+                borderColor: 'gray.200',
+                borderWidth: '1px',
+            },
+        },
+    },
+};
+
 const theme = extendTheme({
     components: {
         Button,
@@ -112,6 +130,7 @@ const theme = extendTheme({
         Input,
         ListItem,
         Tooltip,
+        Table,
     },
     fonts: {
         heading: `'Quicksand', sans-serif`,
@@ -133,6 +152,25 @@ const theme = extendTheme({
             fontSize: 'md',
             alignItems: 'center',
             color: 'red.600',
+        },
+        utilityEntry: {
+            fontSize: 'sm',
+            fontWeight: 700,
+        },
+        utilityId: {
+            fontSize: 'sm',
+            fontWeight: 400,
+            color: 'gray.500',
+        },
+        timestamp: {
+            fontSize: 'sm',
+            fontWeight: 400,
+        },
+        tableHeading: {
+            fontSize: 'sm',
+            fontWeight: 700,
+            fontFamily: `'Inter', sans-serif`,
+            textTransform: 'none',
         },
     },
     styles: {
