@@ -87,8 +87,7 @@ export default function ResetPassword() {
     function makePasswordInput(setter, placeholder) {
         return (
             <Input
-                htmlSize={32}
-                width='auto'
+                width='xs'
                 bg='white'
                 aria-label={placeholder}
                 placeholder={placeholder}
@@ -145,7 +144,7 @@ export default function ResetPassword() {
                     {makePasswordInput(setNewPassword1, 'new password')}
                     {makePasswordInput(setNewPassword2, 'new password (again)')}
                     <Button
-                        w='320px'
+                        w='xs'
                         variant='cta'
                         disabled={disableSubmit}
                         onClick={() =>

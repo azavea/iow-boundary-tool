@@ -54,8 +54,7 @@ export default function ForgotPassword() {
                         </Text>
                     </Box>
                     <Input
-                        htmlSize={32}
-                        width='auto'
+                        width='xs'
                         bg='white'
                         aria-label='email'
                         placeholder='email'
@@ -69,7 +68,7 @@ export default function ForgotPassword() {
                         }}
                     />
                     <Button
-                        w='320px'
+                        width='xs'
                         variant='cta'
                         onClick={() => forgotPasswordRequest(email)}
                     >
