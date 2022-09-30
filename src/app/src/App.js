@@ -1,5 +1,11 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import {
+    BrowserRouter,
+    Outlet,
+    Navigate,
+    Routes,
+    Route,
+} from 'react-router-dom';
 
 import './App.css';
 import Login from './pages/Login';
@@ -8,6 +14,7 @@ import ResetPassword from './pages/ResetPassword';
 import Welcome from './pages/Welcome';
 import Draw from './pages/Draw';
 import Map from './components/Map';
+import Submissions from './pages/Submissions';
 import Sidebar from './components/Sidebar';
 
 import PrivateRoute from './components/PrivateRoute';
@@ -19,16 +26,24 @@ const privateRoutes = (
                 <Route path='/draw' element={<Sidebar />} />
             </Routes>
             <Box flex={1} position='relative'>
+                {/* Map routes */}
                 <Map>
                     <Routes>
                         <Route path='/welcome' element={<Welcome />} />
                         <Route path='/draw' element={<Draw />} />
-                        <Route
-                            path='/'
-                            element={<Navigate to='/welcome' replace />}
-                        />
                     </Routes>
                 </Map>
+                {/* Non-map routes */}
+                <Routes>
+                    <Route path='/submissions' element={<Submissions />} />
+                    {/* Avoid redirecting map routes */}
+                    <Route path='/welcome' element={<Outlet />} />
+                    <Route path='/draw' element={<Outlet />} />
+                    <Route
+                        path='*'
+                        element={<Navigate to='/welcome' replace />}
+                    />
+                </Routes>
             </Box>
         </Flex>
     </PrivateRoute>
