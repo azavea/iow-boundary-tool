@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add utility model and test development users [#73](https://github.com/azavea/iow-boundary-tool/pull/73)
 - Add login interface [#77](https://github.com/azavea/iow-boundary-tool/pull/77)
 - Add reset password functionality [#79](https://github.com/azavea/iow-boundary-tool/pull/79)
+- Create Remaining Initial Django Models [#82](https://github.com/azavea/iow-boundary-tool/pull/82)
 
 ### Changed
 

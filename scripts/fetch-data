@@ -10,11 +10,24 @@ MUNICIPAL_BOUNDARIES_DATA_LOCATION="https://linc.osbm.nc.gov/explore/dataset/mun
 MUNICIPAL_BOUNDARIES_FILENAME=muni.geo.json
 DATA_DIR=src/app/public/data
 
+DEFAULT_STATE_NC_GEOJSON_URL="https://public.opendatasoft.com/explore/dataset/us-state-boundaries/download/?format=geojson&refine.name=North+Carolina&timezone=America/New_York&lang=en"
+NC_GEOJSON_FILENAME=NC_BOUNDARY.geojson
+DJANGO_DATA_DIR=src/django/data
+
 function usage() {
     echo -n \
         "Usage: $(basename "$0")
 Execute Yarn CLI commands.
 "
+}
+
+function fetchDefaultDBData() {
+    if [ ! -d "$DJANGO_DATA_DIR" ]; then
+        mkdir -p "$DJANGO_DATA_DIR"
+    fi
+
+    echo "Fetching default state boundary geojson data from: $DEFAULT_STATE_NC_GEOJSON_URL"
+    curl "${DEFAULT_STATE_NC_GEOJSON_URL}" -o "$DJANGO_DATA_DIR/$NC_GEOJSON_FILENAME"
 }
 
 function fetchData() {
@@ -40,6 +53,18 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
             fi
         else
             fetchData
+        fi
+
+        if [[ -f "$DJANGO_DATA_DIR/$DEFAULT_STATE_NC_GEOJSON_URL" ]]; then
+            if [ "${1:-}" = "--force" ]; then
+                echo "Warning: forcing data refetching!"
+                rm "$DJANGO_DATA_DIR/$NC_GEOJSON_FILENAME"
+                fetchDefaultDBData
+            else
+                echo "Skipping default django data fetching: file exists."
+            fi
+        else
+            fetchDefaultDBData
         fi
     fi
 fi
