@@ -46,6 +46,14 @@ vagrant ssh
 ./scripts/server
 ```
 
+After running `setup` (or `resetdb`), three test users are created:
+
+| User                 | Password          | Role          |
+| ---------------------|-------------------|---------------|
+| a1@azavea.com        | password          | administrator |
+| v1@azavea.com        | password          | validator     |
+| c1@azavea.com        | password          | contributor   |
+
 ### Ports
 
 | Service            | Port                            |

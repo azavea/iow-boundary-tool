@@ -52,6 +52,7 @@ services:
     working_dir: /usr/local/src
     command:
       - "-b :8181"
+      - "--workers=2"
       - "--reload"
       - "--timeout=90"
       - "--access-logfile=-"
