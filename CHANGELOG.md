@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix react-remove-scroll-bar warning [#29](https://github.com/azavea/iow-boundary-tool/pull/29)
 - Don't move reference image when panning map [#59](https://github.com/azavea/iow-boundary-tool/pull/59)
 - Fix ansible task to use var defined in group_vars [#74](https://github.com/azavea/iow-boundary-tool/pull/74)
+- Remove browser-dependent sizing of input elements [#100](https://github.com/azavea/iow-boundary-tool/pull/100)
 
 ### Deprecated
 

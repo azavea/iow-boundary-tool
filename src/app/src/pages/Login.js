@@ -55,8 +55,7 @@ export default function Login() {
                 <Text textStyle='apiError'>{errorDetail}</Text>
             </Box>
             <Input
-                htmlSize={32}
-                width='auto'
+                width='xs'
                 bg='white'
                 aria-label='email'
                 placeholder='email'
@@ -68,8 +67,7 @@ export default function Login() {
                 }}
             />
             <Input
-                htmlSize={32}
-                width='auto'
+                width='xs'
                 bg='white'
                 type='password'
                 aria-label='password'
@@ -83,7 +81,7 @@ export default function Login() {
             />
             <VStack spacing={2}>
                 <Button
-                    w='320px'
+                    width='xs'
                     variant='cta'
                     onClick={() => loginRequest(email, password)}
                 >
