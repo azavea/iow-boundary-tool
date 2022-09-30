@@ -5,6 +5,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from dj_rest_auth.views import LoginView, LogoutView
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 
 class Login(LoginView):
@@ -21,6 +24,13 @@ class Login(LoginView):
 
         if user is None:
             raise AuthenticationFailed("Unable to login with those credentials")
+        if user.has_admin_generated_password:
+            context = {
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            }
+            # Ask client to redirect to a password reset link
+            return Response(context, status=status.HTTP_302_FOUND)
 
         login(request, user)
 

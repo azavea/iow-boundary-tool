@@ -59,6 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    has_admin_generated_password = models.BooleanField(default=True)
 
     role = models.ForeignKey(
         Role,

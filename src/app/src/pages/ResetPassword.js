@@ -45,7 +45,7 @@ export default function ResetPassword() {
     };
 
     const forgotPasswordRequest = () => {
-        API.post(API_URLS.RESET, {
+        API.post(API_URLS.CONFIRM, {
             uid,
             token,
             new_password1: newPassword1,
@@ -65,7 +65,7 @@ export default function ResetPassword() {
     // This will require sending a dummy password that will never be valid (too short)
     // in order to get a response including the token or uid fields.
     useEffect(() => {
-        API.post(API_URLS.RESET, {
+        API.post(API_URLS.CONFIRM, {
             uid,
             token,
             new_password1: '!', // too short
