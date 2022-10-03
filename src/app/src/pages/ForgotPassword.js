@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Input, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { API } from '../api';
+import apiClient from '../api/client';
 import { API_URLS } from '../constants';
 import LoginForm from '../components/LoginForm';
 import { formatApiError } from '../utils';
@@ -14,7 +14,8 @@ export default function ForgotPassword() {
     const navigate = useNavigate();
 
     const forgotPasswordRequest = () => {
-        API.post(API_URLS.FORGOT, { email })
+        apiClient
+            .post(API_URLS.FORGOT, { email })
             .then(() => {
                 setSuccess(true);
                 setErrorDetail('');

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text } from '@chakra-ui/react';
 
-import { API } from '../api';
+import apiClient from '../api/client';
 import { API_URLS } from '../constants';
 import LoginForm from '../components/LoginForm';
 
@@ -45,12 +45,13 @@ export default function ResetPassword() {
     };
 
     const forgotPasswordRequest = () => {
-        API.post(API_URLS.CONFIRM, {
-            uid,
-            token,
-            new_password1: newPassword1,
-            new_password2: newPassword2,
-        })
+        apiClient
+            .post(API_URLS.CONFIRM, {
+                uid,
+                token,
+                new_password1: newPassword1,
+                new_password2: newPassword2,
+            })
             .then(() => {
                 setSuccess(true);
                 setErrorDetail('');
@@ -65,18 +66,23 @@ export default function ResetPassword() {
     // This will require sending a dummy password that will never be valid (too short)
     // in order to get a response including the token or uid fields.
     useEffect(() => {
-        API.post(API_URLS.CONFIRM, {
-            uid,
-            token,
-            new_password1: '!', // too short
-            new_password2: '@',
-        }).catch(apiError => {
-            const errorFields = Object.keys(apiError.response?.data);
-            if (errorFields.includes('token') || errorFields.includes('uid')) {
-                setInvalidToken(true);
-                setSuccess(false);
-            }
-        });
+        apiClient
+            .post(API_URLS.CONFIRM, {
+                uid,
+                token,
+                new_password1: '!', // too short
+                new_password2: '@',
+            })
+            .catch(apiError => {
+                const errorFields = Object.keys(apiError.response?.data);
+                if (
+                    errorFields.includes('token') ||
+                    errorFields.includes('uid')
+                ) {
+                    setInvalidToken(true);
+                    setSuccess(false);
+                }
+            });
     }, [uid, token]);
 
     if ((!uid || !token || invalidToken) && !errorDetail) {
