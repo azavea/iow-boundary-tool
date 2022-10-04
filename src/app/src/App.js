@@ -1,5 +1,11 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import {
+    BrowserRouter,
+    Outlet,
+    Navigate,
+    Routes,
+    Route,
+} from 'react-router-dom';
 
 import './App.css';
 import Login from './pages/Login';
@@ -9,11 +15,16 @@ import Welcome from './pages/Welcome';
 import Draw from './pages/Draw';
 import Submissions from './pages/Submissions';
 import Sidebar from './components/Sidebar';
+import NavBar from './components/NavBar';
 
 import PrivateRoute from './components/PrivateRoute';
 
 const privateRoutes = (
     <PrivateRoute>
+        <Routes>
+            <Route path='/welcome' element={<Outlet />} />
+            <Route path='*' element={<NavBar />} />
+        </Routes>
         <Flex>
             <Routes>
                 <Route path='/draw' element={<Sidebar />} />

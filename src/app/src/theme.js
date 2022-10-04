@@ -209,6 +209,12 @@ const theme = extendTheme({
             fontSize: '16px',
             color: 'gray.700',
         },
+        selectedUtility: {
+            fontFamily: `'Inter', sans-serif`,
+            fontWeight: 400,
+            fontSize: '20px',
+            color: 'white',
+        },
     },
     styles: {
         global: {

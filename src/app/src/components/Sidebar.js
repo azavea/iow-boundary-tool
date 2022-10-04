@@ -12,7 +12,6 @@ import {
     Tooltip,
 } from '@chakra-ui/react';
 import {
-    MenuIcon,
     QuestionMarkCircleIcon as HelpIcon,
     PlusIcon,
     EyeIcon,
@@ -37,24 +36,12 @@ export default function Sidebar() {
     return (
         <Container pl={paddingLeft} maxW='xs' bg='gray.700' p={0}>
             <Flex direction='column'>
-                <TitleBar />
                 <Divider />
                 <ReferenceLayers />
                 <Divider />
                 <BasemapLayers />
             </Flex>
         </Container>
-    );
-}
-
-function TitleBar() {
-    return (
-        <Flex align='center' p={4} mb={2}>
-            <Icon color='white' fontSize='2xl' strokeWidth={1} as={MenuIcon} />
-            <Heading size='md' color='white' ml={6}>
-                Boundary Sync
-            </Heading>
-        </Flex>
     );
 }
 
