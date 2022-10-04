@@ -6,15 +6,21 @@ import {
     Grid,
     GridItem,
     Heading,
+    HStack,
     Icon,
     IconButton,
     Text,
 } from '@chakra-ui/react';
-import { ArrowLeftIcon } from '@heroicons/react/outline';
+import { ArrowLeftIcon, InformationCircleIcon } from '@heroicons/react/outline';
 import { useNavigate, useParams } from 'react-router-dom';
+import { MapContainer } from 'react-leaflet';
 
 import ActivityLog from './ActivityLog';
+import { DefaultBasemap } from './Layers/Basemaps';
+import MapPanes from './MapPanes';
 import { SubmittedBadge } from './SubmissionBadges';
+
+import { MAP_CENTER, MAP_INITIAL_ZOOM } from '../constants';
 
 export default function SubmissionDetail() {
     const navigate = useNavigate();
@@ -147,6 +153,26 @@ export default function SubmissionDetail() {
                 </Box>
                 <Divider />
                 <ActivityLog submissionId={submissionId} />
+            </Box>
+            <Box w={650}>
+                <MapContainer
+                    center={MAP_CENTER}
+                    zoom={MAP_INITIAL_ZOOM}
+                    zoomControl={false}
+                    style={{ height: '486px' }}
+                >
+                    <MapPanes>
+                        <DefaultBasemap />
+                    </MapPanes>
+                </MapContainer>
+                <Box h={12} bg='#E6FFFA'>
+                    <HStack pl={3} pt={3}>
+                        <Icon as={InformationCircleIcon}></Icon>
+                        <Text textStyle='submissionDetailBody'>
+                            Your map will be reviewed.
+                        </Text>
+                    </HStack>
+                </Box>
             </Box>
         </Flex>
     );
