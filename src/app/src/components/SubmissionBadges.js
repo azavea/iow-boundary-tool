@@ -1,16 +1,16 @@
 import { Badge } from '@chakra-ui/react';
 
-export function SubmittedBadge() {
+export function SubmittedBadge({ variant = 'solidFixedHeight' }) {
     return (
-        <Badge bg='#38B2AC' variant='solid' colorScheme='green'>
+        <Badge bg='#38B2AC' variant={variant} colorScheme='green'>
             SUBMITTED
         </Badge>
     );
 }
 
-export function DraftBadge() {
+export function DraftBadge({ variant = 'solidFixedHeight' }) {
     return (
-        <Badge variant='solid' colorScheme='yellow'>
+        <Badge variant={variant} colorScheme='yellow'>
             DRAFT
         </Badge>
     );

@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword';
 import Welcome from './pages/Welcome';
 import Draw from './pages/Draw';
 import Submissions from './pages/Submissions';
+import SubmissionDetail from './components/SubmissionDetail';
 import Sidebar from './components/Sidebar';
 
 import PrivateRoute from './components/PrivateRoute';
@@ -22,7 +23,10 @@ const privateRoutes = (
                 <Routes>
                     <Route path='/welcome' element={<Welcome />} />
                     <Route path='/draw' element={<Draw />} />
-                    <Route path='/submissions' element={<Submissions />} />
+                    <Route path='/submissions'>
+                        <Route index element={<Submissions />} />
+                        <Route path=':id' element={<SubmissionDetail />} />
+                    </Route>
                     <Route
                         path='*'
                         element={<Navigate to='/welcome' replace />}
