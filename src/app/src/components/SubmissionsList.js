@@ -1,8 +1,11 @@
 import {
     HStack,
     Box,
+    Button,
+    Flex,
     Heading,
     Icon,
+    Spacer,
     Tabs,
     TabList,
     TabPanels,
@@ -22,6 +25,7 @@ import {
     FlagIcon,
     LocationMarkerIcon,
 } from '@heroicons/react/solid';
+import { useNavigate } from 'react-router-dom';
 import { heroToChakraIcon } from '../utils';
 import { SubmittedBadge } from './SubmissionBadges';
 
@@ -77,9 +81,17 @@ export default function SubmissionsList() {
         );
     };
 
+    const navigate = useNavigate();
+
     return (
         <Box paddingLeft={8} paddingRight={8} mt={6}>
-            <Heading size='lg'>Submissions</Heading>
+            <Flex>
+                <Heading size='lg'>Submissions</Heading>
+                <Spacer />
+                <Button mr={4} onClick={() => navigate('/draw')}>
+                    Add map
+                </Button>
+            </Flex>
             <Tabs mt={3} isLazy>
                 <TabList borderBottom='0' mb={6}>
                     <Tab>Active</Tab>
