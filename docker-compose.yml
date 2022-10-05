@@ -33,7 +33,7 @@ services:
   django:
     image: iow-django
     environment:
-      - AWS_PROFILE=${AWS_PROFILE:-iow-aboutus}
+      - AWS_PROFILE=${AWS_PROFILE:-iow-boundary-tool}
       - POSTGRES_HOST=database
       - POSTGRES_PORT=5432
       - POSTGRES_USER=iow-aboutus
