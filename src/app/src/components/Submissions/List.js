@@ -26,8 +26,8 @@ import {
     LocationMarkerIcon,
 } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
-import { heroToChakraIcon } from '../utils';
-import { SubmittedBadge } from './SubmissionBadges';
+import { heroToChakraIcon } from '../../utils';
+import { SubmittedBadge } from './Badges';
 
 const tableHeaders = (
     <Thead>

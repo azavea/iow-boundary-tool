@@ -24,11 +24,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { MapContainer } from 'react-leaflet';
 
 import ActivityLog from './ActivityLog';
-import { DefaultBasemap } from './Layers/Basemaps';
-import MapPanes from './MapPanes';
-import { SubmittedBadge } from './SubmissionBadges';
+import { DefaultBasemap } from '../Layers/Basemaps';
+import MapPanes from '../MapPanes';
+import { SubmittedBadge } from './Badges';
 
-import { MAP_CENTER, MAP_INITIAL_ZOOM } from '../constants';
+import { MAP_CENTER, MAP_INITIAL_ZOOM } from '../../constants';
 
 export default function SubmissionDetail() {
     const navigate = useNavigate();
