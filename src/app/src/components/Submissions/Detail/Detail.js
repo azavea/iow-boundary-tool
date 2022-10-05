@@ -1,6 +1,5 @@
 import {
     Box,
-    Checkbox,
     Divider,
     Flex,
     Heading,
@@ -41,7 +40,7 @@ export default function SubmissionDetail() {
 
     const submission = fetchSubmissionDetails(submissionId);
 
-    const { submissionName, sharingPreference } = submission;
+    const { submissionName } = submission;
 
     return (
         <Flex h='100vh' paddingTop={10} paddingBottom={10} bg='gray.50'>
@@ -59,11 +58,6 @@ export default function SubmissionDetail() {
                     <SubmittedBadge variant='submissionDetail' />
                 </Flex>
                 <Info submission={submission} />
-                <Box>
-                    <Checkbox isChecked={sharingPreference} mt={6} mb={12}>
-                        I would like to share data with surrounding towns
-                    </Checkbox>
-                </Box>
                 <Divider />
                 <ActivityLog submissionId={submissionId} />
             </Box>
