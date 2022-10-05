@@ -67,6 +67,13 @@ const Button = {
             textDecoration: 'underline',
             color: 'gray.800',
         },
+        mapButton: {
+            color: 'gray.600',
+            bg: 'white',
+            border: '1px solid',
+            borderColor: 'gray.200',
+            borderRadius: '4px',
+        },
     },
 };
 
