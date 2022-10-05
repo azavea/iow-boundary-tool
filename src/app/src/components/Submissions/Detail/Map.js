@@ -1,10 +1,6 @@
 import { Box, Button, Flex, HStack, Icon, Text } from '@chakra-ui/react';
-import {
-    ChatAltIcon,
-    DownloadIcon,
-    MailIcon,
-    InformationCircleIcon,
-} from '@heroicons/react/outline';
+import { ChatAltIcon, DownloadIcon, MailIcon } from '@heroicons/react/outline';
+import { InformationCircleIcon } from '@heroicons/react/solid';
 import { MapContainer } from 'react-leaflet';
 
 import { DefaultBasemap } from '../../Layers/Basemaps';
@@ -60,15 +56,19 @@ function SubmissionStatusBar({ submission }) {
     return (
         <Box
             h={12}
-            bg='#E6FFFA'
+            bg='teal.50'
             position='absolute'
             zIndex={1000}
             bottom={0}
             w='100%'
             borderRadius={6}
         >
-            <HStack pl={3} pt={3}>
-                <Icon as={InformationCircleIcon}></Icon>
+            <HStack p={3}>
+                <Icon
+                    as={InformationCircleIcon}
+                    color='teal.400'
+                    boxSize={6}
+                ></Icon>
                 <Text textStyle='submissionDetailBody'>
                     Your map will be reviewed.
                 </Text>

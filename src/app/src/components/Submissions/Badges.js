@@ -2,7 +2,7 @@ import { Badge } from '@chakra-ui/react';
 
 export function SubmittedBadge({ variant = 'solidFixedHeight' }) {
     return (
-        <Badge bg='#38B2AC' variant={variant} colorScheme='green'>
+        <Badge bg='teal.400' variant={variant} colorScheme='green'>
             SUBMITTED
         </Badge>
     );
