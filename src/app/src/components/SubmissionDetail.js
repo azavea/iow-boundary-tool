@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     Checkbox,
     Divider,
     Flex,
@@ -9,9 +10,16 @@ import {
     HStack,
     Icon,
     IconButton,
+    Spacer,
     Text,
 } from '@chakra-ui/react';
-import { ArrowLeftIcon, InformationCircleIcon } from '@heroicons/react/outline';
+import {
+    ArrowLeftIcon,
+    ChatAltIcon,
+    DownloadIcon,
+    MailIcon,
+    InformationCircleIcon,
+} from '@heroicons/react/outline';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MapContainer } from 'react-leaflet';
 
@@ -155,6 +163,18 @@ export default function SubmissionDetail() {
                 <ActivityLog submissionId={submissionId} />
             </Box>
             <Box w={650}>
+                <Flex mb={2}>
+                    <Spacer />
+                    <Button rightIcon={<Icon as={ChatAltIcon} />}>
+                        Review map
+                    </Button>
+                    <Button ml={3} rightIcon={<Icon as={MailIcon} />}>
+                        Email
+                    </Button>
+                    <Button ml={3} rightIcon={<Icon as={DownloadIcon} />}>
+                        Download
+                    </Button>
+                </Flex>
                 <MapContainer
                     center={MAP_CENTER}
                     zoom={MAP_INITIAL_ZOOM}
