@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack, Icon, Text } from '@chakra-ui/react';
 import { ChatAltIcon, DownloadIcon, MailIcon } from '@heroicons/react/outline';
-import { InformationCircleIcon } from '@heroicons/react/solid';
+import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import { MapContainer } from 'react-leaflet';
 
 import { DefaultBasemap } from '../../Layers/Basemaps';
@@ -65,7 +65,7 @@ function SubmissionStatusBar({ submission }) {
         >
             <HStack p={3}>
                 <Icon
-                    as={InformationCircleIcon}
+                    as={ExclamationCircleIcon}
                     color='teal.400'
                     boxSize={6}
                 ></Icon>
