@@ -39,7 +39,7 @@ export default function Map({ submission }) {
                 center={MAP_CENTER}
                 zoom={MAP_INITIAL_ZOOM}
                 zoomControl={false}
-                style={{ height: '486px' }}
+                style={{ height: '100%' }}
             >
                 <MapPanes>
                     <DefaultBasemap />

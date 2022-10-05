@@ -1,10 +1,11 @@
 import {
     Box,
-    Divider,
     Flex,
     Heading,
     Icon,
     IconButton,
+    StackDivider,
+    VStack,
 } from '@chakra-ui/react';
 import { ArrowLeftIcon } from '@heroicons/react/outline';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -43,27 +44,42 @@ export default function SubmissionDetail() {
     const { submissionName } = submission;
 
     return (
-        <Flex h='100vh' paddingTop={10} paddingBottom={10} bg='gray.50'>
-            <Box ml={8} mr={8} w={650}>
-                <Flex>
-                    <IconButton
-                        icon={<Icon as={ArrowLeftIcon} />}
-                        aria-label='Back'
-                        mr={6}
-                        onClick={() => navigate('/submissions')}
-                    />
-                    <Heading size='lg' mr={6}>
-                        {submissionName}
-                    </Heading>
-                    <SubmittedBadge variant='submissionDetail' />
+        <VStack
+            p={10}
+            bg='gray.50'
+            align='stretch'
+            divider={<StackDivider />}
+            h='100vh'
+        >
+            <Flex mb={7}>
+                <Flex direction='column' w='50%'>
+                    <Flex>
+                        <IconButton
+                            icon={<Icon as={ArrowLeftIcon} />}
+                            aria-label='Back'
+                            mr={6}
+                            onClick={() => navigate('/submissions')}
+                        />
+                        <Heading size='lg' mr={6}>
+                            {submissionName}
+                        </Heading>
+                        <SubmittedBadge variant='submissionDetail' />
+                    </Flex>
+                    <Info submission={submission} />
                 </Flex>
-                <Info submission={submission} />
-                <Divider />
+                <Box
+                    w='50%'
+                    h='sm'
+                    border='2px solid'
+                    borderColor='gray.200'
+                    borderRadius={6}
+                >
+                    <Map submission={submission} />
+                </Box>
+            </Flex>
+            <Box>
                 <ActivityLog submissionId={submissionId} />
             </Box>
-            <Box w={650}>
-                <Map submission={submission} />
-            </Box>
-        </Flex>
+        </VStack>
     );
 }
