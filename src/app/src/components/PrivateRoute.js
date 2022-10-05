@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { API } from '../api';
+import apiClient from '../api/client';
 import { API_URLS } from '../constants';
 import { login, setLocationBeforeAuth } from '../store/authSlice';
 
@@ -19,7 +19,8 @@ export default function PrivateRoute({ children }) {
     useEffect(() => {
         if (!signedIn) {
             dispatch(setLocationBeforeAuth(location));
-            API.get(API_URLS.LOGIN)
+            apiClient
+                .get(API_URLS.LOGIN)
                 .then(() => {
                     dispatch(login());
                 })

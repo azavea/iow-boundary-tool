@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create Remaining Initial Django Models [#82](https://github.com/azavea/iow-boundary-tool/pull/82)
 - Force users to reset password on first login [#83](https://github.com/azavea/iow-boundary-tool/pull/83)
 - Style submissions list [#99](https://github.com/azavea/iow-boundary-tool/pull/99)
+- Add RTK Query [#101](https://github.com/azavea/iow-boundary-tool/pull/101)
 
 ### Changed
 

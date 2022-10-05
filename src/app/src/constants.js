@@ -39,11 +39,12 @@ export const PANES = {
     USER_POLYGON: { label: 'user-polygon', zIndex: 490 },
 };
 
+export const BASE_API_URL = 'api';
 export const API_URLS = {
-    LOGIN: 'api/auth/login/',
-    LOGOUT: 'api/auth/logout/',
-    FORGOT: 'api/auth/password/reset/',
-    CONFIRM: 'api/auth/password/reset/confirm/',
+    LOGIN: `${BASE_API_URL}/auth/login/`,
+    LOGOUT: `${BASE_API_URL}/auth/logout/`,
+    FORGOT: `${BASE_API_URL}/auth/password/reset/`,
+    CONFIRM: `${BASE_API_URL}/auth/password/reset/confirm/`,
     RESET: 'confirm_password_reset/reset/',
 };
 

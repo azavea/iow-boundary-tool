@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 
-import { API } from '../api';
+import apiClient from '../api/client';
 import { API_URLS, API_STATUSES } from '../constants';
 import { login } from '../store/authSlice';
 import LoginForm from '../components/LoginForm';
@@ -17,10 +17,11 @@ export default function Login() {
     const navigate = useNavigate();
 
     const loginRequest = () => {
-        API.post(API_URLS.LOGIN, {
-            email,
-            password,
-        })
+        apiClient
+            .post(API_URLS.LOGIN, {
+                email,
+                password,
+            })
             .then(() => {
                 dispatch(login());
             })
