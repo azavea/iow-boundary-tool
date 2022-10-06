@@ -15,14 +15,14 @@ export default function Map({ submission }) {
                 center={MAP_CENTER}
                 zoom={MAP_INITIAL_ZOOM}
                 zoomControl={false}
-                style={{ height: '100%' }}
+                style={{ height: 'calc(100% - var(--chakra-sizes-12))' }}
             >
                 <MapPanes>
                     <DefaultBasemap />
                     <MapButtons submission={submission} />
-                    <SubmissionStatusBar submission={submission} />
                 </MapPanes>
             </MapContainer>
+            <SubmissionStatusBar submission={submission} />
         </>
     );
 }
@@ -54,15 +54,7 @@ function MapButton({ icon, children }) {
 
 function SubmissionStatusBar({ submission }) {
     return (
-        <Box
-            h={12}
-            bg='teal.50'
-            position='absolute'
-            zIndex={1000}
-            bottom={0}
-            w='100%'
-            borderRadius={6}
-        >
+        <Box h={12} bg='teal.50' w='100%' borderRadius={6}>
             <HStack p={3}>
                 <Icon
                     as={ExclamationCircleIcon}
