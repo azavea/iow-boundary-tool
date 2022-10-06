@@ -1,5 +1,11 @@
-import SubmissionsList from '../components/SubmissionsList';
+import { Routes, Route } from 'react-router-dom';
+import { List, Detail } from '../components/Submissions';
 
 export default function Submissions() {
-    return <SubmissionsList />;
+    return (
+        <Routes>
+            <Route index element={<List />} />
+            <Route path=':id' element={<Detail />} />
+        </Routes>
+    );
 }

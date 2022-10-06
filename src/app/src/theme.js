@@ -67,6 +67,27 @@ const Button = {
             textDecoration: 'underline',
             color: 'gray.800',
         },
+        mapButton: {
+            color: 'gray.600',
+            bg: 'white',
+            border: '1px solid',
+            borderColor: 'gray.200',
+            borderRadius: '4px',
+        },
+    },
+};
+
+const Badge = {
+    variants: {
+        solidFixedHeight: props => ({
+            ...theme.components.Badge.variants.solid(props),
+            height: 5,
+        }),
+        submissionDetail: props => ({
+            ...theme.components.Badge.variants.solid(props),
+            height: '18px',
+            marginTop: 2,
+        }),
     },
 };
 
@@ -125,6 +146,7 @@ const Table = {
 
 const theme = extendTheme({
     components: {
+        Badge,
         Button,
         Heading,
         Input,
@@ -171,6 +193,21 @@ const theme = extendTheme({
             fontWeight: 700,
             fontFamily: `'Inter', sans-serif`,
             textTransform: 'none',
+        },
+        submissionDetailCategory: {
+            fontWeight: 600,
+            fontSize: '18px',
+            color: 'gray.700',
+        },
+        submissionDetailHeading: {
+            fontWeight: 600,
+            fontSize: '14px',
+            color: 'gray.500',
+        },
+        submissionDetailBody: {
+            fontWeight: 400,
+            fontSize: '16px',
+            color: 'gray.700',
         },
     },
     styles: {

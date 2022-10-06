@@ -22,7 +22,7 @@ const privateRoutes = (
                 <Routes>
                     <Route path='/welcome' element={<Welcome />} />
                     <Route path='/draw' element={<Draw />} />
-                    <Route path='/submissions' element={<Submissions />} />
+                    <Route path='/submissions/*' element={<Submissions />} />
                     <Route
                         path='*'
                         element={<Navigate to='/welcome' replace />}

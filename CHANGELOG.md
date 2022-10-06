@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Force users to reset password on first login [#83](https://github.com/azavea/iow-boundary-tool/pull/83)
 - Style submissions list [#99](https://github.com/azavea/iow-boundary-tool/pull/99)
 - Add RTK Query [#101](https://github.com/azavea/iow-boundary-tool/pull/101)
+- Style submission detail page [#104](https://github.com/azavea/iow-boundary-tool/pull/104)
 
 ### Changed
 
