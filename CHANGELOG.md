@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Style submission detail page [#104](https://github.com/azavea/iow-boundary-tool/pull/104)
 - Add ADR for REST API [#115](https://github.com/azavea/iow-boundary-tool/pull/115)
 - Add boundary list and detail views/serializers [#113](https://github.com/azavea/iow-boundary-tool/pull/113)
+- Add other state boundaries [#111](https://github.com/azavea/iow-boundary-tool/pull/111)
 
 ### Changed
 
