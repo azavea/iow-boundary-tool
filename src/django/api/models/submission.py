@@ -13,7 +13,9 @@ def limit_by_validator_or_admin():
 
 
 class Submission(models.Model):
-    boundary = models.ForeignKey(Boundary, on_delete=models.PROTECT)
+    boundary = models.ForeignKey(
+        Boundary, on_delete=models.PROTECT, related_name='submissions'
+    )
     shape = gis_models.PolygonField(geography=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
@@ -28,6 +30,9 @@ class Submission(models.Model):
     upload_edited_at = models.DateTimeField(null=True, blank=True)
     notes = models.TextField(blank=True)
 
+    class Meta:
+        get_latest_by = 'created_at'
+
     def clean(self):
         if self.submitted_at is not None and self.submitted_by is None:
             raise ValidationError("Must define User submitting.")
@@ -38,7 +43,9 @@ class Submission(models.Model):
 
 
 class Review(models.Model):
-    submission = models.ForeignKey(Submission, on_delete=models.PROTECT)
+    submission = models.OneToOneField(
+        Submission, on_delete=models.PROTECT, related_name='review'
+    )
     reviewed_by = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -57,7 +64,9 @@ class Review(models.Model):
 
 
 class Approval(models.Model):
-    submission = models.ForeignKey(Submission, on_delete=models.PROTECT)
+    submission = models.OneToOneField(
+        Submission, on_delete=models.PROTECT, related_name='approval'
+    )
     approved_at = models.DateTimeField(auto_now_add=True)
     approved_by = models.ForeignKey(
         User, on_delete=models.PROTECT, limit_choices_to=limit_by_validator_or_admin
@@ -65,7 +74,9 @@ class Approval(models.Model):
 
 
 class Annotation(models.Model):
-    review = models.ForeignKey(Review, on_delete=models.PROTECT)
+    review = models.ForeignKey(
+        Review, on_delete=models.PROTECT, related_name='annotations'
+    )
     location = gis_models.PointField(geography=True)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -73,3 +84,7 @@ class Annotation(models.Model):
 
     def __str__(self):
         return self.comment
+
+    @property
+    def resolved(self):
+        return self.resolved_at is not None
