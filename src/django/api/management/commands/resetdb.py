@@ -17,6 +17,7 @@ from ..test_shapes import (
 )
 
 
+
 class Command(BaseCommand):
     help = "Reset the DB schema, run migrations, and create test data."
 

@@ -79,7 +79,7 @@ export default function ReferenceImageLayer() {
              * This is handler is added to save the default position of the
              * reference image. It uses the remove event because the corners
              * don't always exist on the add event. Also, corners might not
-             * be set for some remove events, so their their existence is
+             * be set for some remove events, so their existence is
              * verified before dispatching an update,
              */
             if (!corners) {
