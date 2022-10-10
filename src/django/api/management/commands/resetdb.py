@@ -3,9 +3,9 @@ from datetime import datetime, timezone
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from api.models import Role, Utility, User
+from api.models import Utility, User
 from api.models.boundary import Boundary
-from api.models.role import Roles
+from api.models.user import Roles
 from api.models.submission import Approval, Submission
 
 from ..test_shapes import (
@@ -36,13 +36,13 @@ class Command(BaseCommand):
             email="v1@azavea.com",
             password="password",
             has_admin_generated_password=False,
-            role=Role.objects.get(pk=Roles.VALIDATOR),
+            role=Roles.VALIDATOR,
         )
         contributor = User.objects.create_user(
             email="c1@azavea.com",
             password="password",
             has_admin_generated_password=False,
-            role=Role.objects.get(pk=Roles.CONTRIBUTOR),
+            role=Roles.CONTRIBUTOR,
         )
         contributor.utilities.add(test_utility)
 

@@ -3,14 +3,13 @@ from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as gis_models
 
 from .boundary import Boundary
-from .role import Roles
-from .user import User
+from .user import User, Roles
 
 __all__ = ["Submission", "Approval", "Review", "Annotation"]
 
 
 def limit_by_validator_or_admin():
-    return models.Q(role__pk__in=[Roles.VALIDATOR, Roles.ADMINISTRATOR])
+    return models.Q(role__in=[Roles.VALIDATOR, Roles.ADMINISTRATOR])
 
 
 class Submission(models.Model):

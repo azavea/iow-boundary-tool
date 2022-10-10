@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from django.utils import timezone
 
-from .role import Role, Roles
 from .utility import Utility
 from .state import State
 
@@ -45,8 +44,13 @@ class EmailAsUsernameUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        admin_role = Role.objects.get(pk=Roles.ADMINISTRATOR)
-        return self._create_user(email, admin_role, password, **extra_fields)
+        return self._create_user(email, Roles.ADMINISTRATOR, password, **extra_fields)
+
+
+class Roles(models.TextChoices):
+    CONTRIBUTOR = "C"
+    VALIDATOR = "V"
+    ADMINISTRATOR = "A"
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -61,11 +65,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     has_admin_generated_password = models.BooleanField(default=True)
 
-    role = models.ForeignKey(
-        Role,
-        related_name="actors",
-        on_delete=models.PROTECT,
+    role = models.CharField(
         default=Roles.CONTRIBUTOR,
+        choices=Roles.choices,
+        max_length=1,
     )
 
     utilities = models.ManyToManyField(
@@ -81,11 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     def clean(self):
-        if (
-            self.id
-            and self.role.pk == Roles.CONTRIBUTOR
-            and not self.utilities.exists()
-        ):
+        if self.id and self.role == Roles.CONTRIBUTOR and not self.utilities.exists():
             raise ValidationError("Contributors must be assigned a utility.")
 
         super().clean()
