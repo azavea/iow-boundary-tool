@@ -61,6 +61,17 @@ RALEIGH_FAKE_TRIANGLE = GEOSGeometry(
 }
 """
 )
+POINT_IN_RALEIGH_FAKE_TRIANGLE = GEOSGeometry(
+    """
+{
+    "type": "Point",
+    "coordinates": [
+        -78.70000000000000,
+        35.80000000000000
+    ]
+}
+    """
+)
 
 
 RALEIGH_FAKE_ZIGZAG = GEOSGeometry(
