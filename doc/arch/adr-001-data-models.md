@@ -6,17 +6,13 @@ Below is the Entity Relationship Diagram illustrating the initial data model as 
 
 ```mermaid
 erDiagram
-    Role {
-        string description
-    }
     User }o--o{ Utility : "has"
     User }o--|{ State : "within"
-    User }o--|| Role : is
     User {
-        Role role FK
         email email
         boolean is_staff
         boolean is_active
+        string role "max_length=1"
         date date_joined
         password password
         boolean is_locked_out
