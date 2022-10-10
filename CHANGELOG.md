@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add RTK Query [#101](https://github.com/azavea/iow-boundary-tool/pull/101)
 - Add navigation bar and logout button [#109](https://github.com/azavea/iow-boundary-tool/pull/109)
 - Style submission detail page [#104](https://github.com/azavea/iow-boundary-tool/pull/104)
+- Add ADR for REST API [#115](https://github.com/azavea/iow-boundary-tool/pull/115)
 
 ### Changed
 
