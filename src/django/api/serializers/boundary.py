@@ -6,6 +6,8 @@ from rest_framework.serializers import (
 )
 
 from ..models.boundary import Boundary, BOUNDARY_STATUS
+from ..models.utility import Utility
+from ..models.submission import Submission, Review, Annotation
 
 
 class StatusField(ChoiceField):
@@ -25,3 +27,37 @@ class BoundaryListSerializer(ModelSerializer):
     class Meta:
         model = Boundary
         fields = ['id', 'location', 'pwsid', 'last_modified', 'status']
+
+
+class BoundaryDetailSerializer(ModelSerializer):
+    class UtilitySerializer(ModelSerializer):
+        class Meta:
+            model = Utility
+            fields = ['name', 'pwsid']
+
+    class SubmissionSerializer(ModelSerializer):
+        class ReviewSerializer(ModelSerializer):
+            class AnnotationSerializer(ModelSerializer):
+                class Meta:
+                    model = Annotation
+                    fields = ['location', 'comment', 'resolved']
+
+            annotations = AnnotationSerializer(many=True)
+
+            class Meta:
+                model = Review
+                fields = ['annotations', 'notes']
+
+        review = ReviewSerializer(required=False)
+
+        class Meta:
+            model = Submission
+            fields = ['shape', 'notes', 'review']
+
+    utility = UtilitySerializer()
+    status = StatusField()
+    submission = SubmissionSerializer(source='latest_submission')
+
+    class Meta:
+        model = Boundary
+        fields = ['utility', 'status', 'submission']
