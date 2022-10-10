@@ -12,6 +12,8 @@ Based on the [data model](./adr-001-data-models.md), the following REST API desi
 | `/auth/login/`  | POST   | `{ ... }` | Allow Any      | 200 OK,<br />400 Bad Request,<br />401 Not Authorized | Used for starting new valid session          |
 | `/auth/logout/` | POST   | -         | Logged In User | 200 OK                                                | Used for logging out                         |
 
+Also present are `/auth/password/reset/` and `/auth/password/reset/confirm/` endpoints that come from `dj_rest_auth`.
+
 ### Boundaries
 
 | Path                                       | Method | Body                     | Authentication | Responses                                                  | Notes                                                                                                              |
