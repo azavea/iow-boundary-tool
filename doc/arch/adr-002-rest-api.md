@@ -1,0 +1,74 @@
+# Boundary Sync REST API Design
+
+## Context
+
+Based on the [data model](./adr-001-data-models.md), the following REST API design is proposed to access it:
+
+### Authentication
+
+| Path            | Method | Body      | Authentication | Responses                                             | Notes                                        |
+| --------------- | ------ | --------- | -------------- | ----------------------------------------------------- | -------------------------------------------- |
+| `/auth/login/`  | GET    | -         | Allow Any      | 200 OK,<br />401 Not Authorized                       | Returns loging JSON if current session valid |
+| `/auth/login/`  | POST   | `{ ... }` | Allow Any      | 200 OK,<br />400 Bad Request,<br />401 Not Authorized | Used for starting new valid session          |
+| `/auth/logout/` | POST   | -         | Logged In User | 200 OK                                                | Used for logging out                         |
+
+### Boundaries
+
+| Path                                       | Method | Body                     | Authentication | Responses                                                  | Notes                                                                                                              |
+| ------------------------------------------ | ------ | ------------------------ | -------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `/boundaries/`                             | GET    | -                        | Logged In User | 200 OK                                                     | Returns list of all boundaries the user has access to                                                              |
+| `/boundaries/?utilities=1,3,5,8`           | GET    | -                        | Logged In User | 200 OK,<br />401 Not Authorized                            | Returns list of boundaries in the given utilities. If the user does not have access to that utility, returns a 401 |
+| `/boundaries/`                             | POST   | `{ ... }`                | Contributor    | 201 Created,<br />400 Bad Request,<br />401 Not Authorized | Creates a new boundary if the payload is correct and the user is authorized                                        |
+| `/boundaries/{id}/`                        | GET    | -                        | Logged In User | 200 OK,<br />404 Not Found                                 | Returns boundary details if the users has access to it, else 404s. Includes all details about the boundary.        |
+| `/boundaries/{id}/shape/`                  | PUT    | `{ ... }`                | Contributor    | 200 OK,<br />404 Not Found                                 | Updates a boundary's shape                                                                                         |
+| `/boundaries/{id}/reference-images/`       | POST   | `{ ... }`                | Contributor    | 200 OK,<br />404 Not Found                                 | Adds a new reference image to the boundary                                                                         |
+| `/boundaries/{id}/submit/`                 | POST   | `{ notes }`              | Contributor    | 200 OK,<br />404 Not Found                                 | Submits the boundary                                                                                               |
+| `/boundaries/{id}/review/`                 | POST   | `{ notes, annotations }` | Validator      | 200 OK,<br />404 Not Found                                 | Reviews a boundary                                                                                                 |
+| `/boundaries/{id}/review/annotations/{id}` | PUT    | `{ annotation }`         | Validator      | 200 OK,<br />404 Not Found                                 | Updated an annotation                                                                                              |
+| `/boundaries/{id}/approve/`                | POST   | -                        | Validator      | 200 OK,<br />404 Not Found                                 | Approves a boundary                                                                                                |
+| `/boundaries/{id}/unapprove/`              | POST   | -                        | Validator      | 200 OK,<br />404 Not Found                                 | Unapproves a boundary                                                                                              |
+
+### User
+
+| Path                 | Method | Body      | Authentication | Responses                  | Notes                              |
+| -------------------- | ------ | --------- | -------------- | -------------------------- | ---------------------------------- |
+| `/user/{id}/profile` | PUT    | `{ ... }` | Contributor    | 200 OK,<br />404 Not Found | Update contributor contact details |
+
+## Notes
+
+Any thing that a Contributor or Validator can do, an Administrator can also do.
+
+A payload Body of `-` means that there is no body required. A payload Body of `{ ... }` means that there is a required body, but is not elaborated here.
+
+All endpoints that are marked as requiring a Logged In User will also return 401 Not Authorized if accessed without proper credentials.
+
+When we return `404 Not Found` for objects that the User does not have permissions to, we're using a pattern like this:
+
+```python
+@permission_classes((IsAuthenticated,))
+def get_boundary(request, id):
+    user = request.user
+    boundary = get_object_or_404(Boundary, id)
+    submission = boundary.get_latest_submission_for(user)
+
+    serializer = SubmissionSerializer(submission)
+    return Response(serializer.data)
+```
+
+where `get_latest_submission_for` is along these lines:
+
+```python
+class Boundary(models.Model):
+    ...
+
+    def get_latest_submission_for(self, user):
+        if user.role == CONTRIBUTOR:
+            if self.utility not in user.utilities:
+                raise Http404
+
+        if user.role == VALIDATOR:
+            if self.utility.state not in user.states:
+                raise Http404
+
+        return self.submissions.latest('created_at')
+```
