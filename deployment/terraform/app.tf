@@ -123,6 +123,7 @@ resource "aws_ecs_task_definition" "app" {
     django_log_level        = var.django_log_level
     r53_public_hosted_zone  = var.r53_public_hosted_zone
     # aws_storage_bucket_name = aws_s3_bucket.media.id
+    default_from_email = var.default_from_email
 
     port = local.django_container_port
 
@@ -190,6 +191,7 @@ resource "aws_ecs_task_definition" "app_cli" {
     django_log_level       = var.django_log_level
     r53_public_hosted_zone = var.r53_public_hosted_zone
     # aws_storage_bucket_name = aws_s3_bucket.media.id
+    default_from_email = var.default_from_email
 
     project     = var.project
     environment = var.environment
