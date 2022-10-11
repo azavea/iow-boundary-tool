@@ -11,10 +11,15 @@ urlpatterns = [
     path("auth/", include("dj_rest_auth.urls")),
     path("boundaries/", BoundaryListView.as_view()),
     path("boundaries/<int:id>/", BoundaryDetailView.as_view()),
-    path("boundaries/<int:boundary>/reference-images/", ReferenceImageList.as_view()),
+    path(
+        "boundaries/<int:boundary>/reference-images/",
+        ReferenceImageList.as_view(),
+        name="upload_image",
+    ),
     path(
         "boundaries/<int:boundary>/reference-images/<int:pk>/",
         ReferenceImageDetail.as_view(),
+        name="update_image",
     ),
 ]
 
