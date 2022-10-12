@@ -7,6 +7,7 @@ import {
     createDefaultReferenceImage,
     updateReferenceImage,
 } from './store/mapSlice';
+import { useUploadReferenceImageMutation } from './api/boundaries';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -80,9 +81,17 @@ export function useLayerVisibility(layer) {
 
 export function useAddReferenceImage() {
     const dispatch = useDispatch();
+    const [uploadImage, { isLoading }] = useUploadReferenceImageMutation();
 
-    return file => {
+    const addReferenceImage = file => {
         const url = URL.createObjectURL(file);
+
+        uploadImage({
+            boundary: 1, // TODO: get the actual boundary
+            filename: file.name,
+            is_visible: true,
+            distortion: null,
+        });
         dispatch(
             updateReferenceImage({
                 url,
@@ -90,6 +99,8 @@ export function useAddReferenceImage() {
             })
         );
     };
+
+    return [addReferenceImage, isLoading];
 }
 
 export function useFilePicker(onChange) {

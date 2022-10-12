@@ -7,6 +7,7 @@ import {
     Icon,
     List,
     ListItem,
+    Spinner,
     Text,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +20,7 @@ import { useSelector } from 'react-redux';
 
 export default function FileUpload({ PreviousButton }) {
     const navigate = useNavigate();
-    const addReferenceImage = useAddReferenceImage();
+    const [addReferenceImage, isLoading] = useAddReferenceImage();
 
     const addFiles = newFiles => newFiles.forEach(addReferenceImage);
 
@@ -41,14 +42,14 @@ export default function FileUpload({ PreviousButton }) {
             </Text>
 
             <Flex mt={4} w='100%' grow>
-                <UploadBox addFiles={addFiles} />
+                <UploadBox addFiles={addFiles} isLoading={isLoading} />
                 <FilesBox />
             </Flex>
         </ModalSection>
     );
 }
 
-function UploadBox({ addFiles }) {
+function UploadBox({ addFiles, isLoading }) {
     const { hovering, handleUpload, startDrag, endDrag } =
         useFileUpload(addFiles);
 
@@ -97,14 +98,22 @@ function UploadBox({ addFiles }) {
                 >
                     Browse files
                 </Button>
-                <Text color='gray.400' mb={4}>
-                    <Bold>ACCEPTED FILES</Bold>
-                </Text>
-                <Text color='gray.400'>
-                    <Bold>Shapefiles:</Bold> .SHP, .SHX and .DBF
-                    <br />
-                    <Bold>Other map files:</Bold> JPEG, PNG
-                </Text>
+                <>
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <>
+                            <Text color='gray.400' mb={4}>
+                                <Bold>ACCEPTED FILES</Bold>
+                            </Text>
+                            <Text color='gray.400'>
+                                <Bold>Shapefiles:</Bold> .SHP, .SHX and .DBF
+                                <br />
+                                <Bold>Other map files:</Bold> JPEG, PNG
+                            </Text>
+                        </>
+                    )}
+                </>
             </Flex>
         </Box>
     );
