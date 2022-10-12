@@ -4,9 +4,9 @@ services:
   database:
     image: quay.io/azavea/postgis:3-postgres12.4-slim
     environment:
-      - POSTGRES_USER=iow-aboutus
-      - POSTGRES_PASSWORD=iow-aboutus
-      - POSTGRES_DB=iow-aboutus
+      - POSTGRES_USER=iow-boundary-tool
+      - POSTGRES_PASSWORD=iow-boundary-tool
+      - POSTGRES_DB=iow-boundary-tool
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "iow-aboutus" ]
       interval: 3s
@@ -36,9 +36,9 @@ services:
       - AWS_PROFILE=${AWS_PROFILE:-iow-boundary-tool}
       - POSTGRES_HOST=database
       - POSTGRES_PORT=5432
-      - POSTGRES_USER=iow-aboutus
-      - POSTGRES_PASSWORD=iow-aboutus
-      - POSTGRES_DB=iow-aboutus
+      - POSTGRES_USER=iow-boundary-tool
+      - POSTGRES_PASSWORD=iow-boundary-tool
+      - POSTGRES_DB=iow-boundary-tool
       - DJANGO_ENV=Development
       - DJANGO_SECRET_KEY=secret
       - DJANGO_LOG_LEVEL=INFO
