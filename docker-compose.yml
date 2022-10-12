@@ -2,13 +2,13 @@
 # version : "2.4"
 services:
   database:
-    image: quay.io/azavea/postgis:3-postgres12.4-slim
+    image: postgis/postgis:12-3.1
     environment:
       - POSTGRES_USER=iow-boundary-tool
       - POSTGRES_PASSWORD=iow-boundary-tool
       - POSTGRES_DB=iow-boundary-tool
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "iow-aboutus" ]
+      test: [ "CMD", "pg_isready", "-U", "iow-boundary-tool", "-h", "database" ]
       interval: 3s
       timeout: 3s
       retries: 3
