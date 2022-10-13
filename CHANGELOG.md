@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add boundary list and detail views/serializers [#113](https://github.com/azavea/iow-boundary-tool/pull/113) [#135](https://github.com/azavea/iow-boundary-tool/pull/135)
 - Add other state boundaries [#111](https://github.com/azavea/iow-boundary-tool/pull/111)
 - Configure Amazon SES email support in staging env [#118](https://github.com/azavea/iow-boundary-tool/pull/118)
+- Wire up Boundary List Page [#122](https://github.com/azavea/iow-boundary-tool/pull/122)
 
 ### Changed
 

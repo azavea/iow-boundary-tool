@@ -7,6 +7,7 @@ from .utility import Utility
 __all__ = ["Boundary"]
 
 
+# In sync with app.src.constants.BOUNDARY_STATUS
 class BOUNDARY_STATUS(Enum):
     DRAFT = "Draft"
     SUBMITTED = "Submitted"

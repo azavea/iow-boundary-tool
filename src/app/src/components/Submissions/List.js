@@ -6,6 +6,7 @@ import {
     Heading,
     Icon,
     Spacer,
+    Spinner,
     Tabs,
     TabList,
     TabPanels,
@@ -26,61 +27,13 @@ import {
     LocationMarkerIcon,
 } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
-import { heroToChakraIcon } from '../../utils';
-import { SubmittedBadge } from './Badges';
 
-const tableHeaders = (
-    <Thead>
-        <Tr>
-            <Th>
-                <HStack>
-                    <Icon as={heroToChakraIcon(LocationMarkerIcon)} />
-                    <Text textStyle='tableHeading'>Location / PWSID</Text>
-                </HStack>
-            </Th>
-            <Th>
-                <HStack>
-                    <Icon as={heroToChakraIcon(ClockIcon)} />
-                    <Text textStyle='tableHeading'>Last modified</Text>
-                </HStack>
-            </Th>
-            <Th>
-                <HStack>
-                    <Icon as={heroToChakraIcon(FlagIcon)} />
-                    <Text textStyle='tableHeading'>Status</Text>
-                </HStack>
-            </Th>
-        </Tr>
-    </Thead>
-);
+import { heroToChakraIcon } from '../../utils';
+import { useGetBoundariesQuery } from '../../api/boundaries';
+
+import { StatusBadge } from './Badges';
 
 export default function SubmissionsList() {
-    const getSubmissions = ({ active = true }) => {
-        return (
-            <TableContainer borderRadius='2px'>
-                <Table variant='submissions'>
-                    {tableHeaders}
-                    <Tbody>
-                        <Tr>
-                            <Td>
-                                <Text textStyle='utilityEntry'>Raleigh</Text>
-                                <Text textStyle='utilityId'>0111010</Text>
-                            </Td>
-                            <Td>
-                                <Text textStyle='timestamp'>
-                                    July 7, 2022 3:32 pm
-                                </Text>
-                            </Td>
-                            <Td>
-                                <SubmittedBadge />
-                            </Td>
-                        </Tr>
-                    </Tbody>
-                </Table>
-            </TableContainer>
-        );
-    };
-
     const navigate = useNavigate();
 
     return (
@@ -95,15 +48,114 @@ export default function SubmissionsList() {
             <Tabs mt={3} isLazy>
                 <TabList borderBottom='0' mb={6}>
                     <Tab>Active</Tab>
-                    <Tab>Archived</Tab>
+                    <Tab isDisabled>Archived</Tab>
                 </TabList>
 
                 <TabPanels>
-                    <TabPanel>{getSubmissions({})}</TabPanel>
-                    {/* archived tab is lazily fetched */}
-                    <TabPanel>{getSubmissions({ active: false })}</TabPanel>
+                    <TabPanel>
+                        <TableContainer borderRadius='2px'>
+                            <Table variant='submissions'>
+                                <TableHeader />
+                                <Tbody>
+                                    <TableRows />
+                                </Tbody>
+                            </Table>
+                        </TableContainer>
+                    </TabPanel>
+                    {/* TODO Implement Archived Tab */}
+                    <TabPanel></TabPanel>
                 </TabPanels>
             </Tabs>
         </Box>
+    );
+}
+
+function TableHeader() {
+    return (
+        <Thead>
+            <Tr>
+                <Th>
+                    <HStack>
+                        <Icon as={heroToChakraIcon(LocationMarkerIcon)} />
+                        <Text textStyle='tableHeading'>Location / PWSID</Text>
+                    </HStack>
+                </Th>
+                <Th>
+                    <HStack>
+                        <Icon as={heroToChakraIcon(ClockIcon)} />
+                        <Text textStyle='tableHeading'>Last modified</Text>
+                    </HStack>
+                </Th>
+                <Th>
+                    <HStack>
+                        <Icon as={heroToChakraIcon(FlagIcon)} />
+                        <Text textStyle='tableHeading'>Status</Text>
+                    </HStack>
+                </Th>
+            </Tr>
+        </Thead>
+    );
+}
+
+function TableRows() {
+    const { isFetching, data: boundaries, error } = useGetBoundariesQuery();
+
+    if (isFetching) {
+        return <LoadingRow />;
+    }
+
+    if (error) {
+        return <ErrorRow />;
+    }
+
+    if (boundaries) {
+        return boundaries.map(b => <TableRow key={b.id} boundary={b} />);
+    }
+}
+
+function TableRow({ boundary: { id, location, pwsid, last_modified, status } }) {
+    const navigate = useNavigate();
+
+    return (
+        <Tr
+            cursor='pointer'
+            _hover={{ background: 'gray.50' }}
+            onClick={() => navigate(`/submissions/${id}`)}
+        >
+            <Td>
+                <Text textStyle='utilityEntry'>{location}</Text>
+                <Text textStyle='utilityId'>{pwsid}</Text>
+            </Td>
+            <Td>
+                <Text textStyle='timestamp'>
+                    {new Date(last_modified).toDateString()}
+                </Text>
+            </Td>
+            <Td>
+                <StatusBadge status={status} />
+            </Td>
+        </Tr>
+    );
+}
+
+function LoadingRow() {
+    return (
+        <Tr>
+            <Td />
+            <Td>
+                <Spinner />
+            </Td>
+            <Td />
+        </Tr>
+    );
+}
+
+function ErrorRow({ error }) {
+    return (
+        <Tr>
+            <Td />
+            <Td>There was an error fetching data. Details: {error}</Td>
+            <Td />
+        </Tr>
     );
 }

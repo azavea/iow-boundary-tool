@@ -47,9 +47,21 @@ export const API_URLS = {
     LOGOUT: `${BASE_API_URL}/auth/logout/`,
     FORGOT: `${BASE_API_URL}/auth/password/reset/`,
     CONFIRM: `${BASE_API_URL}/auth/password/reset/confirm/`,
-    RESET: 'confirm_password_reset/reset/',
 };
 
 export const API_STATUSES = {
     REDIRECT: 302,
+};
+
+export const APP_URLS = {
+    RESET: 'confirm_password_reset/reset/',
+};
+
+// In sync with django.api.models.boundary.BOUNDARY_STATUS
+export const BOUNDARY_STATUS = {
+    DRAFT: 'Draft',
+    SUBMITTED: 'Submitted',
+    IN_REVIEW: 'In Review',
+    NEEDS_REVISIONS: 'Needs Revisions',
+    APPROVED: 'Approved',
 };
