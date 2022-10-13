@@ -9,6 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
+from ..serializers import UserSerializer
+
 
 class Login(LoginView):
     permission_classes = (AllowAny,)
@@ -34,13 +36,13 @@ class Login(LoginView):
 
         login(request, user)
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(UserSerializer(user).data)
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_active:
             raise AuthenticationFailed("Unable to sign in")
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(UserSerializer(request.user).data)
 
 
 class Logout(LogoutView):
