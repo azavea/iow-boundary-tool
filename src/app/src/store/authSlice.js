@@ -2,9 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     locationBeforeAuth: '/welcome',
-    utilities: [],
-    selectedUtility: null,
     user: false,
+    utility: null,
 };
 
 export const authSlice = createSlice({
@@ -13,6 +12,10 @@ export const authSlice = createSlice({
     reducers: {
         login: (state, { payload: user }) => {
             state.user = user;
+
+            if (user.utilities) {
+                state.utility = user.utilities[0];
+            }
         },
         logout: state => {
             state.user = false;
@@ -22,21 +25,13 @@ export const authSlice = createSlice({
                 state.locationBeforeAuth = location;
             }
         },
-        setUtilities: (state, { payload: utilities }) => {
-            state.utilities = utilities;
-        },
-        setSelectedUtility: (state, { payload: selectedUtility }) => {
-            state.selectedUtility = selectedUtility;
+        setUtilityByPwsid: (state, { payload: pwsid }) => {
+            state.utility = state.user.utilities.find(u => u.pwsid === pwsid);
         },
     },
 });
 
-export const {
-    login,
-    logout,
-    setLocationBeforeAuth,
-    setUtilities,
-    setSelectedUtility,
-} = authSlice.actions;
+export const { login, logout, setLocationBeforeAuth, setUtilityByPwsid } =
+    authSlice.actions;
 
 export default authSlice.reducer;
