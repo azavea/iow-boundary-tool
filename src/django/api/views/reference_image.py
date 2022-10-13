@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import Boundary, ReferenceImage
 from ..models.user import Roles
 from ..serializers.reference_image import ReferenceImageSerializer
+from ..views.boundary import get_boundary_queryset_for_user
 
 
 class ReferenceImageList(generics.CreateAPIView):
@@ -14,11 +15,7 @@ class ReferenceImageList(generics.CreateAPIView):
     serializer_class = ReferenceImageSerializer
 
     def get_queryset(self):
-        boundary = get_object_or_404(Boundary, pk=self.kwargs["boundary"])
-        if boundary.utility not in self.request.user.utilities.all():
-            raise PermissionDenied("Cannot view images for that utility.")
-
-        return ReferenceImage.objects.filter(boundary=boundary)
+        return get_boundary_queryset_for_user(self.request.user)
 
     def create(self, request, *args, **kwargs):
         boundary = get_object_or_404(Boundary, pk=self.kwargs["boundary"])
