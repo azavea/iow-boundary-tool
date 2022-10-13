@@ -7,7 +7,7 @@ import { API_URLS } from '../constants';
 import { login, setLocationBeforeAuth } from '../store/authSlice';
 
 export default function PrivateRoute({ children }) {
-    const signedIn = useSelector(state => state.auth.signedIn);
+    const user = useSelector(state => state.auth.user);
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -17,12 +17,12 @@ export default function PrivateRoute({ children }) {
     // Log in this user if they have an authenticated session
     // Handles losing Redux state on refresh
     useEffect(() => {
-        if (!signedIn) {
+        if (!user) {
             dispatch(setLocationBeforeAuth(location));
             apiClient
                 .get(API_URLS.LOGIN)
-                .then(() => {
-                    dispatch(login());
+                .then(({ data: user }) => {
+                    dispatch(login(user));
                 })
                 .catch(() => {
                     if (!locationIsLogin) {
@@ -30,7 +30,7 @@ export default function PrivateRoute({ children }) {
                     }
                 });
         }
-    }, [signedIn, location, locationIsLogin, navigate, dispatch]);
+    }, [user, location, locationIsLogin, navigate, dispatch]);
 
     return locationIsLogin ? null : children;
 }

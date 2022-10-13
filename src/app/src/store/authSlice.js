@@ -1,21 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    signedIn: false,
     locationBeforeAuth: '/welcome',
     utilities: [],
     selectedUtility: null,
+    user: false,
 };
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        login: state => {
-            state.signedIn = true;
+        login: (state, { payload: user }) => {
+            state.user = user;
         },
         logout: state => {
-            state.signedIn = false;
+            state.user = false;
         },
         setLocationBeforeAuth: (state, { payload: location }) => {
             if (!location.pathname.startsWith('/login')) {
