@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split DrawMap commponents into Layers and DrawTools [#57](https://github.com/azavea/iow-boundary-tool/pull/57)
 - Make `Roles` enum an `IntEnum` subclass [#74](https://github.com/azavea/iow-boundary-tool/pull/74)
 - Drop `Role` table and refactor as choice field on User [#117](https://github.com/azavea/iow-boundary-tool/pull/117)
+- Return user information from login endpoint [#136](https://github.com/azavea/iow-boundary-tool/pull/136)
 
 ### Fixed
 
