@@ -31,7 +31,9 @@ class ReferenceImageList(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(uploaded_by=self.request.user)
+        serializer.save(
+            boundary_id=self.kwargs["boundary"], uploaded_by=self.request.user
+        )
 
 
 class ReferenceImageDetail(generics.UpdateAPIView):
@@ -40,5 +42,8 @@ class ReferenceImageDetail(generics.UpdateAPIView):
 
     def get_queryset(self):
         if self.request.user.role == Roles.VALIDATOR:
-            raise PermissionDenied("Validators cannot view image details.")
+            raise PermissionDenied("Validators cannot edit image details.")
         return ReferenceImage.objects.all()
+
+    def perform_update(self, serializer):
+        serializer.save(boundary_id=self.kwargs["boundary"])
