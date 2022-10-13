@@ -1,5 +1,5 @@
 const TAGS = {
-    SUBMISSION: 'submission',
+    BOUNDARY: 'boundary',
 
     LIST_ID: 'list',
 };
