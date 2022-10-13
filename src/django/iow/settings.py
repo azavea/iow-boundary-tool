@@ -272,7 +272,7 @@ ECSMANAGE_ENVIRONMENTS = {
 
 if ENVIRONMENT == 'Development':
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'noreply@iow.test'
 else:
     EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
-    DEFAULT_FROM_EMAIL = os.getenv('IOW_DEFAULT_FROM_EMAIL')
+
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@staging.iow.azavea.com')

@@ -277,6 +277,10 @@ variable "django_log_level" {
   type = string
 }
 
+variable "default_from_email" {
+  type = string
+}
+
 variable "aws_ecs_task_execution_role_policy_arn" {
   default = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
   type    = string
