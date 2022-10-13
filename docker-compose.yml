@@ -11,7 +11,7 @@ services:
       test: [ "CMD", "pg_isready", "-U", "iow-boundary-tool", "-h", "database" ]
       interval: 3s
       timeout: 3s
-      retries: 3
+      retries: 6
 
   app:
     image: node:18-slim
