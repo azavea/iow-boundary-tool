@@ -47,9 +47,13 @@ export const API_URLS = {
     LOGOUT: `${BASE_API_URL}/auth/logout/`,
     FORGOT: `${BASE_API_URL}/auth/password/reset/`,
     CONFIRM: `${BASE_API_URL}/auth/password/reset/confirm/`,
-    RESET: 'confirm_password_reset/reset/',
 };
 
 export const API_STATUSES = {
     REDIRECT: 302,
 };
+
+export const APP_URLS = {
+    RESET: 'confirm_password_reset/reset/',
+};
+

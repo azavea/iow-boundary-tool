@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 
 import apiClient from '../api/client';
-import { API_URLS, API_STATUSES } from '../constants';
+import { API_URLS, API_STATUSES, APP_URLS } from '../constants';
 import { login } from '../store/authSlice';
 import LoginForm from '../components/LoginForm';
 
@@ -27,7 +27,7 @@ export default function Login() {
             })
             .catch(apiError => {
                 if (apiError.response?.status === API_STATUSES.REDIRECT) {
-                    const dest = `/${API_URLS.RESET}${apiError.response.data.uid}/${apiError.response.data.token}/`;
+                    const dest = `/${APP_URLS.RESET}${apiError.response.data.uid}/${apiError.response.data.token}/`;
                     navigate(dest);
                 }
                 setErrorDetail(apiError.response?.data?.detail);
