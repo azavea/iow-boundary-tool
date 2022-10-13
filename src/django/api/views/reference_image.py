@@ -14,9 +14,6 @@ class ReferenceImageList(generics.CreateAPIView):
     serializer_class = ReferenceImageSerializer
 
     def get_queryset(self):
-        if self.request.user.role == Roles.VALIDATOR:
-            raise PermissionDenied("Validators cannot view image details.")
-
         boundary = get_object_or_404(Boundary, pk=self.kwargs["boundary"])
         if boundary.utility not in self.request.user.utilities.all():
             raise PermissionDenied("Cannot view images for that utility.")
@@ -43,4 +40,8 @@ class ReferenceImageList(generics.CreateAPIView):
 class ReferenceImageDetail(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ReferenceImageSerializer
-    queryset = ReferenceImage.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.role == Roles.VALIDATOR:
+            raise PermissionDenied("Validators cannot view image details.")
+        return ReferenceImage.objects.all()
