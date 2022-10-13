@@ -9,6 +9,8 @@ from ..models.boundary import Boundary, BOUNDARY_STATUS
 from ..models.utility import Utility
 from ..models.submission import Submission, Review, Annotation
 
+from .reference_image import ReferenceImageSerializer
+
 
 class StatusField(ChoiceField):
     def __init__(self):
@@ -57,7 +59,8 @@ class BoundaryDetailSerializer(ModelSerializer):
     utility = UtilitySerializer()
     status = StatusField()
     submission = SubmissionSerializer(source='latest_submission')
+    reference_images = ReferenceImageSerializer(many=True)
 
     class Meta:
         model = Boundary
-        fields = ['utility', 'status', 'submission']
+        fields = ['utility', 'status', 'submission', 'reference_images']
