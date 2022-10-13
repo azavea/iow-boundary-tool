@@ -42,6 +42,9 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
+# This should cause a Django system check error (caches.E001)
+CACHES = {}
+
 if ENVIRONMENT == "Development":
     # Services within the bridge network access Django by resolving its
     # container name. Also, some folks develop on remote workstations.

@@ -113,7 +113,9 @@ function TableRows() {
     }
 }
 
-function TableRow({ boundary: { id, location, pwsid, last_modified, status } }) {
+function TableRow({
+    boundary: { id, location, pwsid, last_modified, status },
+}) {
     const navigate = useNavigate();
 
     return (
