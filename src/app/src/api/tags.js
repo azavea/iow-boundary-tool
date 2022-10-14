@@ -12,15 +12,15 @@ export function getListTagProvider(tag) {
 }
 
 export function getSingleItemProvider(tag) {
-    return (result, error, id) => ({ tag, id });
+    return (result, error, id) => [{ tag, id }];
 }
 
 export function getNewItemTagInvalidator(tag) {
-    return () => ({ tag, id: TAGS.LIST_ID });
+    return () => [{ tag, id: TAGS.LIST_ID }];
 }
 
 export function getUpdateItemTagInvalidator(tag) {
-    return (result, error, id) => ({ tag, id });
+    return (result, error, id) => [{ tag, id }];
 }
 
 export default TAGS;
