@@ -61,9 +61,7 @@ function SubmissionStatusBar({ submission }) {
                     color='teal.400'
                     boxSize={6}
                 ></Icon>
-                <Text textStyle='submissionDetailBody'>
-                    Your map will be reviewed.
-                </Text>
+                <Text textStyle='detail'>Your map will be reviewed.</Text>
             </HStack>
         </Box>
     );
