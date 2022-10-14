@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configure Amazon SES email support in staging env [#118](https://github.com/azavea/iow-boundary-tool/pull/118)
 - Wire up Boundary List Page [#122](https://github.com/azavea/iow-boundary-tool/pull/122)
 - Add ReferenceImage views/serializers for image metadata [#114](https://github.com/azavea/iow-boundary-tool/pull/114)
+- Load boundary details in draw page [#139](https://github.com/azavea/iow-boundary-tool/pull/139)
 
 ### Changed
 
