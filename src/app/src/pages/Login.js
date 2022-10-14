@@ -22,8 +22,8 @@ export default function Login() {
                 email,
                 password,
             })
-            .then(() => {
-                dispatch(login());
+            .then(({ data: user }) => {
+                dispatch(login(user));
             })
             .catch(apiError => {
                 if (apiError.response?.status === API_STATUSES.REDIRECT) {
@@ -34,20 +34,20 @@ export default function Login() {
             });
     };
 
-    const signedIn = useSelector(state => state.auth.signedIn);
+    const user = useSelector(state => state.auth.user);
     const locationBeforeAuth = useSelector(
         state => state.auth.locationBeforeAuth
     );
 
     // Upon successful sign in, redirect if specified (e.g. by /login route)
     useEffect(() => {
-        if (signedIn) {
+        if (user) {
             navigate(locationBeforeAuth, { replace: true });
         }
         if (forgotPassword) {
             navigate('/forgot');
         }
-    }, [navigate, signedIn, forgotPassword, locationBeforeAuth]);
+    }, [navigate, user, forgotPassword, locationBeforeAuth]);
 
     return (
         <LoginForm>

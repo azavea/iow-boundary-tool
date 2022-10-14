@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, CogIcon, LogoutIcon } from '@heroicons/react/outline';
 import apiClient from '../api/client';
 import { API_URLS, NAVBAR_HEIGHT } from '../constants';
-import { logout, setSelectedUtility } from '../store/authSlice';
+import { logout, setUtilityByPwsid } from '../store/authSlice';
 
 const NAVBAR_VARIANTS = {
     DRAW: 'draw',
@@ -102,31 +102,33 @@ function ExitButton({ variant }) {
 function UtilityControl({ variant }) {
     const dispatch = useDispatch();
 
-    // placeholders
-    const utilities = ['Raleigh City of', 'Azavea Test Utility'];
-    const selectedUtility =
-        useSelector(state => state.auth.selectedUtility) || utilities[0];
+    const utilities = useSelector(state => state.auth.user.utilities);
+    const utility = useSelector(state => state.auth.utility);
 
-    return variant === NAVBAR_VARIANTS.SUBMISSION && utilities.length > 1 ? (
+    if (!utility) {
+        return null;
+    }
+
+    return variant === NAVBAR_VARIANTS.SUBMISSION && utilities?.length > 1 ? (
         <Select
             variant='filled'
             h='40px'
             w='250px'
-            value={selectedUtility}
+            value={utility.pwsid}
             onChange={e => {
-                dispatch(setSelectedUtility(e.target.value));
+                dispatch(setUtilityByPwsid(e.target.value));
             }}
             _focus={{ background: 'white' }}
         >
-            {utilities.map(u => {
+            {utilities.map(({ id, pwsid, name }) => {
                 return (
-                    <option key={u} value={u}>
-                        {u}
+                    <option key={id} value={pwsid}>
+                        {name}
                     </option>
                 );
             })}
         </Select>
     ) : (
-        <Text textStyle='selectedUtility'>{selectedUtility}</Text>
+        <Text textStyle='selectedUtility'>{utility.name}</Text>
     );
 }

@@ -5,11 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from ..models.user import Roles
-from ..models.boundary import Boundary
-from ..models.submission import Submission
+from ..models import Boundary, Roles, Submission
 
-from ..serializers.boundary import BoundaryListSerializer, BoundaryDetailSerializer
+from ..serializers import BoundaryListSerializer, BoundaryDetailSerializer
 
 
 def get_boundary_queryset_for_user(user):
