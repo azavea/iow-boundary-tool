@@ -1,4 +1,4 @@
-export const MAP_CENTER = [35.7596, -79.0193]; // North Carolina
+export const MAP_CENTER = [35.7938, -78.7232]; // Raleigh, North Carolina
 export const MAP_INITIAL_ZOOM = 13;
 export const INITIAL_POLYGON_SCALE_FACTOR = 0.5;
 
@@ -64,4 +64,11 @@ export const BOUNDARY_STATUS = {
     IN_REVIEW: 'In Review',
     NEEDS_REVISIONS: 'Needs Revisions',
     APPROVED: 'Approved',
+};
+
+// In sync with django.api.models.user.Roles
+export const ROLES = {
+    CONTRIBUTOR: 'C',
+    VALIDATOR: 'V',
+    ADMINISTRATOR: 'A',
 };

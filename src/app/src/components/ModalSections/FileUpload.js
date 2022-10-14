@@ -29,7 +29,7 @@ export default function FileUpload({ PreviousButton }) {
             heading='Would you like to add your current map?'
             prevButton={PreviousButton}
             nextButton={
-                <Button variant='cta' onClick={() => navigate('/draw')}>
+                <Button variant='cta' onClick={() => navigate('/draw/3')}>
                     Continue
                 </Button>
             }
