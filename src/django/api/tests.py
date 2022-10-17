@@ -61,90 +61,130 @@ class BoundarySyncAPITestCase(TestCase):
         cls.boundary_4 = Boundary.objects.create(utility=test_utility)
         cls.boundary_5 = Boundary.objects.create(utility=test_utility)
 
+        # Submissions activities should follow
+        # Draft-->Submission-->Approved/Revisions flow
+        # Order of test data activities dependent on order of below methods executing,
+        # So there is potential for order variation if unexpected execution sequence.
+        # If variation, explicitly override the created_at value on Submission creation
+
         # draft
         Submission.objects.create(
             boundary=cls.boundary_1,
             shape=RALEIGH_FAKE_ZIGZAG,
-            created_at=datetime(2022, 10, 3, hour=15, tzinfo=timezone.utc),
+            created_by=cls.contributor,
+        )
+
+        submission_2 = Submission.objects.create(
+            boundary=cls.boundary_2,
+            shape=RALEIGH_FAKE_TRIANGLE,
+            created_by=cls.contributor,
+        )
+
+        submission_3 = Submission.objects.create(
+            boundary=cls.boundary_3,
+            shape=RALEIGH_FAKE_TRIANGLE,
+            created_by=cls.contributor,
+        )
+
+        submission_4 = Submission.objects.create(
+            boundary=cls.boundary_4,
+            shape=RALEIGH_FAKE_TRIANGLE,
+            created_by=cls.contributor,
+        )
+
+        submission_5 = Submission.objects.create(
+            boundary=cls.boundary_5,
+            shape=RALEIGH_FAKE_RECTANGLE,
             created_by=cls.contributor,
         )
 
         # submitted
-        Submission.objects.create(
-            boundary=cls.boundary_2,
-            shape=RALEIGH_FAKE_TRIANGLE,
-            created_at=datetime(2022, 10, 2, hour=11, tzinfo=timezone.utc),
-            created_by=cls.contributor,
-            submitted_at=datetime(2022, 10, 2, hour=12, tzinfo=timezone.utc),
+        Submission.objects.filter(pk=submission_2.pk).update(
+            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_by=cls.contributor,
+            notes="Notes for the test submission.",
+        )
+
+        Submission.objects.filter(pk=submission_3.pk).update(
+            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_by=cls.contributor,
+            notes="Notes for the test submission.",
+        )
+
+        Submission.objects.filter(pk=submission_4.pk).update(
+            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_by=cls.contributor,
+            notes="Notes for the test submission.",
+        )
+
+        Submission.objects.filter(pk=submission_5.pk).update(
+            submitted_at=datetime.now(tz=timezone.utc),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
 
         # reviewing
-        submitted = Submission.objects.create(
-            boundary=cls.boundary_3,
-            shape=RALEIGH_FAKE_TRIANGLE,
-            created_at=datetime(2022, 10, 2, hour=4, tzinfo=timezone.utc),
-            created_by=cls.contributor,
-            submitted_at=datetime(2022, 10, 2, hour=6, tzinfo=timezone.utc),
-            submitted_by=cls.contributor,
-            notes="Notes for the test submission.",
-        )
-
-        review = Review.objects.create(
-            submission=submitted,
+        review_submission_3 = Review.objects.create(
+            submission=submission_3,
             reviewed_by=cls.validator,
             notes="Notes for the review.",
-            created_at=datetime(2022, 10, 2, hour=10, tzinfo=timezone.utc),
+            created_at=datetime.now(tz=timezone.utc),
+        )
+
+        review_submission_4 = Review.objects.create(
+            submission=submission_4,
+            reviewed_by=cls.validator,
+            notes="Notes for the review.",
+            created_at=datetime.now(tz=timezone.utc),
         )
 
         Annotation.objects.create(
-            review=review,
+            review=review_submission_3,
             location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
             comment="Comment on review",
-            created_at=datetime(2022, 10, 2, hour=10, minute=5, tzinfo=timezone.utc),
+            created_at=datetime.now(tz=timezone.utc),
+        )
+
+        Annotation.objects.create(
+            review=review_submission_4,
+            location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
+            comment="Comment on review",
+            created_at=datetime.now(tz=timezone.utc),
         )
 
         # needs revision
-        submitted = Submission.objects.create(
+        Review.objects.filter(pk=review_submission_4.pk).update(
+            reviewed_at=datetime.now(tz=timezone.utc),
+            reviewed_by=cls.validator,
+            notes="Final notes for the review.",
+        )
+
+        # new submission draft
+
+        resubmission_4 = Submission.objects.create(
             boundary=cls.boundary_4,
             shape=RALEIGH_FAKE_TRIANGLE,
-            created_at=datetime(2022, 10, 2, hour=4, tzinfo=timezone.utc),
             created_by=cls.contributor,
-            submitted_at=datetime(2022, 10, 2, hour=6, tzinfo=timezone.utc),
+        )
+
+        # re-submit for review
+
+        Submission.objects.filter(pk=resubmission_4.pk).update(
+            submitted_at=datetime.now(tz=timezone.utc),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
 
-        review = Review.objects.create(
-            submission=submitted,
-            reviewed_by=cls.validator,
-            reviewed_at=datetime(2022, 10, 2, hour=11, tzinfo=timezone.utc),
-            notes="Notes for the review.",
-            created_at=datetime(2022, 10, 2, hour=10, tzinfo=timezone.utc),
-        )
-
-        Annotation.objects.create(
-            review=review,
-            location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
-            comment="Comment on review",
-            created_at=datetime(2022, 10, 2, hour=10, minute=5, tzinfo=timezone.utc),
-        )
-
         # approved
-        approved = Submission.objects.create(
-            boundary=cls.boundary_5,
-            shape=RALEIGH_FAKE_RECTANGLE,
-            created_at=datetime(2022, 10, 1, hour=8, tzinfo=timezone.utc),
-            created_by=cls.contributor,
-            submitted_at=datetime(2022, 10, 1, hour=9, tzinfo=timezone.utc),
-            submitted_by=cls.contributor,
-            notes="Notes for the test approved boundary.",
+        Approval.objects.create(
+            submission=resubmission_4,
+            approved_at=datetime.now(tz=timezone.utc),
+            approved_by=cls.validator,
         )
 
         Approval.objects.create(
-            submission=approved,
-            approved_at=datetime(2022, 10, 4, hour=16, tzinfo=timezone.utc),
+            submission=submission_5,
+            approved_at=datetime.now(tz=timezone.utc),
             approved_by=cls.validator,
         )
 
