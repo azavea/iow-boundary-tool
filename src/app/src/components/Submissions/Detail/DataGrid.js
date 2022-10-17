@@ -15,7 +15,7 @@ export default function DataGrid({ initialMarginTop, title, data }) {
                             </Text>
                             {/* if not a string, accept a React element */}
                             {entry instanceof String ? (
-                                <Text mt={1} textStyle='submissionDetailBody'>
+                                <Text mt={1} textStyle='detail'>
                                     {entry}
                                 </Text>
                             ) : (

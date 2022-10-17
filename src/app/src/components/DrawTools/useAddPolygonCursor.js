@@ -3,7 +3,7 @@ import { useMap } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import { DomUtil } from 'leaflet';
 
-import { addPolygon } from '../../store/mapSlice';
+import { setPolygon } from '../../store/mapSlice';
 import { generateInitialPolygonPoints } from '../../utils';
 
 export default function useAddPolygonCursor() {
@@ -20,7 +20,7 @@ export default function useAddPolygonCursor() {
 
             map.flyTo(event.latlng);
             dispatch(
-                addPolygon({
+                setPolygon({
                     points: generateInitialPolygonPoints({
                         mapBounds: map.getBounds(),
                         center: event.latlng,

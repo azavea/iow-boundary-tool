@@ -204,7 +204,7 @@ const theme = extendTheme({
             fontSize: '14px',
             color: 'gray.500',
         },
-        submissionDetailBody: {
+        detail: {
             fontWeight: 400,
             fontSize: '16px',
             color: 'gray.700',

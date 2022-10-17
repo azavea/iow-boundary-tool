@@ -37,7 +37,7 @@ export const mapSlice = createSlice({
     name: 'map',
     initialState,
     reducers: {
-        addPolygon: (state, { payload: newPolygon }) => {
+        setPolygon: (state, { payload: newPolygon }) => {
             state.polygon = {
                 ...DEFAULT_POLYGON,
                 ...newPolygon,
@@ -110,7 +110,7 @@ export const mapSlice = createSlice({
 });
 
 export const {
-    addPolygon,
+    setPolygon,
     updatePolygon,
     deletePolygon,
     togglePolygonVisibility,

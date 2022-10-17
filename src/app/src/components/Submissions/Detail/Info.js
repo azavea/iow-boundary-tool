@@ -36,13 +36,13 @@ export default function Info({ submission }) {
                     'Water system name': utilityName,
                     'Mailing address': (
                         <>
-                            <Text mt={1} textStyle='submissionDetailBody'>
+                            <Text mt={1} textStyle='detail'>
                                 {utilityAddress1}
                             </Text>
-                            <Text mt={1} textStyle='submissionDetailBody'>
+                            <Text mt={1} textStyle='detail'>
                                 {utilityAddress2}
                             </Text>
-                            <Text mt={1} textStyle='submissionDetailBody'>
+                            <Text mt={1} textStyle='detail'>
                                 {cityStateZip}
                             </Text>
                         </>

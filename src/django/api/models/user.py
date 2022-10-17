@@ -48,6 +48,8 @@ class EmailAsUsernameUserManager(BaseUserManager):
 
 
 class Roles(models.TextChoices):
+    """In sync with src.app.src.constants.ROLES"""
+
     CONTRIBUTOR = "C"
     VALIDATOR = "V"
     ADMINISTRATOR = "A"

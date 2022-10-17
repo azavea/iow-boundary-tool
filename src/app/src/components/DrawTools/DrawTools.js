@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
@@ -9,7 +12,28 @@ import useEditingPolygon from './useEditingPolygon';
 import useGeocoderResult from './useGeocoderResult';
 import useTrackMapZoom from './useTrackMapZoom';
 
-export default function DrawTools() {
+import { setPolygon } from '../../store/mapSlice';
+
+export default function DrawTools({ details }) {
+    const dispatch = useDispatch();
+
+    // Add the polygon indicated by `details` to the state
+    useEffect(() => {
+        if (details) {
+            dispatch(
+                setPolygon({
+                    // endpoint returns lngLat, leaflet needs latLng
+                    points: details.submission.shape.coordinates[0].map(p => [
+                        p[1],
+                        p[0],
+                    ]),
+                    visible: true,
+                    label: details.utility.name,
+                })
+            );
+        }
+    }, [dispatch, details]);
+
     useEditingPolygon();
     useAddPolygonCursor();
     useGeocoderResult();

@@ -43,7 +43,7 @@ export default function NavBar() {
             </Flex>
 
             <Flex align='center' justify='center'>
-                <Heading size='md' color='white' ml={6}>
+                <Heading size='md' color='white'>
                     Boundary Sync
                 </Heading>
             </Flex>
