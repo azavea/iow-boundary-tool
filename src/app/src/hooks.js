@@ -7,6 +7,7 @@ import {
     createDefaultReferenceImage,
     updateReferenceImage,
 } from './store/mapSlice';
+import { useParams } from 'react-router';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -109,4 +110,8 @@ export function useFilePicker(onChange) {
     };
 
     return openFileDialog;
+}
+
+export function useBoundaryId() {
+    return useParams().boundaryId;
 }

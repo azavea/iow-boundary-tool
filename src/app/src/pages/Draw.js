@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { Box, Flex, Spinner } from '@chakra-ui/react';
 
 import NotFound from './NotFound';
@@ -10,6 +9,7 @@ import Sidebar from '../components/Sidebar';
 
 import { useGetBoundaryDetailsQuery } from '../api/boundaries';
 import { BOUNDARY_STATUS, ROLES } from '../constants';
+import { useBoundaryId } from '../hooks';
 
 const DRAW_MODES = {
     FULLY_EDITABLE: 'fully_editable',
@@ -19,7 +19,7 @@ const DRAW_MODES = {
 
 export default function Draw() {
     const user = useSelector(state => state.auth.user);
-    const { id } = useParams();
+    const id = useBoundaryId();
 
     const { isFetching, data: details, error } = useGetBoundaryDetailsQuery(id);
 
