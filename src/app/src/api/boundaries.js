@@ -36,7 +36,7 @@ const boundaryApi = api.injectEndpoints({
         updateBoundaryShape: build.mutation({
             query: ({ id, shape }) => ({
                 url: `/boundaries/${id}/shape/`,
-                method: 'POST',
+                method: 'PUT',
                 data: shape,
             }),
         }),

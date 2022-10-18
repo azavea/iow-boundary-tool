@@ -4,10 +4,17 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.status import HTTP_204_NO_CONTENT
 
+
+from ..models.boundary import BOUNDARY_STATUS
+from ..serializers import (
+    BoundaryListSerializer,
+    BoundaryDetailSerializer,
+    ShapeSerializer,
+)
 from ..models import Boundary, Roles, Submission
-
-from ..serializers import BoundaryListSerializer, BoundaryDetailSerializer
+from ..exceptions import ForbiddenException, BadRequestException
 
 
 def get_boundary_queryset_for_user(user):
@@ -70,3 +77,32 @@ class BoundaryDetailView(APIView):
         boundary = get_object_or_404(boundary_set, pk=id)
 
         return Response(BoundaryDetailSerializer(boundary).data)
+
+
+class BoundaryShapeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, id, format=None):
+        boundary_set = get_boundary_queryset_for_user(request.user)
+        boundary_set = boundary_set.prefetch_related('submissions')
+        boundary = get_object_or_404(boundary_set, pk=id)
+
+        if request.user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
+            raise ForbiddenException(
+                'Only contributors and administrators can edit boundaries.'
+            )
+
+        if boundary.status != BOUNDARY_STATUS.DRAFT:
+            raise BadRequestException(
+                'Cannot update shape of boundary with status: {}'.format(
+                    boundary.status
+                ),
+            )
+
+        serializer = ShapeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        boundary.latest_submission.shape = serializer.validated_data
+        boundary.latest_submission.save()
+
+        return Response(status=HTTP_204_NO_CONTENT)
