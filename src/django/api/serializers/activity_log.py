@@ -6,6 +6,7 @@ from rest_framework.serializers import (
 )
 
 from ..models import Submission
+from ..models.boundary import BOUNDARY_STATUS
 
 
 class ActivityDraftedSerializer(ModelSerializer):
@@ -15,7 +16,7 @@ class ActivityDraftedSerializer(ModelSerializer):
     notes = ''
 
     def get_action(self, value):
-        return 'Drafted'
+        return BOUNDARY_STATUS.DRAFT.value
 
     class Meta:
         model = Submission
@@ -26,7 +27,7 @@ class ActivityDraftedSerializer(ModelSerializer):
 class ActivitySubmittedSerializer(ActivityDraftedSerializer):
     def to_representation(self, instance):
         obj = super().to_representation(instance)
-        obj['action'] = 'Submitted'
+        obj['action'] = BOUNDARY_STATUS.SUBMITTED.value
         obj['time'] = instance.submitted_at
         obj['user'] = instance.submitted_by.full_name
         obj['notes'] = instance.notes
@@ -37,7 +38,7 @@ class ActivityReviewStartedSerializer(ActivityDraftedSerializer):
     def to_representation(self, instance):
         obj = super().to_representation(instance)
         review = instance.review
-        obj['action'] = 'Review Started'
+        obj['action'] = BOUNDARY_STATUS.IN_REVIEW.value
         obj['time'] = review.created_at
         obj['user'] = review.reviewed_by.full_name
         # Don't show review notes in log until review is complete
@@ -50,7 +51,7 @@ class ActivityReviewedSerializer(ActivityReviewStartedSerializer):
     def to_representation(self, instance):
         obj = super().to_representation(instance)
         review = instance.review
-        obj['action'] = 'Reviewed'
+        obj['action'] = BOUNDARY_STATUS.NEEDS_REVISIONS.value
         obj['time'] = review.reviewed_at
         obj['notes'] = review.notes
         obj['annotations_count'] = review.annotations.count()
@@ -62,7 +63,7 @@ class ActivityApprovedSerializer(ActivityDraftedSerializer):
         obj = super().to_representation(instance)
         approval = instance.approval
         if approval.approved_at:
-            obj['action'] = 'Approved'
+            obj['action'] = BOUNDARY_STATUS.APPROVED.value
             obj['time'] = approval.approved_at
             obj['user'] = approval.approved_by.full_name
             if hasattr(obj, 'notes'):

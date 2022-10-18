@@ -209,6 +209,11 @@ const theme = extendTheme({
             fontSize: '16px',
             color: 'gray.700',
         },
+        smallDetail: {
+            fontWeight: 400,
+            fontSize: '14px',
+            color: 'gray.700',
+        },
         selectedUtility: {
             fontFamily: `'Inter', sans-serif`,
             fontWeight: 400,
@@ -219,6 +224,16 @@ const theme = extendTheme({
             fontFamily: `'Inter', sans-serif`,
             fontSize: '16px',
             fontWeight: 600,
+        },
+        activityLogNotes: {
+            fontFamily: `'Inter', sans-serif`,
+            fontStyle: 'italic',
+            fontSize: '14px',
+            fontWeight: 400,
+            color: 'gray.700',
+            borderLeft: '.25rem solid var(--chakra-colors-gray-200)',
+            maxWidth: '50%',
+            paddingLeft: '.5rem',
         },
     },
     styles: {

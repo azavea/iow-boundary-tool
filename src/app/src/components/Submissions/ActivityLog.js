@@ -1,34 +1,65 @@
 import { Fragment } from 'react';
 import { Text } from '@chakra-ui/react';
 
-export default function ActivityLog({ submissionId }) {
-    const fetchLogEntries = () => {
-        return [
-            [
-                'July 7, 2022 | 3:30 pm',
-                'Jenny Smith has submitted a new map for review',
-            ],
-        ];
-    };
+import { formatDateTime } from '../../utils';
+import { BOUNDARY_STATUS } from '../../constants';
 
-    const logEntries = fetchLogEntries();
-
-    const logEntriesAsTextElements = logEntries.map((entry, index) => {
-        const [timestamp, description] = entry;
-        return (
-            <Fragment key={index}>
-                <Text textStyle='submissionDetailHeading'>{timestamp}</Text>
-                <Text mt={2}>{description}</Text>
-            </Fragment>
-        );
-    });
+export default function ActivityLog({ entries }) {
+    const logEntriesAsTextElements = entries.map(
+        ({ user, action, time, notes }, index) => {
+            return (
+                <Fragment key={index}>
+                    <Text textStyle='submissionDetailHeading' mt={4}>
+                        {formatDateTime(time)}
+                    </Text>
+                    <Text textStyle='smallDetail'>
+                        {user}
+                        {getActionString(action)}
+                    </Text>
+                    {notes ? (
+                        <>
+                            <Text textStyle='smallDetail' mt={1}>
+                                Additional comment:
+                            </Text>
+                            <Text textStyle='activityLogNotes' mt={1}>
+                                {notes}
+                            </Text>
+                        </>
+                    ) : null}
+                </Fragment>
+            );
+        }
+    );
 
     return (
         <>
-            <Text key='heading' mt={7} textStyle='submissionDetailCategory'>
+            <Text
+                key='heading'
+                mt={7}
+                mb={2}
+                textStyle='submissionDetailCategory'
+            >
                 Activity log
             </Text>
             {logEntriesAsTextElements}
         </>
     );
+}
+
+function getActionString(action) {
+    switch (action) {
+        case BOUNDARY_STATUS.DRAFT:
+            return ' created a new draft.';
+        case BOUNDARY_STATUS.SUBMITTED:
+            return ' submitted a new map for review.';
+        case BOUNDARY_STATUS.IN_REVIEW:
+            return ' started a review.';
+        case BOUNDARY_STATUS.NEEDS_REVISIONS:
+            return ' requested revisions.';
+        case BOUNDARY_STATUS.APPROVED:
+            return ' approved this map.';
+
+        default:
+            throw new Error(`Invalid action type: ${action}`);
+    }
 }

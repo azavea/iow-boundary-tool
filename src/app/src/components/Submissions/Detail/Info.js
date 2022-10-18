@@ -1,49 +1,36 @@
 import { Text } from '@chakra-ui/react';
 import DataGrid from './DataGrid';
 
-export default function Info({ submission }) {
-    const {
-        contactName,
-        contactPhone,
-        contactTitle,
-        pwsId,
-        utilityName,
-        utilityAddress1,
-        utilityAddress2,
-        utilityCity,
-        utilityState,
-        utilityZip,
-    } = submission;
-
-    const cityStateZip = `${utilityCity}, ${utilityState} ${utilityZip}`;
-
+export default function Info({ utility, primary_contact }) {
     return (
         <>
             <DataGrid
                 initialMarginTop={7}
                 title='Primary contact'
                 data={{
-                    'Full name': contactName,
-                    'Phone number': contactPhone,
-                    'Job title': contactTitle,
+                    'Full name': primary_contact.full_name,
+                    'Phone number': primary_contact.phone_number,
+                    'Job title': primary_contact.job_title,
                 }}
             />
+
             <DataGrid
                 initialMarginTop={10}
                 title='Water system information'
                 data={{
-                    PWSID: pwsId,
-                    'Water system name': utilityName,
+                    PWSID: utility.pwsid,
+                    'Water system name': utility.name,
                     'Mailing address': (
                         <>
                             <Text mt={1} textStyle='detail'>
-                                {utilityAddress1}
+                                {utility.address_line_1}
                             </Text>
                             <Text mt={1} textStyle='detail'>
-                                {utilityAddress2}
+                                {utility.address_line_2}
                             </Text>
                             <Text mt={1} textStyle='detail'>
-                                {cityStateZip}
+                                {utility.address_city}, {utility.state}{' '}
+                                {utility.address_zip_code}
                             </Text>
                         </>
                     ),
