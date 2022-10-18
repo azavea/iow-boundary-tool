@@ -22,11 +22,7 @@ export default function DrawTools({ details }) {
         if (details) {
             dispatch(
                 setPolygon({
-                    // endpoint returns lngLat, leaflet needs latLng
-                    points: details.submission.shape.coordinates[0].map(p => [
-                        p[1],
-                        p[0],
-                    ]),
+                    points: details.submission.shape.coordinates[0],
                     visible: true,
                     label: details.utility.name,
                 })

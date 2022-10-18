@@ -8,6 +8,7 @@ import {
     updateReferenceImage,
 } from './store/mapSlice';
 import { useParams } from 'react-router';
+import api from './api/api';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -114,4 +115,62 @@ export function useFilePicker(onChange) {
 
 export function useBoundaryId() {
     return useParams().boundaryId;
+}
+
+/**
+ * Debounce a callback
+ * @template CallbackFunction
+ * @param {CallbackFunction} callback - A function to be called after no calls have been
+ *  made to the returned callback for the duration of the interval. Its impending call
+ *  will be replaced by newer ones.
+ * @param {CallbackFunction} immediateCallback - A function to be called immediately
+ *  after calling the returned callback
+ * @param {number} interval
+ * @returns CallbackFunction
+ */
+export function useTrailingDebounceCallback({
+    callback,
+    immediateCallback,
+    interval,
+}) {
+    const timeout = useRef();
+
+    return useCallback(
+        (...args) => {
+            const scheduledCallback = () => {
+                callback(...args);
+            };
+
+            clearTimeout(timeout.current);
+            timeout.current = setTimeout(scheduledCallback, interval);
+
+            if (immediateCallback) {
+                immediateCallback(...args);
+            }
+        },
+        [callback, immediateCallback, interval]
+    );
+}
+
+export function useReverseQueue({ queryArgs, endpointName }) {
+    const dispatch = useDispatch();
+
+    const queue = useRef([]);
+
+    const clear = useCallback(() => {
+        queue.current = [];
+    }, []);
+
+    const apply = useCallback(() => {
+        dispatch(
+            api.util.patchQueryData(endpointName, queryArgs, queue.current)
+        );
+        clear();
+    }, [dispatch, queryArgs, endpointName, clear]);
+
+    const push = useCallback(patches => {
+        queue.current = [...patches, ...queue.current];
+    }, []);
+
+    return { queue, clear, apply, push };
 }
