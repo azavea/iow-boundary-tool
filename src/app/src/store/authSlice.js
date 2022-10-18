@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { ROLES } from '../constants';
+
 const initialState = {
     locationBeforeAuth: '/welcome',
     user: false,
@@ -13,7 +15,11 @@ export const authSlice = createSlice({
         login: (state, { payload: user }) => {
             state.user = user;
 
-            if (user.utilities) {
+            // Contributors must choose a utility if there are multiple
+            if (
+                user.utilities &&
+                (user.role !== ROLES.CONTRIBUTOR || user.utilities.length === 1)
+            ) {
                 state.utility = user.utilities[0];
             }
         },

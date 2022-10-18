@@ -4,15 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 
 import apiClient from '../api/client';
-import { API_URLS, API_STATUSES, APP_URLS } from '../constants';
-import { login } from '../store/authSlice';
+import { API_URLS, API_STATUSES, APP_URLS, ROLES } from '../constants';
+import { login, setUtilityByPwsid } from '../store/authSlice';
 import LoginForm from '../components/LoginForm';
+import SelectUtility from './SelectUtility';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorDetail, setErrorDetail] = useState('');
     const [forgotPassword, setForgotPassword] = useState(false);
+    const [showUtilityControl, setShowUtilityControl] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -42,14 +44,22 @@ export default function Login() {
     // Upon successful sign in, redirect if specified (e.g. by /login route)
     useEffect(() => {
         if (user) {
-            navigate(locationBeforeAuth, { replace: true });
+            if (user.utilities.length > 1 && user.role === ROLES.CONTRIBUTOR) {
+                setShowUtilityControl(true);
+                // Go ahead and set this, they'll have an opportunity to change it.
+                dispatch(setUtilityByPwsid(user.utilities[0].pwsid));
+            } else {
+                navigate(locationBeforeAuth, { replace: true });
+            }
+        } else {
+            setShowUtilityControl(false);
         }
         if (forgotPassword) {
             navigate('/forgot');
         }
-    }, [navigate, user, forgotPassword, locationBeforeAuth]);
+    }, [dispatch, navigate, user, forgotPassword, locationBeforeAuth]);
 
-    return (
+    const loginForm = (
         <LoginForm>
             <Text textStyle='loginHeader'>Boundary Sync</Text>
             <Box>
@@ -97,4 +107,6 @@ export default function Login() {
             </VStack>
         </LoginForm>
     );
+
+    return showUtilityControl ? <SelectUtility /> : loginForm;
 }
