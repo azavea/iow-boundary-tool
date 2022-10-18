@@ -73,3 +73,11 @@ export function formatApiError(apiErrorData) {
     }
     return errorDetail || 'An unknown error occurred.';
 }
+
+export function formatDateTime(date) {
+    const d = new Date(date);
+    const datePart = d.toLocaleDateString('en-US', { dateStyle: 'long' });
+    const timePart = d.toLocaleTimeString('en-US', { timeStyle: 'short' });
+
+    return `${datePart} | ${timePart}`;
+}
