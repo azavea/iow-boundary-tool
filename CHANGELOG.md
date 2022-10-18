@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Wire up Boundary List Page [#122](https://github.com/azavea/iow-boundary-tool/pull/122)
 - Add ReferenceImage views/serializers for image metadata [#114](https://github.com/azavea/iow-boundary-tool/pull/114)
 - Load boundary details in draw page [#139](https://github.com/azavea/iow-boundary-tool/pull/139)
+- Add Activity Log Serializer [#140](https://github.com/azavea/iow-boundary-tool/pull/140)
 
 ### Changed
 

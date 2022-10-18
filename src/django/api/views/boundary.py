@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import Prefetch, functions
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
@@ -54,8 +54,15 @@ class BoundaryDetailView(APIView):
         boundary_set = boundary_set.prefetch_related(
             Prefetch(
                 'submissions',
-                queryset=Submission.objects.select_related('review').prefetch_related(
-                    'review__annotations'
+                queryset=Submission.objects.select_related('review', 'approval')
+                .prefetch_related('review__annotations')
+                .order_by(
+                    functions.Coalesce(
+                        'approval__approved_at',
+                        'review__reviewed_at',
+                        'submitted_at',
+                        'created_at',
+                    ).desc()
                 ),
             )
         )
