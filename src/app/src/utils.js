@@ -81,3 +81,28 @@ export function formatDateTime(date) {
 
     return `${datePart} | ${timePart}`;
 }
+
+export function downloadData(data, filename = null) {
+    const a = document.createElement('a');
+    a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(data);
+    a.download = filename ?? `${new Date().toISOString()}`;
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+export function getBoundaryShapeFilename(boundary) {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = now.getMonth().toString().padStart(2, '0');
+    const date = now.getDate().toString().padStart(2, '0');
+
+    return `${[
+        year,
+        month,
+        date,
+        boundary.utility.name.replaceAll(/\s+/g, '_'),
+    ].join('_')}.geojson`;
+}
