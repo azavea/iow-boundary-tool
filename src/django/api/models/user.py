@@ -67,6 +67,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     has_admin_generated_password = models.BooleanField(default=True)
 
+    full_name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20)
+    job_title = models.CharField(max_length=127)
+
     role = models.CharField(
         default=Roles.CONTRIBUTOR,
         choices=Roles.choices,

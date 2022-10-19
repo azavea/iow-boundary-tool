@@ -16,7 +16,9 @@ erDiagram
         date date_joined
         password password
         boolean is_locked_out
-        phone phone
+        string full_name
+        job_title job_title
+        phone phone_number
         State state FK
         Utility utilities
     }
@@ -24,7 +26,10 @@ erDiagram
     Utility {
         string pwsid
         string name
-        address address
+        string address_line_1
+        string address_line_2
+        string address_city
+        string address_zip_code
         point location
         State state FK
     }
@@ -36,6 +41,7 @@ erDiagram
     }
     Boundary }o--|| Utility : "for"
     Boundary {
+        string name
         Utility utility FK
         date archived_at
     }
