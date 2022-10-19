@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
 import {
@@ -173,4 +174,19 @@ export function useReverseQueue({ queryArgs, endpointName }) {
     }, []);
 
     return { queue, clear, apply, push };
+}
+
+export function useEndpointToastError(error, message = 'An error occured') {
+    const toast = useToast();
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: message,
+                status: 'error',
+                isClosable: true,
+                duration: 5000,
+            });
+        }
+    }, [error, message, toast]);
 }
