@@ -7,7 +7,12 @@ import LoginForm from '../components/LoginForm';
 import UtilityControl from '../components/UtilityControl';
 import { logout } from '../store/authSlice';
 
-import { API_URLS } from '../constants';
+import {
+    BASE_API_URL,
+    API_URLS,
+    BOUNDARY_STATUS,
+    UTILITY_CONTROL_WIDTH,
+} from '../constants';
 
 export default function SelectUtility() {
     const dispatch = useDispatch();
@@ -17,7 +22,24 @@ export default function SelectUtility() {
     );
     const destination = locationBeforeAuth || '/welcome';
     const utilities = useSelector(state => state.auth.user?.utilities);
-    const width = '320px';
+    const utility = useSelector(state => state.auth.utility);
+    const width = `${UTILITY_CONTROL_WIDTH}px`;
+
+    const navigateAway = () => {
+        apiClient
+            .get(`${BASE_API_URL}/boundaries?utilities=${utility.id}`)
+            .then(({ data: boundaries }) => {
+                const drafts = boundaries.filter(
+                    b => b.status === BOUNDARY_STATUS.DRAFT
+                );
+                if (drafts.length > 0) {
+                    navigate(`/draw/${drafts[0].id}`);
+                } else {
+                    navigate(destination);
+                }
+            })
+            .catch(navigate(destination));
+    };
 
     return utilities?.length ? (
         <LoginForm>
@@ -26,11 +48,7 @@ export default function SelectUtility() {
                 Select your utility
             </Text>
             <UtilityControl readOnly={false} width={width} />
-            <Button
-                variant='cta'
-                width='xs'
-                onClick={() => navigate(destination)}
-            >
+            <Button variant='cta' width='xs' onClick={navigateAway}>
                 Proceed
             </Button>
         </LoginForm>

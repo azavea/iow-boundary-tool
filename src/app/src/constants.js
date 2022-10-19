@@ -31,6 +31,7 @@ export const SIDEBAR_TEXT_TOOLTIP_THRESHOLD = 30;
 export const MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL = 9;
 
 export const NAVBAR_HEIGHT = 68;
+export const UTILITY_CONTROL_WIDTH = 320;
 
 // https://leafletjs.com/reference.html#map-mappane
 export const PANES = {
