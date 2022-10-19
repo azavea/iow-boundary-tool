@@ -5,16 +5,15 @@ import {
     Heading,
     Icon,
     IconButton,
-    Select,
     Spacer,
-    Text,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, CogIcon, LogoutIcon } from '@heroicons/react/outline';
 import apiClient from '../api/client';
 import { API_URLS, NAVBAR_HEIGHT } from '../constants';
-import { logout, setUtilityByPwsid } from '../store/authSlice';
+import { logout } from '../store/authSlice';
+import UtilityControl from './UtilityControl';
 
 const NAVBAR_VARIANTS = {
     DRAW: 'draw',
@@ -39,7 +38,7 @@ export default function NavBar() {
             bg='gray.700'
         >
             <Flex align='center'>
-                <UtilityControl variant={variant} />
+                <UtilityControl readOnly={variant === NAVBAR_VARIANTS.DRAW} />
             </Flex>
 
             <Flex align='center' justify='center'>
@@ -96,39 +95,5 @@ function ExitButton({ variant }) {
         >
             Save and back
         </Button>
-    );
-}
-
-function UtilityControl({ variant }) {
-    const dispatch = useDispatch();
-
-    const utilities = useSelector(state => state.auth.user.utilities);
-    const utility = useSelector(state => state.auth.utility);
-
-    if (!utility) {
-        return null;
-    }
-
-    return variant === NAVBAR_VARIANTS.SUBMISSION && utilities?.length > 1 ? (
-        <Select
-            variant='filled'
-            h='40px'
-            w='250px'
-            value={utility.pwsid}
-            onChange={e => {
-                dispatch(setUtilityByPwsid(e.target.value));
-            }}
-            _focus={{ background: 'white' }}
-        >
-            {utilities.map(({ id, pwsid, name }) => {
-                return (
-                    <option key={id} value={pwsid}>
-                        {name}
-                    </option>
-                );
-            })}
-        </Select>
-    ) : (
-        <Text textStyle='selectedUtility'>{utility.name}</Text>
     );
 }

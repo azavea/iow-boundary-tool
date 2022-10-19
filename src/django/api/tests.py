@@ -30,6 +30,10 @@ class BoundarySyncAPITestCase(TestCase):
         test_utility = Utility(pwsid="123456789", name="Azavea Test Utility")
         test_utility.save()
 
+        # Create another test utility.
+        other_utility = Utility(pwsid="OTHERUTIL", name="Other Utility")
+        other_utility.save()
+
         # Create test users.
         cls.administrator = User.objects.create_superuser(
             email="a1@azavea.com",
@@ -52,6 +56,7 @@ class BoundarySyncAPITestCase(TestCase):
             role=Roles.CONTRIBUTOR,
         )
         cls.contributor.utilities.add(test_utility)
+        cls.contributor.utilities.add(other_utility)
 
         # Create test boundaries and submissions.
         # Use tz-aware datetimes to avoid warnings.

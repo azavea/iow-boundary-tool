@@ -215,6 +215,11 @@ const theme = extendTheme({
             fontSize: '20px',
             color: 'white',
         },
+        utilitySelectLabel: {
+            fontFamily: `'Inter', sans-serif`,
+            fontSize: '16px',
+            fontWeight: 600,
+        },
     },
     styles: {
         global: {
