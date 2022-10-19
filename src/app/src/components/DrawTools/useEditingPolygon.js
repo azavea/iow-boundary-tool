@@ -7,11 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { customizePrototypeIcon } from '../../utils';
 import { PANES } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
-import {
-    useBoundaryId,
-    useReverseQueue,
-    useTrailingDebounceCallback,
-} from '../../hooks';
+import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
 import api from '../../api/api';
 
 const POLYGON_LAYER_OPTIONS = {
@@ -58,20 +54,13 @@ export default function useEditingPolygon() {
     const { polygon, editMode, basemapType } = useSelector(state => state.map);
 
     const [updateShape] = useUpdateBoundaryShapeMutation();
-    const reverseQueue = useReverseQueue({
-        endpointName: 'getBoundaryDetails',
-        queryArgs: id,
-    });
 
     const updatePolygonFromDrawEvent = useTrailingDebounceCallback({
         callback: event => {
-            updateShape({ id, shape: getShapeFromDrawEvent(event) })
-                .unwrap()
-                .then(reverseQueue.clear)
-                .catch(reverseQueue.apply);
+            updateShape({ id, shape: getShapeFromDrawEvent(event) });
         },
         immediateCallback: event => {
-            const { inversePatches } = dispatch(
+            dispatch(
                 api.util.updateQueryData(
                     'getBoundaryDetails',
                     id,
@@ -81,8 +70,6 @@ export default function useEditingPolygon() {
                     }
                 )
             );
-
-            reverseQueue.push(inversePatches);
         },
         interval: 3000,
     });

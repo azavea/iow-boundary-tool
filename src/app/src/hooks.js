@@ -9,7 +9,6 @@ import {
     updateReferenceImage,
 } from './store/mapSlice';
 import { useParams } from 'react-router';
-import api from './api/api';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -151,29 +150,6 @@ export function useTrailingDebounceCallback({
         },
         [callback, immediateCallback, interval]
     );
-}
-
-export function useReverseQueue({ queryArgs, endpointName }) {
-    const dispatch = useDispatch();
-
-    const queue = useRef([]);
-
-    const clear = useCallback(() => {
-        queue.current = [];
-    }, []);
-
-    const apply = useCallback(() => {
-        dispatch(
-            api.util.patchQueryData(endpointName, queryArgs, queue.current)
-        );
-        clear();
-    }, [dispatch, queryArgs, endpointName, clear]);
-
-    const push = useCallback(patches => {
-        queue.current = [...patches, ...queue.current];
-    }, []);
-
-    return { queue, clear, apply, push };
 }
 
 export function useEndpointToastError(error, message = 'An error occured') {
