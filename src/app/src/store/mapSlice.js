@@ -12,15 +12,6 @@ const initialState = {
     referenceImages: {},
 };
 
-export const createDefaultReferenceImage = name => ({
-    name,
-    visible: true,
-    corners: null,
-    mode: 'distort',
-    transparent: false,
-    outlined: false,
-});
-
 const DEFAULT_POLYGON = {
     points: [],
     visible: true,

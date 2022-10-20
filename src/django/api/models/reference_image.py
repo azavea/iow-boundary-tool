@@ -15,6 +15,7 @@ class ReferenceImage(models.Model):
     uploaded_by = models.ForeignKey(User, on_delete=models.PROTECT)
     is_visible = models.BooleanField(default=True)
     distortion = models.JSONField(blank=True, null=True)
+    opacity = models.PositiveSmallIntegerField(default=100)
 
     def __str__(self):
         return self.filename

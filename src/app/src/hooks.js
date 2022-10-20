@@ -4,11 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
-import {
-    createDefaultReferenceImage,
-    updateReferenceImage,
-} from './store/mapSlice';
+import { updateReferenceImage } from './store/mapSlice';
 import { useParams } from 'react-router';
+import { useUploadReferenceImageMutation } from './api/boundaries';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -84,17 +82,44 @@ export function useLayerVisibility(layer) {
     return useSelector(state => state.map.layers).includes(layer);
 }
 
-export function useAddReferenceImage() {
+export function useAddReferenceImage(boundary) {
     const dispatch = useDispatch();
+    const [uploadImage] = useUploadReferenceImageMutation();
+
+    const convertResponseToStateFormat = (response, boundary) => {
+        return {
+            id: response.id,
+            boundary,
+            name: response.filename,
+            visible: response.is_visible,
+            corners: response.distortion,
+            mode: 'distort',
+            transparent: false,
+            outlined: false,
+        };
+    };
 
     return file => {
         const url = URL.createObjectURL(file);
-        dispatch(
-            updateReferenceImage({
-                url,
-                update: createDefaultReferenceImage(file.name),
-            })
-        );
+        uploadImage({
+            boundary,
+            filename: file.name,
+            is_visible: true,
+            distortion: null,
+            opacity: file.transparent ? 50 : 100,
+        })
+            .unwrap()
+            .then(response => {
+                dispatch(
+                    updateReferenceImage({
+                        url,
+                        update: convertResponseToStateFormat(
+                            response,
+                            boundary
+                        ),
+                    })
+                );
+            });
     };
 }
 

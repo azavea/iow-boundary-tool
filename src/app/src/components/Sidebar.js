@@ -28,7 +28,8 @@ import {
     toggleReferenceImageVisibility,
 } from '../store/mapSlice';
 import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
-import { useAddReferenceImage, useFilePicker } from '../hooks';
+import { useAddReferenceImage, useBoundaryId, useFilePicker } from '../hooks';
+import { useUpdateReferenceImageMutation } from '../api/boundaries';
 
 const paddingLeft = 4;
 
@@ -47,7 +48,9 @@ export default function Sidebar() {
 
 function ReferenceLayers() {
     const dispatch = useDispatch();
-    const addReferenceImage = useAddReferenceImage();
+    const id = useBoundaryId();
+    const addReferenceImage = useAddReferenceImage(id);
+    const [postReferenceImage] = useUpdateReferenceImageMutation();
     const openFileDialog = useFilePicker(files => files.map(addReferenceImage));
 
     const images = useSelector(state => state.map.referenceImages);
@@ -75,9 +78,15 @@ function ReferenceLayers() {
                     <VisibilityButton
                         key={url}
                         visible={image.visible}
-                        onChange={() =>
-                            dispatch(toggleReferenceImageVisibility(url))
-                        }
+                        onChange={() => {
+                            dispatch(toggleReferenceImageVisibility(url));
+                            postReferenceImage({
+                                boundary: id,
+                                referenceImageId: image.id,
+                                is_visible: !image.visible,
+                                opacity: image.transparent ? 50 : 100,
+                            });
+                        }}
                         label={image.name}
                     />
                 ))}
@@ -142,7 +151,7 @@ function VisibilityButton({ label, visible, onChange, disabled = false }) {
             label={label}
             bg='gray.500'
             hasArrow
-            isDisabled={label.length <= SIDEBAR_TEXT_TOOLTIP_THRESHOLD}
+            isDisabled={label?.length <= SIDEBAR_TEXT_TOOLTIP_THRESHOLD}
         >
             <Button
                 mb={1}

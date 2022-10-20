@@ -94,5 +94,6 @@ erDiagram
         date uploaded_at
         boolean is_visible
         json distortion
+        int opacity
     }
 ```

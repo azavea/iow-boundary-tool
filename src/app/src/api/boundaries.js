@@ -50,6 +50,21 @@ const boundaryApi = api.injectEndpoints({
             }),
             invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
         }),
+
+        uploadReferenceImage: build.mutation({
+            query: ({ boundary, ...details }) => ({
+                url: `/boundaries/${boundary}/reference-images/`,
+                method: 'POST',
+                data: details,
+            }),
+        }),
+        updateReferenceImage: build.mutation({
+            query: ({ boundary, referenceImageId, ...details }) => ({
+                url: `/boundaries/${boundary}/reference-images/${referenceImageId}/`,
+                method: 'PUT',
+                data: details,
+            }),
+        }),
     }),
 });
 
@@ -59,4 +74,6 @@ export const {
     useStartNewBoundaryMutation,
     useUpdateBoundaryShapeMutation,
     useSubmitBoundaryMutation,
+    useUploadReferenceImageMutation,
+    useUpdateReferenceImageMutation,
 } = boundaryApi;

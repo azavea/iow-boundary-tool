@@ -5,6 +5,7 @@ import L from './L.DistortableImage.Edit.fix';
 
 import { customizePrototypeIcon } from '../../utils';
 import { updateReferenceImage } from '../../store/mapSlice';
+import { useUpdateReferenceImageMutation } from '../../api/boundaries';
 import { useMap } from 'react-leaflet';
 
 customizePrototypeIcon(L.DistortHandle.prototype, 'ref-handle');
@@ -23,6 +24,7 @@ export default function ReferenceImageLayer() {
     const dispatch = useDispatch();
     const map = useMap();
     const referenceImageLayers = useRef({});
+    const [postReferenceImage] = useUpdateReferenceImageMutation();
 
     const images = useSelector(state => state.map.referenceImages);
 
@@ -37,7 +39,7 @@ export default function ReferenceImageLayer() {
     );
 
     const createLayer = useCallback(
-        ({ url, corners, mode }) => {
+        ({ url, id, boundary, corners, mode }) => {
             const layer = new L.distortableImageOverlay(url, {
                 actions: [
                     L.DragAction,
@@ -69,6 +71,12 @@ export default function ReferenceImageLayer() {
                         },
                     })
                 );
+                postReferenceImage({
+                    boundary,
+                    referenceImageId: id,
+                    distortion: layer._corners,
+                    opacity: layer.editing._transparent ? 50 : 0,
+                });
             };
 
             layer.on('edit', updateImageHandler);
@@ -101,7 +109,7 @@ export default function ReferenceImageLayer() {
 
             return layer;
         },
-        [dispatch]
+        [dispatch, postReferenceImage]
     );
 
     /**
@@ -116,10 +124,14 @@ export default function ReferenceImageLayer() {
 
         const imageShouldBeHidden = url => !(url in visibleImages);
 
-        for (const [url, { corners, mode }] of Object.entries(visibleImages)) {
+        for (const [url, { id, boundary, corners, mode }] of Object.entries(
+            visibleImages
+        )) {
             if (imageShouldBeAdded(url)) {
                 referenceImageLayers.current[url] = createLayer({
                     url,
+                    id,
+                    boundary,
                     corners,
                     mode,
                 });
