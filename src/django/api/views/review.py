@@ -4,10 +4,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 
 
 from .boundary import get_boundary_queryset_for_user
-from ..exceptions import BadRequestException, ForbiddenException
+from ..exceptions import BadRequestException
 from ..models.user import Roles
 from ..models.submission import Review
 from ..models.boundary import BOUNDARY_STATUS
@@ -26,7 +27,7 @@ class ReviewCreateView(APIView):
         )
 
         if not user_can_review:
-            raise ForbiddenException(
+            raise PermissionDenied(
                 'Only validators and administrators can review boundaries.'
             )
 

@@ -16,7 +16,7 @@ class Submission(models.Model):
     boundary = models.ForeignKey(
         Boundary, on_delete=models.PROTECT, related_name='submissions'
     )
-    shape = gis_models.PolygonField(geography=True)
+    shape = gis_models.PolygonField(geography=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="creator"
