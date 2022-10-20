@@ -1,12 +1,14 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-
 import L from 'leaflet';
 import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePolygon } from '../../store/mapSlice';
+
 import { customizePrototypeIcon } from '../../utils';
 import { PANES } from '../../constants';
+import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
+import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
+import api from '../../api/api';
 
 const POLYGON_LAYER_OPTIONS = {
     weight: 1,
@@ -36,28 +38,46 @@ function styleMidpointElement(element) {
     element.className += ' edit-poly-marker-midpoint';
 }
 
+function getShapeFromDrawEvent(event) {
+    return {
+        coordinates: [
+            event.poly.getLatLngs()[0].map(point => [point.lng, point.lat]),
+        ],
+    };
+}
+
 export default function useEditingPolygon() {
     const dispatch = useDispatch();
     const map = useMap();
+    const id = useBoundaryId();
+
     const { polygon, editMode, basemapType } = useSelector(state => state.map);
 
-    const updatePolygonFromDrawEvent = useCallback(
-        event => {
+    const [updateShape] = useUpdateBoundaryShapeMutation();
+
+    const updatePolygonFromDrawEvent = useTrailingDebounceCallback({
+        callback: event => {
+            updateShape({ id, shape: getShapeFromDrawEvent(event) });
+        },
+        immediateCallback: event => {
             dispatch(
-                updatePolygon({
-                    points: event.poly
-                        .getLatLngs()[0]
-                        .map(point => [point.lat, point.lng]),
-                })
+                api.util.updateQueryData(
+                    'getBoundaryDetails',
+                    id,
+                    draftDetails => {
+                        draftDetails.submission.shape =
+                            getShapeFromDrawEvent(event);
+                    }
+                )
             );
         },
-        [dispatch]
-    );
+        interval: 3000,
+    });
 
     useEffect(() => {
         if (polygon && polygon.visible) {
             const polygonLayer = new L.Polygon(
-                polygon.points.map(point => new L.latLng(point[0], point[1])),
+                polygon.points.map(point => new L.latLng(point[1], point[0])),
                 {
                     ...POLYGON_LAYER_OPTIONS,
                     color: basemapType === 'satellite' ? 'white' : 'black',

@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
 import {
     createDefaultReferenceImage,
     updateReferenceImage,
 } from './store/mapSlice';
+import { useParams } from 'react-router';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -109,4 +111,58 @@ export function useFilePicker(onChange) {
     };
 
     return openFileDialog;
+}
+
+export function useBoundaryId() {
+    return useParams().boundaryId;
+}
+
+/**
+ * Debounce a callback
+ * @template CallbackFunction
+ * @param {CallbackFunction} callback - A function to be called after no calls have been
+ *  made to the returned callback for the duration of the interval. Its impending call
+ *  will be replaced by newer ones.
+ * @param {CallbackFunction} immediateCallback - A function to be called immediately
+ *  after calling the returned callback
+ * @param {number} interval
+ * @returns CallbackFunction
+ */
+export function useTrailingDebounceCallback({
+    callback,
+    immediateCallback,
+    interval,
+}) {
+    const timeout = useRef();
+
+    return useCallback(
+        (...args) => {
+            const scheduledCallback = () => {
+                callback(...args);
+            };
+
+            clearTimeout(timeout.current);
+            timeout.current = setTimeout(scheduledCallback, interval);
+
+            if (immediateCallback) {
+                immediateCallback(...args);
+            }
+        },
+        [callback, immediateCallback, interval]
+    );
+}
+
+export function useEndpointToastError(error, message = 'An error occured') {
+    const toast = useToast();
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                title: message,
+                status: 'error',
+                isClosable: true,
+                duration: 5000,
+            });
+        }
+    }, [error, message, toast]);
 }

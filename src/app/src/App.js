@@ -28,7 +28,7 @@ const privateRoutes = (
         <Routes>
             <Route path='/welcome' element={<Welcome />} />
             <Route path='/draw' element={<NotFound />} />
-            <Route path='/draw/:id' element={<Draw />} />
+            <Route path='/draw/:boundaryId' element={<Draw />} />
             <Route path='/submissions/*' element={<Submissions />} />
             <Route path='*' element={<Navigate to='/welcome' replace />} />
         </Routes>

@@ -28,9 +28,17 @@ const boundaryApi = api.injectEndpoints({
             query: newBoundary => ({
                 url: '/boundaries/',
                 method: 'POST',
-                body: newBoundary,
+                data: newBoundary,
             }),
             invalidatesTags: getNewItemTagInvalidator(TAGS.BOUNDARY),
+        }),
+
+        updateBoundaryShape: build.mutation({
+            query: ({ id, shape }) => ({
+                url: `/boundaries/${id}/shape/`,
+                method: 'PUT',
+                data: shape,
+            }),
         }),
 
         submitBoundary: build.mutation({
@@ -47,5 +55,6 @@ export const {
     useGetBoundariesQuery,
     useGetBoundaryDetailsQuery,
     useStartNewBoundaryMutation,
+    useUpdateBoundaryShapeMutation,
     useSubmitBoundaryMutation,
 } = boundaryApi;

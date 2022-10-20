@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Load boundary details in draw page [#139](https://github.com/azavea/iow-boundary-tool/pull/139)
 - Let users select utility at login [#142](https://github.com/azavea/iow-boundary-tool/pull/142)
 - Add Activity Log Serializer [#140](https://github.com/azavea/iow-boundary-tool/pull/140)
+- Save shape updates on draw page [#141](https://github.com/azavea/iow-boundary-tool/pull/141)
 
 ### Changed
 
