@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Save shape updates on draw page [#141](https://github.com/azavea/iow-boundary-tool/pull/141)
 - Wire up boundary details page [#143](https://github.com/azavea/iow-boundary-tool/pull/143) [#152](https://github.com/azavea/iow-boundary-tool/pull/152)
 - Add check for missing migrations [#153](https://github.com/azavea/iow-boundary-tool/pull/153)
+- Save reference image metadata on draw page [#144](https://github.com/azavea/iow-boundary-tool/pull/144)
 
 ### Changed
 
