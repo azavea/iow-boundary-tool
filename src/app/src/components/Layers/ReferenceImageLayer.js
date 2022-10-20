@@ -5,6 +5,7 @@ import L from './L.DistortableImage.Edit.fix';
 
 import { customizePrototypeIcon } from '../../utils';
 import { updateReferenceImage } from '../../store/mapSlice';
+import { useEndpointToastError } from '../../hooks';
 import { useUpdateReferenceImageMutation } from '../../api/boundaries';
 import { useMap } from 'react-leaflet';
 
@@ -24,7 +25,8 @@ export default function ReferenceImageLayer() {
     const dispatch = useDispatch();
     const map = useMap();
     const referenceImageLayers = useRef({});
-    const [postReferenceImage] = useUpdateReferenceImageMutation();
+    const [postReferenceImage, { error }] = useUpdateReferenceImageMutation();
+    useEndpointToastError(error);
 
     const images = useSelector(state => state.map.referenceImages);
 

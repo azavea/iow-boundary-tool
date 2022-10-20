@@ -28,7 +28,12 @@ import {
     toggleReferenceImageVisibility,
 } from '../store/mapSlice';
 import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
-import { useAddReferenceImage, useBoundaryId, useFilePicker } from '../hooks';
+import {
+    useAddReferenceImage,
+    useBoundaryId,
+    useEndpointToastError,
+    useFilePicker,
+} from '../hooks';
 import { useUpdateReferenceImageMutation } from '../api/boundaries';
 
 const paddingLeft = 4;
@@ -50,7 +55,8 @@ function ReferenceLayers() {
     const dispatch = useDispatch();
     const id = useBoundaryId();
     const addReferenceImage = useAddReferenceImage(id);
-    const [postReferenceImage] = useUpdateReferenceImageMutation();
+    const [postReferenceImage, { error }] = useUpdateReferenceImageMutation();
+    useEndpointToastError(error);
     const openFileDialog = useFilePicker(files => files.map(addReferenceImage));
 
     const images = useSelector(state => state.map.referenceImages);
