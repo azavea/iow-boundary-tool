@@ -6,8 +6,8 @@ import { useToast } from '@chakra-ui/react';
 import { convertIndexedObjectToArray } from './utils';
 import { useParams } from 'react-router';
 
-export function useDialogController() {
-    const [isOpen, setIsOpen] = useState(false);
+export function useDialogController(initialState = false) {
+    const [isOpen, setIsOpen] = useState(initialState);
 
     const open = useCallback(() => setIsOpen(true), []);
     const close = useCallback(() => setIsOpen(false), []);
