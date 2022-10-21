@@ -4,6 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import Login, Logout
 from .views.boundary import BoundaryDetailView, BoundaryListView, BoundaryShapeView
 from .views.reference_image import ReferenceImageList, ReferenceImageDetail
+from .views.review import ReviewCreateView
 
 urlpatterns = [
     path("auth/login/", Login.as_view()),
@@ -21,6 +22,11 @@ urlpatterns = [
         "boundaries/<int:boundary>/reference-images/<int:pk>/",
         ReferenceImageDetail.as_view(),
         name="update_image",
+    ),
+    path(
+        "boundaries/<int:boundary_id>/review",
+        ReviewCreateView.as_view(),
+        name='start_review',
     ),
 ]
 

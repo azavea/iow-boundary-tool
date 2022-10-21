@@ -19,7 +19,7 @@ import {
 import { useMapLayer } from '../../../hooks';
 import { downloadData, getBoundaryShapeFilename } from '../../../utils';
 
-export default function Map({ boundary }) {
+export default function Map({ boundary, startReview }) {
     return (
         <>
             <MapContainer
@@ -30,7 +30,7 @@ export default function Map({ boundary }) {
             >
                 <MapPanes>
                     <DefaultBasemap />
-                    <MapButtons boundary={boundary} />
+                    <MapButtons boundary={boundary} startReview={startReview} />
                     <Polygon shape={boundary.submission.shape} />
                 </MapPanes>
             </MapContainer>
@@ -39,7 +39,7 @@ export default function Map({ boundary }) {
     );
 }
 
-function MapButtons({ boundary }) {
+function MapButtons({ boundary, startReview }) {
     const navigate = useNavigate();
     const userRole = useSelector(state => state.auth.user.role);
 
@@ -80,15 +80,13 @@ function MapButtons({ boundary }) {
     };
 
     const drawButtonText = getDrawButtonText();
+    const drawButtonOnClick = getDrawButtonOnClick();
 
     return (
         <Box position='absolute' zIndex={1000} top={22} w='100%'>
             <Flex justify='space-evenly'>
                 {drawButtonText ? (
-                    <MapButton
-                        icon={ChatAltIcon}
-                        onClick={() => navigate(`/draw/${boundary.id}/`)}
-                    >
+                    <MapButton icon={ChatAltIcon} onClick={drawButtonOnClick}>
                         {drawButtonText}
                     </MapButton>
                 ) : null}

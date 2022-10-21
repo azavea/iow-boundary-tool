@@ -23,6 +23,7 @@ const boundaryApi = api.injectEndpoints({
                 method: 'GET',
             }),
             providesTags: getSingleItemProvider(TAGS.BOUNDARY),
+            transformResponse: (response, meta, id) => ({ ...response, id }),
         }),
 
         startNewBoundary: build.mutation({

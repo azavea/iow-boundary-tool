@@ -40,7 +40,15 @@ export default function SubmissionDetail() {
         'There was an error fetching boundary details.'
     );
 
-    if (isFetching) {
+    const [startReview, { isLoading: isStartingReview, startReviewError }] =
+        useStartReviewMutation();
+
+    useEndpointToastError(
+        startReviewError,
+        'There was an error starting a review.'
+    );
+
+    if (isFetching || isStartingReview) {
         return <CenteredSpinner />;
     }
 
