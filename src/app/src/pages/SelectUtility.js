@@ -27,7 +27,7 @@ export default function SelectUtility() {
 
     const navigateAway = () => {
         apiClient
-            .get(`${BASE_API_URL}/boundaries?utilities=${utility.id}`)
+            .get(`${BASE_API_URL}/boundaries/?utilities=${utility.id}`)
             .then(({ data: boundaries }) => {
                 const drafts = boundaries.filter(
                     b => b.status === BOUNDARY_STATUS.DRAFT
