@@ -26,12 +26,14 @@ import {
     FlagIcon,
     LocationMarkerIcon,
 } from '@heroicons/react/solid';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { heroToChakraIcon } from '../../utils';
 import { useGetBoundariesQuery } from '../../api/boundaries';
 
 import { StatusBadge } from './Badges';
+import { ROLES } from '../../constants';
 
 export default function SubmissionsList() {
     const navigate = useNavigate();
@@ -98,7 +100,16 @@ function TableHeader() {
 }
 
 function TableRows() {
-    const { isFetching, data: boundaries, error } = useGetBoundariesQuery();
+    const user = useSelector(state => state.auth.user);
+    const utilityId = useSelector(state => state.auth.utility?.id);
+
+    const {
+        isFetching,
+        data: boundaries,
+        error,
+    } = useGetBoundariesQuery({
+        utilities: user.role === ROLES.CONTRIBUTOR ? utilityId : undefined,
+    });
 
     if (isFetching) {
         return <LoadingRow />;

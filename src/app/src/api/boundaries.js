@@ -9,9 +9,10 @@ import TAGS, {
 const boundaryApi = api.injectEndpoints({
     endpoints: build => ({
         getBoundaries: build.query({
-            query: () => ({
+            query: ({ utilities }) => ({
                 url: '/boundaries/',
                 method: 'GET',
+                params: { utilities },
             }),
             providesTags: getListTagProvider(TAGS.BOUNDARY),
         }),
