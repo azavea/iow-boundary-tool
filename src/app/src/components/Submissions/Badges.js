@@ -10,12 +10,9 @@ const BADGE_COLORS = {
     [BOUNDARY_STATUS.APPROVED]: 'green',
 };
 
-export function StatusBadge({ status, fixedHeight }) {
+export function StatusBadge({ status }) {
     return (
-        <Badge
-            variant={fixedHeight ? 'solidFixedHeight' : 'solid'}
-            colorScheme={BADGE_COLORS[status]}
-        >
+        <Badge variant='solid' colorScheme={BADGE_COLORS[status]}>
             {status.toUpperCase()}
         </Badge>
     );

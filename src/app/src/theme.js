@@ -79,10 +79,6 @@ const Button = {
 
 const Badge = {
     variants: {
-        solidFixedHeight: props => ({
-            ...theme.components.Badge.variants.solid(props),
-            height: 5,
-        }),
         submissionDetail: props => ({
             ...theme.components.Badge.variants.solid(props),
             height: '18px',
