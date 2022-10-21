@@ -2,7 +2,12 @@ from django.urls import include, path
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import Login, Logout
-from .views.boundary import BoundaryDetailView, BoundaryListView, BoundaryShapeView
+from .views.boundary import (
+    BoundaryDetailView,
+    BoundaryListView,
+    BoundaryShapeView,
+    BoundarySubmitView,
+)
 from .views.reference_image import ReferenceImageList, ReferenceImageDetail
 from .views.review import ReviewCreateView
 
@@ -13,6 +18,7 @@ urlpatterns = [
     path("boundaries/", BoundaryListView.as_view()),
     path("boundaries/<int:id>/", BoundaryDetailView.as_view()),
     path("boundaries/<int:id>/shape/", BoundaryShapeView.as_view()),
+    path("boundaries/<int:id>/submit/", BoundarySubmitView.as_view()),
     path(
         "boundaries/<int:boundary>/reference-images/",
         ReferenceImageList.as_view(),
