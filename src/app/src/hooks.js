@@ -6,7 +6,7 @@ import { useToast } from '@chakra-ui/react';
 import { convertIndexedObjectToArray } from './utils';
 import { updateReferenceImage } from './store/mapSlice';
 import { useParams } from 'react-router';
-import { useUploadReferenceImageMutation } from './api/boundaries';
+import { useUploadReferenceImageMutation } from './api/referenceImages';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);

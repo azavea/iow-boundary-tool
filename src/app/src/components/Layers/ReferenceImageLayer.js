@@ -6,7 +6,7 @@ import L from './L.DistortableImage.Edit.fix';
 import { customizePrototypeIcon } from '../../utils';
 import { updateReferenceImage } from '../../store/mapSlice';
 import { useEndpointToastError } from '../../hooks';
-import { useUpdateReferenceImageMutation } from '../../api/boundaries';
+import { useUpdateReferenceImageMutation } from '../../api/referenceImages';
 import { useMap } from 'react-leaflet';
 
 customizePrototypeIcon(L.DistortHandle.prototype, 'ref-handle');

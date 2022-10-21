@@ -34,7 +34,7 @@ import {
     useEndpointToastError,
     useFilePicker,
 } from '../hooks';
-import { useUpdateReferenceImageMutation } from '../api/boundaries';
+import { useUpdateReferenceImageMutation } from '../api/referenceImages';
 
 const paddingLeft = 4;
 
