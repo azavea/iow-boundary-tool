@@ -15,6 +15,11 @@ class Utility(models.Model):
     location = gis_models.PointField(geography=True, default=RALEIGH)
     state = models.ForeignKey(State, on_delete=models.PROTECT, default="NC")
 
+    address_line_1 = models.CharField(max_length=127)
+    address_line_2 = models.CharField(max_length=127, blank=True)
+    address_city = models.CharField(max_length=127)
+    address_zip_code = models.CharField(max_length=10)
+
     class Meta:
         verbose_name_plural = "utilities"
 

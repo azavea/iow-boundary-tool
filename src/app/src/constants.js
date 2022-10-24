@@ -2,6 +2,14 @@ export const MAP_CENTER = [35.7938, -78.7232]; // Raleigh, North Carolina
 export const MAP_INITIAL_ZOOM = 13;
 export const INITIAL_POLYGON_SCALE_FACTOR = 0.5;
 
+export const POLYGON_LAYER_OPTIONS = {
+    weight: 1,
+    fillColor: 'black',
+    fillOpacity: '.3',
+    dashArray: '2 3',
+    color: 'black',
+};
+
 export const DATA_LAYERS = {
     PARCELS: { label: 'Parcel data', minZoom: 14 },
     MUNICIPAL_BOUNDARIES: { label: 'Municipal boundaries' },

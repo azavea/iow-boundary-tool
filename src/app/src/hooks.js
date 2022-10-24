@@ -62,18 +62,22 @@ export function useSetMaxZoomLevel(maxZoomLevel) {
     }, [maxZoomLevel, map]);
 }
 
-export function useMapLayer(layer) {
+export function useMapLayer(layer, { fitBounds = false } = {}) {
     const map = useMap();
 
     useEffect(() => {
         map.addLayer(layer);
+
+        if (fitBounds) {
+            map.fitBounds(layer.getBounds());
+        }
 
         return () => {
             if (map.hasLayer(layer)) {
                 map.removeLayer(layer);
             }
         };
-    }, [map, layer]);
+    }, [map, layer, fitBounds]);
 }
 
 export function useLayerVisibility(layer) {

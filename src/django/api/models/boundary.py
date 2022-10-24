@@ -19,6 +19,7 @@ class BOUNDARY_STATUS(Enum):
 class Boundary(models.Model):
     utility = models.ForeignKey(Utility, on_delete=models.PROTECT)
     archived_at = models.DateTimeField(blank=True, null=True)
+    name = models.CharField(max_length=127)
 
     class Meta:
         verbose_name_plural = "boundaries"

@@ -41,6 +41,10 @@ class Submission(models.Model):
     def __str__(self):
         return f"Submission {self.pk} for {self.boundary}"
 
+    @property
+    def primary_contact(self):
+        return self.created_by
+
 
 class Review(models.Model):
     submission = models.OneToOneField(

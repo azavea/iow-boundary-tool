@@ -9,6 +9,7 @@ from rest_framework.serializers import (
 from ..models.boundary import Boundary, BOUNDARY_STATUS
 from ..models.utility import Utility
 from ..models.submission import Submission, Review, Annotation
+from ..models.user import User
 
 from .reference_image import ReferenceImageSerializer
 from .activity_log import (
@@ -41,11 +42,26 @@ class BoundaryListSerializer(ModelSerializer):
 
 class BoundaryDetailSerializer(ModelSerializer):
     class UtilitySerializer(ModelSerializer):
+        state = CharField(source='state.id')
+
         class Meta:
             model = Utility
-            fields = ['name', 'pwsid']
+            fields = [
+                'name',
+                'pwsid',
+                'address_line_1',
+                'address_line_2',
+                'address_city',
+                'address_zip_code',
+                'state',
+            ]
 
     class SubmissionSerializer(ModelSerializer):
+        class PrimaryContactSerializer(ModelSerializer):
+            class Meta:
+                model = User
+                fields = ['full_name', 'job_title', 'phone_number', 'email']
+
         class ReviewSerializer(ModelSerializer):
             class AnnotationSerializer(ModelSerializer):
                 class Meta:
@@ -58,11 +74,12 @@ class BoundaryDetailSerializer(ModelSerializer):
                 model = Review
                 fields = ['annotations', 'notes']
 
+        primary_contact = PrimaryContactSerializer()
         review = ReviewSerializer(required=False)
 
         class Meta:
             model = Submission
-            fields = ['shape', 'notes', 'review']
+            fields = ['shape', 'notes', 'primary_contact', 'review']
 
     utility = UtilitySerializer()
     status = StatusField()
@@ -89,4 +106,11 @@ class BoundaryDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Boundary
-        fields = ['utility', 'status', 'submission', 'reference_images', 'activity_log']
+        fields = [
+            'name',
+            'utility',
+            'status',
+            'submission',
+            'reference_images',
+            'activity_log',
+        ]

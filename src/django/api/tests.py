@@ -27,7 +27,13 @@ class BoundarySyncAPITestCase(TestCase):
     def setUpTestData(cls):
         """Called also by resetdb command."""
         # Create test utility located in Raleigh.
-        test_utility = Utility(pwsid="123456789", name="Azavea Test Utility")
+        test_utility = Utility(
+            pwsid="123456789",
+            name="Azavea Test Utility",
+            address_line_1="1 E Edenton St",
+            address_city="Raleigh",
+            address_zip_code="27601",
+        )
         test_utility.save()
 
         # Create another test utility.
@@ -38,12 +44,18 @@ class BoundarySyncAPITestCase(TestCase):
         cls.administrator = User.objects.create_superuser(
             email="a1@azavea.com",
             password="password",
+            full_name="Test Administrator",
+            job_title="Administrator",
+            phone_number="(123) 456-7890",
             has_admin_generated_password=False,
         )
 
         cls.validator = User.objects.create_user(
             email="v1@azavea.com",
             password="password",
+            full_name="Test Validator",
+            job_title="Validator",
+            phone_number="(123) 456-7890",
             has_admin_generated_password=False,
             role=Roles.VALIDATOR,
         )
@@ -52,6 +64,9 @@ class BoundarySyncAPITestCase(TestCase):
         cls.contributor = User.objects.create_user(
             email="c1@azavea.com",
             password="password",
+            full_name="Test Contributor",
+            job_title="Contributor",
+            phone_number="(123) 456-7890",
             has_admin_generated_password=False,
             role=Roles.CONTRIBUTOR,
         )
@@ -60,11 +75,26 @@ class BoundarySyncAPITestCase(TestCase):
 
         # Create test boundaries and submissions.
         # Use tz-aware datetimes to avoid warnings.
-        cls.boundary_1 = Boundary.objects.create(utility=test_utility)
-        cls.boundary_2 = Boundary.objects.create(utility=test_utility)
-        cls.boundary_3 = Boundary.objects.create(utility=test_utility)
-        cls.boundary_4 = Boundary.objects.create(utility=test_utility)
-        cls.boundary_5 = Boundary.objects.create(utility=test_utility)
+        cls.boundary_1 = Boundary.objects.create(
+            utility=test_utility,
+            name="Boundary 1",
+        )
+        cls.boundary_2 = Boundary.objects.create(
+            utility=test_utility,
+            name="Boundary 2",
+        )
+        cls.boundary_3 = Boundary.objects.create(
+            utility=test_utility,
+            name="Boundary 3",
+        )
+        cls.boundary_4 = Boundary.objects.create(
+            utility=test_utility,
+            name="Boundary 4",
+        )
+        cls.boundary_5 = Boundary.objects.create(
+            utility=test_utility,
+            name="Boundary 5",
+        )
 
         # Submissions activities should follow
         # Draft-->Submission-->Approved/Revisions flow

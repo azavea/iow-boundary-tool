@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     Flex,
     Heading,
     Icon,
@@ -9,39 +10,54 @@ import {
 } from '@chakra-ui/react';
 import { ArrowLeftIcon } from '@heroicons/react/outline';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetBoundaryDetailsQuery } from '../../../api/boundaries';
+import CenteredSpinner from '../../CenteredSpinner';
+import { CheckCircleIcon } from '@heroicons/react/outline';
 
 import ActivityLog from '../ActivityLog';
-import { SubmittedBadge } from '../Badges';
+import { StatusBadge } from '../Badges';
 import Info from './Info';
 import Map from './Map';
+import { useEndpointToastError } from '../../../hooks';
+import { useStartReviewMutation } from '../../../api/reviews';
+import { NAVBAR_HEIGHT, ROLES } from '../../../constants';
+import { useSelector } from 'react-redux';
+import { heroToChakraIcon } from '../../../utils';
 
 export default function SubmissionDetail() {
     const navigate = useNavigate();
-    const params = useParams();
+    const { id } = useParams();
+    const userRole = useSelector(state => state.auth.user.role);
 
-    const submissionId = params.id;
+    const {
+        data: boundary,
+        isFetching,
+        error,
+    } = useGetBoundaryDetailsQuery(id);
 
-    const fetchSubmissionDetails = submissionId => {
-        return {
-            submissionName: 'Raleigh',
-            contactName: 'Jenny Smith',
-            contactPhone: '1-919-123-4567',
-            contactTitle: 'Water System Operator',
-            pwsId: '0392010',
-            utilityName: 'Raleigh City Of',
-            utilityAddress1: 'Division of Water Resources',
-            utilityAddress2: '1634 Mail Service Center',
-            utilityCity: 'Raleigh',
-            utilityState: 'NC',
-            utilityZip: '27699-1634',
-            sharingPreference: true,
-            status: 'submitted',
-        };
-    };
+    useEndpointToastError(
+        error,
+        'There was an error fetching boundary details.'
+    );
 
-    const submission = fetchSubmissionDetails(submissionId);
+    const [startReview, { isLoading: isStartingReview, startReviewError }] =
+        useStartReviewMutation();
 
-    const { submissionName } = submission;
+    useEndpointToastError(
+        startReviewError,
+        'There was an error starting a review.'
+    );
+
+    if (isFetching || isStartingReview) {
+        return <CenteredSpinner />;
+    }
+
+    if (!boundary) {
+        return null;
+    }
+
+    const showApproveButton =
+        userRole === ROLES.VALIDATOR || userRole === ROLES.ADMINISTRATOR;
 
     return (
         <VStack
@@ -49,11 +65,11 @@ export default function SubmissionDetail() {
             bg='gray.50'
             align='stretch'
             divider={<StackDivider />}
-            h='100vh'
+            minH={`calc(100vh - ${NAVBAR_HEIGHT}px)`}
         >
             <Flex mb={7}>
                 <Flex direction='column' w='50%'>
-                    <Flex>
+                    <Flex alignItems='center'>
                         <IconButton
                             icon={<Icon as={ArrowLeftIcon} />}
                             aria-label='Back'
@@ -61,24 +77,38 @@ export default function SubmissionDetail() {
                             onClick={() => navigate('/submissions')}
                         />
                         <Heading size='lg' mr={6}>
-                            {submissionName}
+                            {boundary.name}
                         </Heading>
-                        <SubmittedBadge variant='submissionDetail' />
+                        <StatusBadge status={boundary.status} fixedHeight />
                     </Flex>
-                    <Info submission={submission} />
+                    <Info
+                        primary_contact={boundary.submission.primary_contact}
+                        utility={boundary.utility}
+                    />
                 </Flex>
-                <Box
-                    w='50%'
-                    h='sm'
-                    border='2px solid'
-                    borderColor='gray.200'
-                    borderRadius={6}
-                >
-                    <Map submission={submission} />
-                </Box>
+                <Flex direction='column' w='50%'>
+                    {showApproveButton ? (
+                        <Button
+                            mb={4}
+                            alignSelf='flex-end'
+                            rightIcon={heroToChakraIcon(CheckCircleIcon)()}
+                        >
+                            Mark approved
+                        </Button>
+                    ) : null}
+
+                    <Box
+                        h='sm'
+                        border='2px solid'
+                        borderColor='gray.200'
+                        borderRadius={6}
+                    >
+                        <Map boundary={boundary} startReview={startReview} />
+                    </Box>
+                </Flex>
             </Flex>
             <Box>
-                <ActivityLog submissionId={submissionId} />
+                <ActivityLog entries={boundary.activity_log} />
             </Box>
         </VStack>
     );

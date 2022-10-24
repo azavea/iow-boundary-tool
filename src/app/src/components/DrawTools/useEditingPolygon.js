@@ -5,17 +5,10 @@ import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { customizePrototypeIcon } from '../../utils';
-import { PANES } from '../../constants';
+import { PANES, POLYGON_LAYER_OPTIONS } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
 import api from '../../api/api';
-
-const POLYGON_LAYER_OPTIONS = {
-    weight: 1,
-    fillColor: 'black',
-    fillOpacity: '.3',
-    dashArray: '2 3',
-};
 
 customizePrototypeIcon(L.Draw.Polyline.prototype, 'edit-poly-marker');
 customizePrototypeIcon(L.Edit.PolyVerticesEdit.prototype, 'edit-poly-marker');
