@@ -27,6 +27,8 @@ export const mapSlice = createSlice({
     name: 'map',
     initialState,
     reducers: {
+        // TODO Remove polygon from this slice
+        // useEditingPolygon and useAddPolygonCursor no longer use it
         setPolygon: (state, { payload: newPolygon }) => {
             state.polygon = {
                 ...DEFAULT_POLYGON,
