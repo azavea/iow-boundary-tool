@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ValidationError
 
 from ..models.reference_image import ReferenceImage
 
@@ -11,3 +11,9 @@ class ReferenceImageSerializer(ModelSerializer):
             "uploaded_at",
             "uploaded_by",
         ]
+
+    def validate_opacity(self, value):
+        if value > 100:
+            # DRF already validates negative values for PositiveIntegerField
+            raise ValidationError("Opacity takes values from 0-100.")
+        return value

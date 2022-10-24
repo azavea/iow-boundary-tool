@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from .boundary import Boundary
@@ -16,6 +17,11 @@ class ReferenceImage(models.Model):
     is_visible = models.BooleanField(default=True)
     distortion = models.JSONField(blank=True, null=True)
     opacity = models.PositiveSmallIntegerField(default=100)
+
+    def clean(self):
+        if self.opacity > 100 or self.opacity < 0:
+            raise ValidationError("Opacity takes values from 0-100.")
+        super().clean()
 
     def __str__(self):
         return self.filename
