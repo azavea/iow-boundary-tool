@@ -3,9 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import L from './L.DistortableImage.Edit.fix';
 
+import api from '../../api/api';
+
 import { customizePrototypeIcon } from '../../utils';
 import { updateReferenceImage } from '../../store/mapSlice';
-import { useEndpointToastError } from '../../hooks';
+import {
+    useEndpointToastError,
+    useTrailingDebounceCallback,
+} from '../../hooks';
 import { useUpdateReferenceImageMutation } from '../../api/referenceImages';
 import { useMap } from 'react-leaflet';
 
@@ -19,6 +24,13 @@ const convertCornerToStateFormat = corner => [corner.lat, corner.lng];
 const convertCornerFromStateFormat = corner => ({
     lat: corner[0],
     lng: corner[1],
+});
+
+const convertImageMetadataFromStateFormat = (id, boundary, layer) => ({
+    boundary,
+    referenceImageId: id,
+    distortion: layer._corners,
+    opacity: layer.editing._transparent ? 50 : 0,
 });
 
 export default function ReferenceImageLayer() {
@@ -39,6 +51,24 @@ export default function ReferenceImageLayer() {
             ),
         [images]
     );
+
+    const updateReferenceImageDebounced = useTrailingDebounceCallback({
+        callback: (id, boundary, layer) => {
+            postReferenceImage(
+                convertImageMetadataFromStateFormat(id, boundary, layer)
+            );
+        },
+        immediateCallback: (id, boundary, layer) => {
+            dispatch(
+                api.util.updateQueryData(
+                    'updateReferenceImage',
+                    id,
+                    convertImageMetadataFromStateFormat(id, boundary, layer)
+                )
+            );
+        },
+        interval: 3000,
+    });
 
     const createLayer = useCallback(
         ({ url, id, boundary, corners, mode }) => {
@@ -73,12 +103,7 @@ export default function ReferenceImageLayer() {
                         },
                     })
                 );
-                postReferenceImage({
-                    boundary,
-                    referenceImageId: id,
-                    distortion: layer._corners,
-                    opacity: layer.editing._transparent ? 50 : 0,
-                });
+                updateReferenceImageDebounced(id, boundary, layer);
             };
 
             layer.on('edit', updateImageHandler);
@@ -105,13 +130,14 @@ export default function ReferenceImageLayer() {
                                 },
                             })
                         );
+                        updateReferenceImageDebounced(id, boundary, layer);
                     }
                 });
             }
 
             return layer;
         },
-        [dispatch, postReferenceImage]
+        [dispatch, updateReferenceImageDebounced]
     );
 
     /**
