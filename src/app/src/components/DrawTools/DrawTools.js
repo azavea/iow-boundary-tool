@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
+import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
@@ -68,6 +69,7 @@ function DrawTools({ mode, details }) {
 
     return (
         <>
+            <ReferenceImageLayer />
             <EditToolbar />
             <SaveAndBackButton />
             <ReviewAndSaveButton />
