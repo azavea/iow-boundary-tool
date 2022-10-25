@@ -20,7 +20,7 @@ import { CursorClickIcon } from '@heroicons/react/solid';
 
 import AddPolygonIcon from '../../img/AddPolygonIcon.js';
 import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
-import { useDialogController } from '../../hooks.js';
+import { useDialogController, useDrawMode } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
 import {
     cancelAddPolygon,
@@ -28,14 +28,14 @@ import {
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
+import { DRAW_MODES } from '../../constants.js';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
-    const { polygon, editMode, addPolygonMode } = useSelector(
-        state => state.map
-    );
+    const canWrite = useDrawMode() === DRAW_MODES.WRITE;
+    const { polygon, editMode } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
     const editDialogController = useDialogController();
@@ -56,31 +56,7 @@ export default function EditToolbar() {
                 cursor='default'
             >
                 <Flex>
-                    {addPolygonMode ? (
-                        <Button
-                            onClick={() => dispatch(cancelAddPolygon())}
-                            w={POLYGON_BUTTON_WIDTH}
-                        >
-                            Cancel
-                        </Button>
-                    ) : polygon ? (
-                        <Button
-                            onClick={editDialogController.open}
-                            rightIcon={<Icon as={PencilIcon} />}
-                            variant='toolbar'
-                            minW={POLYGON_BUTTON_WIDTH}
-                        >
-                            {polygon.label}
-                        </Button>
-                    ) : (
-                        <Button
-                            onClick={() => dispatch(startAddPolygon())}
-                            rightIcon={<AddPolygonIcon />}
-                            w={POLYGON_BUTTON_WIDTH}
-                        >
-                            Draw Polygon
-                        </Button>
-                    )}
+                    <PolygonButton openEditDialog={editDialogController.open} />
                     <Divider
                         orientation='vertical'
                         mx={4}
@@ -102,14 +78,14 @@ export default function EditToolbar() {
                         <EditToolbarButton
                             icon={CursorClickIcon}
                             onClick={() => dispatch(toggleEditMode())}
-                            disabled={!polygon}
+                            disabled={!canWrite || !polygon}
                             tooltip='Edit Points'
-                            active={editMode}
+                            active={canWrite && editMode}
                         />
                         <EditToolbarButton
                             icon={TrashIcon}
                             onClick={confirmDeleteDialogController.open}
-                            disabled={!polygon}
+                            disabled={!canWrite || !polygon}
                             tooltip='Delete Polygon'
                         />
                     </ButtonGroup>
@@ -138,5 +114,53 @@ function EditToolbarButton({ icon, onClick, disabled, tooltip, active }) {
                 bg={active ? 'gray.100' : undefined}
             />
         </Tooltip>
+    );
+}
+
+function PolygonButton({ openEditDialog }) {
+    const dispatch = useDispatch();
+    const canWrite = useDrawMode() === DRAW_MODES.WRITE;
+    const { polygon, addPolygonMode } = useSelector(state => state.map);
+
+    if (!canWrite) {
+        return (
+            <Button variant='toolbar' minW={POLYGON_BUTTON_WIDTH} isDisabled>
+                {polygon?.label || ''}
+            </Button>
+        );
+    }
+
+    if (addPolygonMode) {
+        return (
+            <Button
+                onClick={() => dispatch(cancelAddPolygon())}
+                w={POLYGON_BUTTON_WIDTH}
+            >
+                Cancel
+            </Button>
+        );
+    }
+
+    if (polygon) {
+        return (
+            <Button
+                onClick={openEditDialog}
+                rightIcon={<Icon as={PencilIcon} />}
+                variant='toolbar'
+                minW={POLYGON_BUTTON_WIDTH}
+            >
+                {polygon.label}
+            </Button>
+        );
+    }
+
+    return (
+        <Button
+            onClick={() => dispatch(startAddPolygon())}
+            rightIcon={<AddPolygonIcon />}
+            w={POLYGON_BUTTON_WIDTH}
+        >
+            Draw Polygon
+        </Button>
     );
 }

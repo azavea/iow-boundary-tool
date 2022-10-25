@@ -5,9 +5,13 @@ import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { customizePrototypeIcon } from '../../utils';
-import { PANES, POLYGON_LAYER_OPTIONS } from '../../constants';
+import { DRAW_MODES, PANES, POLYGON_LAYER_OPTIONS } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
-import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
+import {
+    useBoundaryId,
+    useDrawMode,
+    useTrailingDebounceCallback,
+} from '../../hooks';
 import api from '../../api/api';
 
 customizePrototypeIcon(L.Draw.Polyline.prototype, 'edit-poly-marker');
@@ -43,6 +47,7 @@ export default function useEditingPolygon() {
     const dispatch = useDispatch();
     const map = useMap();
     const id = useBoundaryId();
+    const drawMode = useDrawMode();
 
     const { polygon, editMode, basemapType } = useSelector(state => state.map);
 
@@ -77,7 +82,7 @@ export default function useEditingPolygon() {
                 }
             );
 
-            if (editMode) {
+            if (editMode && drawMode === DRAW_MODES.WRITE) {
                 polygonLayer.editing.enable();
             }
 
@@ -98,5 +103,12 @@ export default function useEditingPolygon() {
                 }
             };
         }
-    }, [polygon, editMode, basemapType, map, updatePolygonFromDrawEvent]);
+    }, [
+        drawMode,
+        polygon,
+        editMode,
+        basemapType,
+        map,
+        updatePolygonFromDrawEvent,
+    ]);
 }
