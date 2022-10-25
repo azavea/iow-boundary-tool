@@ -22,19 +22,15 @@ import BasemapDefaultImage from '../img/basemap-default.jpg';
 import BasemapLandWaterImage from '../img/basemap-landwater.jpg';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    setBasemapType,
-    toggleLayer,
-    toggleReferenceImageVisibility,
-} from '../store/mapSlice';
+import { setBasemapType, toggleLayer } from '../store/mapSlice';
 import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
+import { useBoundaryId, useEndpointToastError, useFilePicker } from '../hooks';
 import {
-    useAddReferenceImage,
-    useBoundaryId,
-    useEndpointToastError,
-    useFilePicker,
-} from '../hooks';
-import { useUpdateReferenceImageMutation } from '../api/referenceImages';
+    useDebouncedUpdateReferenceImageMutation,
+    useUploadReferenceImageMutation,
+} from '../api/referenceImages';
+import { useGetBoundaryDetailsQuery } from '../api/boundaries';
+import CenteredSpinner from './CenteredSpinner';
 
 const paddingLeft = 4;
 
@@ -52,14 +48,44 @@ export default function Sidebar() {
 }
 
 function ReferenceLayers() {
-    const dispatch = useDispatch();
-    const id = useBoundaryId();
-    const addReferenceImage = useAddReferenceImage(id);
-    const [postReferenceImage, { error }] = useUpdateReferenceImageMutation();
-    useEndpointToastError(error);
-    const openFileDialog = useFilePicker(files => files.map(addReferenceImage));
+    const boundaryId = useBoundaryId();
 
-    const images = useSelector(state => state.map.referenceImages);
+    const {
+        data: boundary,
+        isLoading,
+        error,
+    } = useGetBoundaryDetailsQuery(boundaryId);
+
+    const [createReferenceImage, { createReferenceImageError }] =
+        useUploadReferenceImageMutation();
+
+    const [updateReferenceImage, { updateReferenceImageError }] =
+        useDebouncedUpdateReferenceImageMutation(boundaryId);
+
+    useEndpointToastError(
+        createReferenceImageError ?? updateReferenceImageError
+    );
+
+    const uploadImage = file => {
+        createReferenceImage({
+            boundaryId,
+            filename: file.name,
+            is_visible: true,
+            distortion: null,
+            opacity: 100,
+        });
+    };
+
+    // TODO support multiple files
+    const openFileDialog = useFilePicker(files => files.map(uploadImage));
+
+    if (isLoading) {
+        return <CenteredSpinner />;
+    }
+
+    if (error || !boundary) {
+        return null;
+    }
 
     return (
         <Box ml={paddingLeft} mt={6} mb={6}>
@@ -80,20 +106,17 @@ function ReferenceLayers() {
                 Upload file
             </Button>
             <Flex direction='column' align='flex-start'>
-                {Object.entries(images).map(([url, image]) => (
+                {boundary.reference_images.map(image => (
                     <VisibilityButton
-                        key={url}
-                        visible={image.visible}
+                        key={image.id}
+                        visible={image.is_visible}
                         onChange={() => {
-                            dispatch(toggleReferenceImageVisibility(url));
-                            postReferenceImage({
-                                boundary: id,
-                                referenceImageId: image.id,
-                                is_visible: !image.visible,
-                                opacity: image.transparent ? 50 : 100,
+                            updateReferenceImage({
+                                ...image,
+                                is_visible: !image.is_visible,
                             });
                         }}
-                        label={image.name}
+                        label={image.filename}
                     />
                 ))}
             </Flex>

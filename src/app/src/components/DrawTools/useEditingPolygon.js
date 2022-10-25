@@ -5,7 +5,11 @@ import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { customizePrototypeIcon } from '../../utils';
-import { PANES, POLYGON_LAYER_OPTIONS } from '../../constants';
+import {
+    DEBOUNCE_INTERVAL,
+    PANES,
+    POLYGON_LAYER_OPTIONS,
+} from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
 import api from '../../api/api';
@@ -64,7 +68,7 @@ export default function useEditingPolygon() {
                 )
             );
         },
-        interval: 3000,
+        interval: DEBOUNCE_INTERVAL,
     });
 
     useEffect(() => {

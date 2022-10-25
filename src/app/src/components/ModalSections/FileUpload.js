@@ -14,14 +14,13 @@ import { CloudUploadIcon } from '@heroicons/react/outline';
 
 import { convertIndexedObjectToArray } from '../../utils';
 import ModalSection from './ModalSection';
-import { useAddReferenceImage, useFilePicker } from '../../hooks';
-import { useSelector } from 'react-redux';
+import { useFilePicker } from '../../hooks';
 
 export default function FileUpload({ PreviousButton }) {
     const navigate = useNavigate();
-    const addReferenceImage = useAddReferenceImage();
 
-    const addFiles = newFiles => newFiles.forEach(addReferenceImage);
+    // TODO figure out reference image upload from this page
+    const addFiles = newFiles => newFiles.forEach(() => {});
 
     return (
         <ModalSection
@@ -185,9 +184,7 @@ function Bold({ children }) {
 }
 
 function FilesBox() {
-    const imageEntries = Object.entries(
-        useSelector(state => state.map.referenceImages)
-    );
+    const imageEntries = []; // TODO: get images
 
     if (imageEntries.length === 0) return null;
 

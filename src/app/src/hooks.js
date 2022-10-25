@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
-import { updateReferenceImage } from './store/mapSlice';
 import { useParams } from 'react-router';
-import { useUploadReferenceImageMutation } from './api/referenceImages';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -80,47 +78,6 @@ export function useMapLayer(layer, { fitBounds = false } = {}) {
 
 export function useLayerVisibility(layer) {
     return useSelector(state => state.map.layers).includes(layer);
-}
-
-export function useAddReferenceImage(boundary) {
-    const dispatch = useDispatch();
-    const [uploadImage] = useUploadReferenceImageMutation();
-
-    const convertResponseToStateFormat = (response, boundary) => {
-        return {
-            id: response.id,
-            boundary,
-            name: response.filename,
-            visible: response.is_visible,
-            corners: response.distortion,
-            mode: 'distort',
-            transparent: false,
-            outlined: false,
-        };
-    };
-
-    return file => {
-        const url = URL.createObjectURL(file);
-        uploadImage({
-            boundary,
-            filename: file.name,
-            is_visible: true,
-            distortion: null,
-            opacity: file.transparent ? 50 : 100,
-        })
-            .unwrap()
-            .then(response => {
-                dispatch(
-                    updateReferenceImage({
-                        url,
-                        update: convertResponseToStateFormat(
-                            response,
-                            boundary
-                        ),
-                    })
-                );
-            });
-    };
 }
 
 export function useFilePicker(onChange) {

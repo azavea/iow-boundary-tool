@@ -69,7 +69,7 @@ function DrawTools({ mode, details }) {
 
     return (
         <>
-            <ReferenceImageLayer />
+            <ReferenceImageLayer images={details.reference_images} />
             <EditToolbar />
             <SaveAndBackButton />
             <ReviewAndSaveButton />

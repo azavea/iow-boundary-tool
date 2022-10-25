@@ -1,18 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import L from './L.DistortableImage.Edit.fix';
 
-import api from '../../api/api';
-
 import { customizePrototypeIcon } from '../../utils';
-import { updateReferenceImage } from '../../store/mapSlice';
-import {
-    useEndpointToastError,
-    useTrailingDebounceCallback,
-} from '../../hooks';
-import { useUpdateReferenceImageMutation } from '../../api/referenceImages';
+import { useBoundaryId, useEndpointToastError } from '../../hooks';
 import { useMap } from 'react-leaflet';
+import { useDebouncedUpdateReferenceImageMutation } from '../../api/referenceImages';
 
 customizePrototypeIcon(L.DistortHandle.prototype, 'ref-handle');
 customizePrototypeIcon(L.DragHandle.prototype, 'ref-handle');
@@ -26,53 +19,29 @@ const convertCornerFromStateFormat = corner => ({
     lng: corner[1],
 });
 
-const convertImageMetadataFromStateFormat = (id, boundary, layer) => ({
-    boundary,
-    referenceImageId: id,
-    distortion: layer._corners,
-    opacity: layer.editing._transparent ? 50 : 0,
-});
-
-export default function ReferenceImageLayer() {
-    const dispatch = useDispatch();
+export default function ReferenceImageLayer({ images }) {
     const map = useMap();
+    const boundaryId = useBoundaryId();
     const referenceImageLayers = useRef({});
-    const [postReferenceImage, { error }] = useUpdateReferenceImageMutation();
-    useEndpointToastError(error);
 
-    const images = useSelector(state => state.map.referenceImages);
+    const [updateReferenceImage, { error }] =
+        useDebouncedUpdateReferenceImageMutation(boundaryId);
+    useEndpointToastError(error);
 
     const visibleImages = useMemo(
         () =>
             Object.fromEntries(
-                Object.entries(images).filter(
-                    ([, imageInfo]) => imageInfo.visible
-                )
+                images
+                    .filter(imageInfo => imageInfo.is_visible)
+                    .map(image => [image.id, image])
             ),
         [images]
     );
 
-    const updateReferenceImageDebounced = useTrailingDebounceCallback({
-        callback: (id, boundary, layer) => {
-            postReferenceImage(
-                convertImageMetadataFromStateFormat(id, boundary, layer)
-            );
-        },
-        immediateCallback: (id, boundary, layer) => {
-            dispatch(
-                api.util.updateQueryData(
-                    'updateReferenceImage',
-                    id,
-                    convertImageMetadataFromStateFormat(id, boundary, layer)
-                )
-            );
-        },
-        interval: 3000,
-    });
-
     const createLayer = useCallback(
-        ({ url, id, boundary, corners, mode }) => {
-            const layer = new L.distortableImageOverlay(url, {
+        ({ id, corners, mode }) => {
+            // TODO use reference image url here
+            const layer = new L.distortableImageOverlay('', {
                 actions: [
                     L.DragAction,
                     L.ScaleAction,
@@ -91,19 +60,13 @@ export default function ReferenceImageLayer() {
             });
 
             const updateImageHandler = ({ target: layer }) => {
-                dispatch(
-                    updateReferenceImage({
-                        url,
-                        update: {
-                            corners: layer._corners.map(
-                                convertCornerToStateFormat
-                            ),
-                            mode: layer.editing._mode,
-                            transparent: layer.editing._transparent,
-                        },
-                    })
-                );
-                updateReferenceImageDebounced(id, boundary, layer);
+                updateReferenceImage({
+                    id,
+                    distortion: layer._corners.map(convertCornerToStateFormat),
+                    mode: layer.editing._mode,
+                    is_visible: true, // because layer must be visible to be updated
+                    opacity: layer.editing._transparent ? 50 : 100,
+                });
             };
 
             layer.on('edit', updateImageHandler);
@@ -120,24 +83,19 @@ export default function ReferenceImageLayer() {
             if (!corners) {
                 layer.on('remove', ({ target: layer }) => {
                     if (layer._corners) {
-                        dispatch(
-                            updateReferenceImage({
-                                url,
-                                update: {
-                                    corners: layer._corners.map(
-                                        convertCornerToStateFormat
-                                    ),
-                                },
-                            })
-                        );
-                        updateReferenceImageDebounced(id, boundary, layer);
+                        updateReferenceImage({
+                            id,
+                            distortion: layer._corners.map(
+                                convertCornerToStateFormat
+                            ),
+                        });
                     }
                 });
             }
 
             return layer;
         },
-        [dispatch, updateReferenceImageDebounced]
+        [updateReferenceImage]
     );
 
     /**
@@ -147,34 +105,28 @@ export default function ReferenceImageLayer() {
      * visibleImages.
      */
     useEffect(() => {
-        const imageShouldBeAdded = url =>
-            !(url in referenceImageLayers.current);
+        const imageShouldBeAdded = id => !(id in referenceImageLayers.current);
+        const imageShouldBeHidden = id => !(id in visibleImages);
 
-        const imageShouldBeHidden = url => !(url in visibleImages);
-
-        for (const [url, { id, boundary, corners, mode }] of Object.entries(
-            visibleImages
-        )) {
-            if (imageShouldBeAdded(url)) {
-                referenceImageLayers.current[url] = createLayer({
-                    url,
+        for (const { id, distortion, mode } of Object.values(visibleImages)) {
+            if (imageShouldBeAdded(id)) {
+                referenceImageLayers.current[id] = createLayer({
                     id,
-                    boundary,
-                    corners,
+                    corners: distortion,
                     mode,
                 });
 
-                map.addLayer(referenceImageLayers.current[url]);
+                map.addLayer(referenceImageLayers.current[id]);
             }
         }
 
-        for (const url of Object.keys(referenceImageLayers.current)) {
-            if (imageShouldBeHidden(url)) {
-                if (map.hasLayer(referenceImageLayers.current[url])) {
-                    map.removeLayer(referenceImageLayers.current[url]);
+        for (const id of Object.keys(referenceImageLayers.current)) {
+            if (imageShouldBeHidden(id)) {
+                if (map.hasLayer(referenceImageLayers.current[id])) {
+                    map.removeLayer(referenceImageLayers.current[id]);
                 }
 
-                delete referenceImageLayers.current[url];
+                delete referenceImageLayers.current[id];
             }
         }
     }, [visibleImages, map, createLayer]);

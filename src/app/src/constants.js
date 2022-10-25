@@ -66,6 +66,8 @@ export const APP_URLS = {
     RESET: 'confirm_password_reset/reset/',
 };
 
+export const DEBOUNCE_INTERVAL = 3000;
+
 // In sync with django.api.models.boundary.BOUNDARY_STATUS
 export const BOUNDARY_STATUS = {
     DRAFT: 'Draft',
