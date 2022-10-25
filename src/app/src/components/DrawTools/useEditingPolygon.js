@@ -95,6 +95,8 @@ export default function useEditingPolygon() {
 
             map.on(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);
 
+            map.fitBounds(featureGroup.getBounds());
+
             return () => {
                 map.off(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);
 
