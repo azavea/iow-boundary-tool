@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
@@ -8,12 +8,8 @@ import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
-import { useGetBoundaryDetailsQuery } from '../../api/boundaries';
-import {
-    useBoundaryId,
-    useDialogController,
-    useEndpointToastError,
-} from '../../hooks';
+import { useDialogController } from '../../hooks';
+import { useDrawBoundary } from '../DrawContext';
 
 import useAddPolygonCursor from './useAddPolygonCursor';
 import useEditingPolygon from './useEditingPolygon';
@@ -21,38 +17,13 @@ import useGeocoderResult from './useGeocoderResult';
 import useTrackMapZoom from './useTrackMapZoom';
 
 import { setPolygon } from '../../store/mapSlice';
-import { BOUNDARY_STATUS, ROLES } from '../../constants';
-import LoadingModal from '../LoadingModal';
+import { BOUNDARY_STATUS } from '../../constants';
+
 import SubmitModal from '../SubmitModal';
 import AfterSubmitModal from '../AfterSubmitModal';
 
-const DRAW_MODES = {
-    FULLY_EDITABLE: 'fully_editable',
-    ANNOTATIONS_ONLY: 'annotations_only',
-    READ_ONLY: 'read_only',
-};
-
-export default function LoadBoundaryDetails() {
-    const user = useSelector(state => state.auth.user);
-    const id = useBoundaryId();
-
-    const { isFetching, data: details, error } = useGetBoundaryDetailsQuery(id);
-    useEndpointToastError(error);
-
-    if (isFetching) {
-        return <LoadingModal isOpen title='Loading boundary data...' />;
-    }
-
-    if (error || typeof details !== 'object') {
-        return null;
-    }
-
-    const mode = getDrawMode({ status: details.status, userRole: user.role });
-
-    return <DrawTools mode={mode} details={details} />;
-}
-
-function DrawTools({ mode, details }) {
+export default function DrawTools() {
+    const details = useDrawBoundary();
     const dispatch = useDispatch();
 
     // Add the polygon indicated by `details` to the state
@@ -96,18 +67,6 @@ function DrawTools({ mode, details }) {
             <MapControlButtons />
         </>
     );
-}
-
-function getDrawMode({ status, userRole }) {
-    if (userRole === ROLES.VALIDATOR && status === BOUNDARY_STATUS.IN_REVIEW) {
-        return DRAW_MODES.ANNOTATIONS_ONLY;
-    }
-
-    if (status === BOUNDARY_STATUS.DRAFT && userRole === ROLES.CONTRIBUTOR) {
-        return DRAW_MODES.FULLY_EDITABLE;
-    }
-
-    return DRAW_MODES.READ_ONLY;
 }
 
 function SaveAndBackButton() {
