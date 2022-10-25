@@ -9,6 +9,8 @@ import {
     updateReferenceImage,
 } from './store/mapSlice';
 import { useParams } from 'react-router';
+import { BOUNDARY_STATUS, DRAW_MODES, ROLES } from './constants';
+import { useGetBoundaryDetailsQuery } from './api/boundaries';
 
 export function useDialogController() {
     const [isOpen, setIsOpen] = useState(false);
@@ -169,4 +171,38 @@ export function useEndpointToastError(error, message = 'An error occured') {
             });
         }
     }, [error, message, toast]);
+}
+
+export function useDrawMode() {
+    const boundary_id = useBoundaryId();
+    const {
+        isFetching,
+        data: boundary,
+        error,
+    } = useGetBoundaryDetailsQuery(boundary_id);
+    const user = useSelector(state => state.auth.user);
+
+    if (isFetching || error) {
+        return DRAW_MODES.READ;
+    }
+
+    if (user?.role === ROLES.ADMINISTRATOR) {
+        return DRAW_MODES.WRITE;
+    }
+
+    if (
+        user?.role === ROLES.CONTRIBUTOR &&
+        boundary?.status === BOUNDARY_STATUS.DRAFT
+    ) {
+        return DRAW_MODES.WRITE;
+    }
+
+    if (
+        user?.role === ROLES.VALIDATOR &&
+        boundary?.status === BOUNDARY_STATUS.IN_REVIEW
+    ) {
+        return DRAW_MODES.ANNOTATE;
+    }
+
+    return DRAW_MODES.READ;
 }

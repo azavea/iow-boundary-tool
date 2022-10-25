@@ -81,3 +81,9 @@ export const ROLES = {
     VALIDATOR: 'V',
     ADMINISTRATOR: 'A',
 };
+
+export const DRAW_MODES = {
+    READ: 'R',
+    WRITE: 'W',
+    ANNOTATE: 'A',
+};
