@@ -114,3 +114,13 @@ export default function useEditingPolygon() {
         updatePolygonFromDrawEvent,
     ]);
 }
+
+// TODO:
+
+// Add a useAnnotationMode hook that enables an annotation mode, triggered by changes to
+// mapSlice.annotationMode. This should make the cursor into the annotation icon, and when
+// the user clicks on the map it should open an annotation modal, and turn off the annotation
+// mode. This annotation should be saved to the database. Clicking the annotation should
+// open a popup to view or delete the annotation.
+
+// When the annotations are added, they should also be visible in the Submission Detail Map.
