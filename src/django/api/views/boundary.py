@@ -158,21 +158,9 @@ class BoundaryShapeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, id, format=None):
-        boundary_set = get_boundary_queryset_for_user(request.user)
-        boundary_set = boundary_set.prefetch_related('submissions')
-        boundary = get_object_or_404(boundary_set, pk=id)
-
-        if request.user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
-            raise PermissionDenied(
-                'Only contributors and administrators can edit boundaries.'
-            )
-
-        if boundary.status != BOUNDARY_STATUS.DRAFT:
-            raise BadRequestException(
-                'Cannot update shape of boundary with status: {}'.format(
-                    boundary.status.value
-                ),
-            )
+        boundary = BoundaryShapeView.get_boundary(request, id)
+        BoundaryShapeView.check_user_has_access_to_shape(request.user)
+        BoundaryShapeView.check_boundary_is_editable(boundary)
 
         serializer = ShapeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -181,3 +169,35 @@ class BoundaryShapeView(APIView):
         boundary.latest_submission.save()
 
         return Response(status=HTTP_204_NO_CONTENT)
+
+    def delete(self, request, id, format=None):
+        boundary = BoundaryShapeView.get_boundary(request, id)
+        BoundaryShapeView.check_user_has_access_to_shape(request.user)
+        BoundaryShapeView.check_boundary_is_editable(boundary)
+
+        boundary.latest_submission.shape = None
+        boundary.latest_submission.save()
+
+        return Response(status=HTTP_204_NO_CONTENT)
+
+    @staticmethod
+    def get_boundary(request, id):
+        boundary_set = get_boundary_queryset_for_user(request.user)
+        boundary_set = boundary_set.prefetch_related('submissions')
+        return get_object_or_404(boundary_set, pk=id)
+
+    @staticmethod
+    def check_user_has_access_to_shape(user):
+        if user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
+            raise PermissionDenied(
+                'Only contributors and administrators can edit boundaries.'
+            )
+
+    @staticmethod
+    def check_boundary_is_editable(boundary):
+        if boundary.status != BOUNDARY_STATUS.DRAFT:
+            raise BadRequestException(
+                'Cannot update shape of boundary with status: {}'.format(
+                    boundary.status
+                ),
+            )

@@ -9,12 +9,15 @@ import {
     Flex,
     Spacer,
 } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
-import { deletePolygon } from '../../store/mapSlice';
+import { useBoundaryId, useEndpointToastError } from '../../hooks';
+import { useDeleteBoundaryShapeMutation } from '../../api/boundaries';
 
 export default function DeletePolygonConfirmModal({ isOpen, onClose }) {
-    const dispatch = useDispatch();
     const cancelRef = useRef();
+    const boundaryId = useBoundaryId();
+
+    const [deleteShape, { error }] = useDeleteBoundaryShapeMutation();
+    useEndpointToastError(error);
 
     return (
         <AlertDialog
@@ -42,8 +45,9 @@ export default function DeletePolygonConfirmModal({ isOpen, onClose }) {
                             <Button
                                 variant='cta'
                                 onClick={() => {
-                                    dispatch(deletePolygon());
-                                    onClose();
+                                    deleteShape(boundaryId)
+                                        .unwrap()
+                                        .then(onClose);
                                 }}
                             >
                                 Yes, Delete
