@@ -41,6 +41,12 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                 run --rm --no-deps --entrypoint black django \
                 --skip-string-normalization --check --diff \
                 --extend-exclude migrations .
+
+            GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+                -f docker-compose.yml \
+                -f docker-compose.ci.yml \
+                run --rm --entrypoint python django \
+                manage.py makemigrations --check
         else
             # Lint Django app
             docker-compose \
@@ -51,6 +57,10 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                 run --rm --no-deps --entrypoint black django \
                 --skip-string-normalization --check --diff \
                 --extend-exclude migrations .
+
+            docker-compose \
+                run --rm --entrypoint python django \
+                manage.py makemigrations
         fi
     fi
 fi
