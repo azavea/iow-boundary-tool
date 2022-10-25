@@ -5,7 +5,7 @@ import 'leaflet-draw';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { customizePrototypeIcon } from '../../utils';
-import { DRAW_MODES, PANES, POLYGON_LAYER_OPTIONS } from '../../constants';
+import { PANES, POLYGON_LAYER_OPTIONS } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import {
     useBoundaryId,
@@ -47,7 +47,7 @@ export default function useEditingPolygon() {
     const dispatch = useDispatch();
     const map = useMap();
     const id = useBoundaryId();
-    const drawMode = useDrawMode();
+    const { canWrite } = useDrawMode();
 
     const { polygon, editMode, basemapType } = useSelector(state => state.map);
 
@@ -82,7 +82,7 @@ export default function useEditingPolygon() {
                 }
             );
 
-            if (editMode && drawMode === DRAW_MODES.WRITE) {
+            if (canWrite && editMode) {
                 polygonLayer.editing.enable();
             }
 
@@ -106,7 +106,7 @@ export default function useEditingPolygon() {
             };
         }
     }, [
-        drawMode,
+        canWrite,
         polygon,
         editMode,
         basemapType,

@@ -28,13 +28,12 @@ import {
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
-import { DRAW_MODES } from '../../constants.js';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
-    const canWrite = useDrawMode() === DRAW_MODES.WRITE;
+    const { canWrite } = useDrawMode();
     const { polygon, editMode } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
@@ -119,7 +118,7 @@ function EditToolbarButton({ icon, onClick, disabled, tooltip, active }) {
 
 function PolygonButton({ openEditDialog }) {
     const dispatch = useDispatch();
-    const canWrite = useDrawMode() === DRAW_MODES.WRITE;
+    const { canWrite } = useDrawMode();
     const { polygon, addPolygonMode } = useSelector(state => state.map);
 
     if (!canWrite) {

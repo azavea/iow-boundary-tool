@@ -9,7 +9,7 @@ import {
     updateReferenceImage,
 } from './store/mapSlice';
 import { useParams } from 'react-router';
-import { BOUNDARY_STATUS, DRAW_MODES, ROLES } from './constants';
+import { BOUNDARY_STATUS, ROLES } from './constants';
 import { useGetBoundaryDetailsQuery } from './api/boundaries';
 
 export function useDialogController() {
@@ -183,26 +183,26 @@ export function useDrawMode() {
     const user = useSelector(state => state.auth.user);
 
     if (isFetching || error) {
-        return DRAW_MODES.READ;
+        return { canWrite: false, canAnnotate: false };
     }
 
     if (user?.role === ROLES.ADMINISTRATOR) {
-        return DRAW_MODES.WRITE;
+        return { canWrite: true, canAnnotate: true };
     }
 
     if (
         user?.role === ROLES.CONTRIBUTOR &&
         boundary?.status === BOUNDARY_STATUS.DRAFT
     ) {
-        return DRAW_MODES.WRITE;
+        return { canWrite: true, canAnnotate: false };
     }
 
     if (
         user?.role === ROLES.VALIDATOR &&
         boundary?.status === BOUNDARY_STATUS.IN_REVIEW
     ) {
-        return DRAW_MODES.ANNOTATE;
+        return { canWrite: false, canAnnotate: true };
     }
 
-    return DRAW_MODES.READ;
+    return { canWrite: false, canAnnotate: false };
 }
