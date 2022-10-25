@@ -27,8 +27,12 @@ import {
     toggleLayer,
     toggleReferenceImageVisibility,
 } from '../store/mapSlice';
-import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
-import { useAddReferenceImage, useFilePicker } from '../hooks';
+import {
+    DATA_LAYERS,
+    DRAW_MODES,
+    SIDEBAR_TEXT_TOOLTIP_THRESHOLD,
+} from '../constants';
+import { useAddReferenceImage, useDrawMode, useFilePicker } from '../hooks';
 
 const paddingLeft = 4;
 
@@ -49,6 +53,7 @@ function ReferenceLayers() {
     const dispatch = useDispatch();
     const addReferenceImage = useAddReferenceImage();
     const openFileDialog = useFilePicker(files => files.map(addReferenceImage));
+    const drawMode = useDrawMode();
 
     const images = useSelector(state => state.map.referenceImages);
 
@@ -67,6 +72,7 @@ function ReferenceLayers() {
                 leftIcon={<Icon as={PlusIcon} />}
                 mb={4}
                 onClick={openFileDialog}
+                disabled={drawMode !== DRAW_MODES.WRITE}
             >
                 Upload file
             </Button>
