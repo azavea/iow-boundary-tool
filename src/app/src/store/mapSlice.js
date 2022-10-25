@@ -5,6 +5,7 @@ const initialState = {
     polygon: null,
     addPolygonMode: false,
     editMode: false,
+    annotateMode: false,
     layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
     geocodeResult: null,
@@ -75,6 +76,9 @@ export const mapSlice = createSlice({
         toggleEditMode: state => {
             state.editMode = !state.editMode;
         },
+        toggleAnnotateMode: state => {
+            state.annotateMode = !state.annotateMode;
+        },
         toggleLayer: (state, { payload: layerToToggle }) => {
             if (state.layers.includes(layerToToggle)) {
                 state.layers = state.layers.filter(
@@ -118,6 +122,7 @@ export const {
     startAddPolygon,
     cancelAddPolygon,
     toggleEditMode,
+    toggleAnnotateMode,
     toggleLayer,
     setBasemapType,
     setGeocodeResult,

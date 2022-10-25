@@ -15,6 +15,7 @@ import {
     TrashIcon,
     EyeOffIcon,
     PencilIcon,
+    AnnotationIcon,
 } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 
@@ -26,6 +27,7 @@ import {
     cancelAddPolygon,
     startAddPolygon,
     toggleEditMode,
+    toggleAnnotateMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
 
@@ -33,8 +35,8 @@ const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
-    const { canWrite } = useDrawMode();
-    const { polygon, editMode } = useSelector(state => state.map);
+    const { canWrite, canAnnotate } = useDrawMode();
+    const { polygon, editMode, annotateMode } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
     const editDialogController = useDialogController();
@@ -87,6 +89,14 @@ export default function EditToolbar() {
                             disabled={!canWrite || !polygon}
                             tooltip='Delete Polygon'
                         />
+                        {canAnnotate && (
+                            <EditToolbarButton
+                                icon={AnnotationIcon}
+                                onClick={() => dispatch(toggleAnnotateMode())}
+                                tooltip='Add note'
+                                active={annotateMode}
+                            />
+                        )}
                     </ButtonGroup>
                 </Flex>
             </Box>
