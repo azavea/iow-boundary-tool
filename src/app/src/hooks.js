@@ -138,13 +138,13 @@ export function useTrailingDebounceCallback({
     );
 }
 
-export function useEndpointToastError(error, message = 'An error occured') {
+export function useEndpointToastError(error, message) {
     const toast = useToast();
 
     useEffect(() => {
         if (error) {
             toast({
-                title: message,
+                title: message || error.data.detail || 'An error occurred',
                 status: 'error',
                 isClosable: true,
                 duration: 5000,
