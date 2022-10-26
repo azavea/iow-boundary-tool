@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add check for missing migrations [#153](https://github.com/azavea/iow-boundary-tool/pull/153)
 - Save reference image metadata on draw page [#144](https://github.com/azavea/iow-boundary-tool/pull/144)
 - Wire up create boundary [#145](https://github.com/azavea/iow-boundary-tool/pull/145)
+- Add Draw page React context [#154](https://github.com/azavea/iow-boundary-tool/pull/154)
 
 ### Changed
 
