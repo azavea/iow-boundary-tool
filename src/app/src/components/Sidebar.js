@@ -29,8 +29,7 @@ import {
     useDebouncedUpdateReferenceImageMutation,
     useUploadReferenceImageMutation,
 } from '../api/referenceImages';
-import { useGetBoundaryDetailsQuery } from '../api/boundaries';
-import CenteredSpinner from './CenteredSpinner';
+import { useDrawBoundary } from './DrawContext';
 
 const paddingLeft = 4;
 
@@ -49,12 +48,7 @@ export default function Sidebar() {
 
 function ReferenceLayers() {
     const boundaryId = useBoundaryId();
-
-    const {
-        data: boundary,
-        isLoading,
-        error,
-    } = useGetBoundaryDetailsQuery(boundaryId);
+    const boundary = useDrawBoundary();
 
     const [createReferenceImage, { createReferenceImageError }] =
         useUploadReferenceImageMutation();
@@ -78,14 +72,6 @@ function ReferenceLayers() {
 
     // TODO support multiple files
     const openFileDialog = useFilePicker(files => files.map(uploadImage));
-
-    if (isLoading) {
-        return <CenteredSpinner />;
-    }
-
-    if (error || !boundary) {
-        return null;
-    }
 
     return (
         <Box ml={paddingLeft} mt={6} mb={6}>
