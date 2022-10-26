@@ -17,7 +17,11 @@ import {
     ROLES,
 } from '../../../constants';
 import { useMapLayer } from '../../../hooks';
-import { downloadData, getBoundaryShapeFilename } from '../../../utils';
+import {
+    downloadData,
+    getBoundaryShapeFilename,
+    getBoundaryPermissions,
+} from '../../../utils';
 
 export default function Map({ boundary, startReview }) {
     const StatusBar = useSubmissionStatusBar(boundary);
@@ -47,23 +51,20 @@ export default function Map({ boundary, startReview }) {
 
 function MapButtons({ boundary, startReview }) {
     const navigate = useNavigate();
-    const userRole = useSelector(state => state.auth.user.role);
+    const user = useSelector(state => state.auth.user);
 
-    const canEdit =
-        userRole === ROLES.CONTRIBUTOR || userRole === ROLES.ADMINISTRATOR;
-    const canReview =
-        userRole === ROLES.VALIDATOR || userRole === ROLES.ADMINISTRATOR;
+    const { canWrite, canReview } = getBoundaryPermissions({ boundary, user });
 
     const getDrawButtonText = () => {
         switch (boundary.status) {
             case BOUNDARY_STATUS.DRAFT:
-                return canEdit ? 'Edit boundary' : null;
+                return canWrite ? 'Edit boundary' : null;
             case BOUNDARY_STATUS.SUBMITTED:
                 return canReview ? 'Start review' : null;
             case BOUNDARY_STATUS.IN_REVIEW:
                 return canReview ? 'Continue review' : null;
             case BOUNDARY_STATUS.NEEDS_REVISIONS:
-                return canEdit ? 'Revise boundary' : null;
+                return canWrite ? 'Revise boundary' : null;
             default:
                 return null;
         }
@@ -72,23 +73,14 @@ function MapButtons({ boundary, startReview }) {
     const goToDrawPage = () => navigate(`/draw/${boundary.id}`);
 
     const getDrawButtonOnClick = () => {
-        switch (boundary.status) {
-            case BOUNDARY_STATUS.DRAFT:
-            case BOUNDARY_STATUS.NEEDS_REVISIONS:
-                return canEdit ? goToDrawPage : null;
-            case BOUNDARY_STATUS.SUBMITTED:
-                return canReview
-                    ? () => startReview(boundary.id).unwrap().then(goToDrawPage)
-                    : null;
-            case BOUNDARY_STATUS.IN_REVIEW:
-                return canReview ? goToDrawPage : null;
-
-            default:
-                return null;
+        if (canReview && boundary.status === BOUNDARY_STATUS.SUBMITTED) {
+            return startReview(boundary.id).unwrap().then(goToDrawPage);
         }
+
+        return goToDrawPage;
     };
 
-    const drawButtonText = getDrawButtonText();
+    const drawButtonText = getDrawButtonText() || 'View boundary';
     const drawButtonOnClick = getDrawButtonOnClick();
 
     return (
@@ -138,13 +130,9 @@ function MapButton({ icon, children, onClick }) {
 }
 
 function useSubmissionStatusBar(boundary) {
-    const userRole = useSelector(state => state.auth.user.role);
+    const role = useSelector(state => state.auth.user.role);
 
-    if (userRole === ROLES.VALIDATOR) {
-        return null;
-    }
-
-    if (userRole === ROLES.VALIDATOR) {
+    if (role !== ROLES.CONTRIBUTOR) {
         return null;
     }
 
