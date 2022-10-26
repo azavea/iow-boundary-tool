@@ -88,9 +88,7 @@ function ExitButton({ variant }) {
         </Button>
     ) : (
         <Button
-            onClick={() => {
-                navigate('/submissions');
-            }}
+            onClick={() => navigate(-1)}
             rightIcon={<Icon as={ArrowLeftIcon} />}
         >
             Save and back
