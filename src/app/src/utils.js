@@ -2,6 +2,7 @@ import { Icon } from '@chakra-ui/react';
 import L from 'leaflet';
 
 import {
+    BOUNDARY_STATUS,
     INITIAL_POLYGON_SCALE_FACTOR,
     NC_EAST,
     NC_NORTH,
@@ -10,6 +11,7 @@ import {
     REFERENCE_IMAGE_FILE_EXTENSIONS,
     REFERENCE_IMAGE_MIME_TYPES,
     SHAPE_FILE_EXTENSIONS,
+    ROLES,
 } from './constants';
 
 export function heroToChakraIcon(icon) {
@@ -122,4 +124,39 @@ export function fileIsShapeFile(file) {
     return SHAPE_FILE_EXTENSIONS.some(extension =>
         file.name.endsWith(extension)
     );
+}
+
+export function getBoundaryPermissions({ boundary, user }) {
+    const permissions = {
+        canWrite: false,
+        canReview: false,
+        canApprove: false,
+    };
+
+    const status = boundary?.status;
+    const role = user?.role;
+
+    if (!status || !role) {
+        return permissions;
+    }
+
+    if (role === ROLES.ADMINISTRATOR) {
+        permissions.canWrite = true;
+        permissions.canReview = true;
+        permissions.canApprove = true;
+    }
+
+    if (role === ROLES.CONTRIBUTOR && status === BOUNDARY_STATUS.DRAFT) {
+        permissions.canWrite = true;
+    }
+
+    if (
+        role === ROLES.VALIDATOR &&
+        [BOUNDARY_STATUS.SUBMITTED, BOUNDARY_STATUS.IN_REVIEW].includes(status)
+    ) {
+        permissions.canReview = true;
+        permissions.canApprove = true;
+    }
+
+    return permissions;
 }

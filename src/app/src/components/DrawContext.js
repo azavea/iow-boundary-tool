@@ -5,13 +5,7 @@ import LoadingModal from './LoadingModal';
 
 import { useGetBoundaryDetailsQuery } from '../api/boundaries';
 import { useBoundaryId, useEndpointToastError } from '../hooks';
-import { BOUNDARY_STATUS, ROLES } from '../constants';
-
-const DRAW_MODES = {
-    FULLY_EDITABLE: 'fully_editable',
-    ANNOTATIONS_ONLY: 'annotations_only',
-    READ_ONLY: 'read_only',
-};
+import { getBoundaryPermissions } from '../utils';
 
 const DrawContext = createContext();
 
@@ -34,31 +28,19 @@ export default function DrawContextProvider({ children }) {
         return null;
     }
 
-    const mode = getDrawMode({ status: boundary.status, userRole: user.role });
+    const permissions = getBoundaryPermissions({ boundary, user });
 
     return (
-        <DrawContext.Provider value={{ boundary, mode }}>
+        <DrawContext.Provider value={{ boundary, permissions }}>
             {children}
         </DrawContext.Provider>
     );
-}
-
-function getDrawMode({ status, userRole }) {
-    if (userRole === ROLES.VALIDATOR && status === BOUNDARY_STATUS.IN_REVIEW) {
-        return DRAW_MODES.ANNOTATIONS_ONLY;
-    }
-
-    if (status === BOUNDARY_STATUS.DRAFT && userRole === ROLES.CONTRIBUTOR) {
-        return DRAW_MODES.FULLY_EDITABLE;
-    }
-
-    return DRAW_MODES.READ_ONLY;
 }
 
 export function useDrawBoundary() {
     return useContext(DrawContext).boundary;
 }
 
-export function useDrawMode() {
-    return useContext(DrawContext).mode;
+export function useDrawPermissions() {
+    return useContext(DrawContext).permissions;
 }
