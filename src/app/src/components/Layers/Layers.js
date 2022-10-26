@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { DefaultBasemap, SatelliteBasemap, LandWaterBasemap } from './Basemaps';
 import MunicipalBoundariesLayer from './MunicipalBoundariesLayer';
 import ParcelLayer from './ParcelLayer';
+import ReferenceImageLayer from './ReferenceImageLayer';
 
 export default function Layers() {
     return (
@@ -10,6 +11,7 @@ export default function Layers() {
             <Basemap />
             <MunicipalBoundariesLayer />
             <ParcelLayer />
+            <ReferenceImageLayer />
         </>
     );
 }

@@ -1,7 +1,6 @@
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
-import ReferenceImageLayer from '../Layers/ReferenceImageLayer';
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
@@ -19,7 +18,7 @@ import AfterSubmitModal from '../AfterSubmitModal';
 import { BOUNDARY_STATUS } from '../../constants';
 
 export default function DrawTools() {
-    const { status, reference_images } = useDrawBoundary();
+    const { status } = useDrawBoundary();
 
     useEditingPolygon();
     useAddPolygonCursor();
@@ -33,7 +32,6 @@ export default function DrawTools() {
 
     return (
         <>
-            <ReferenceImageLayer images={reference_images} />
             <EditToolbar />
             <SaveAndBackButton />
             <SubmitModal
