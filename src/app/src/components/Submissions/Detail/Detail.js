@@ -20,14 +20,14 @@ import Info from './Info';
 import Map from './Map';
 import { useEndpointToastError } from '../../../hooks';
 import { useStartReviewMutation } from '../../../api/reviews';
-import { NAVBAR_HEIGHT, ROLES } from '../../../constants';
+import { NAVBAR_HEIGHT } from '../../../constants';
 import { useSelector } from 'react-redux';
-import { heroToChakraIcon } from '../../../utils';
+import { getBoundaryPermissions, heroToChakraIcon } from '../../../utils';
 
 export default function SubmissionDetail() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const userRole = useSelector(state => state.auth.user.role);
+    const user = useSelector(state => state.auth.user);
 
     const {
         data: boundary,
@@ -58,8 +58,7 @@ export default function SubmissionDetail() {
         return null;
     }
 
-    const showApproveButton =
-        userRole === ROLES.VALIDATOR || userRole === ROLES.ADMINISTRATOR;
+    const { canApprove } = getBoundaryPermissions({ boundary, user });
 
     return (
         <VStack
@@ -89,7 +88,7 @@ export default function SubmissionDetail() {
                     />
                 </Flex>
                 <Flex direction='column' w='50%'>
-                    {showApproveButton ? (
+                    {canApprove && (
                         <Button
                             mb={4}
                             alignSelf='flex-end'
@@ -97,7 +96,7 @@ export default function SubmissionDetail() {
                         >
                             Mark approved
                         </Button>
-                    ) : null}
+                    )}
 
                     <Box
                         h='sm'
