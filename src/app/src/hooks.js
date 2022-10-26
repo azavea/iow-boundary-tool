@@ -1,13 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
-import {
-    createDefaultReferenceImage,
-    updateReferenceImage,
-} from './store/mapSlice';
 import { useParams } from 'react-router';
 
 export function useDialogController() {
@@ -82,20 +78,6 @@ export function useMapLayer(layer, { fitBounds = false } = {}) {
 
 export function useLayerVisibility(layer) {
     return useSelector(state => state.map.layers).includes(layer);
-}
-
-export function useAddReferenceImage() {
-    const dispatch = useDispatch();
-
-    return file => {
-        const url = URL.createObjectURL(file);
-        dispatch(
-            updateReferenceImage({
-                url,
-                update: createDefaultReferenceImage(file.name),
-            })
-        );
-    };
 }
 
 export function useFilePicker(onChange) {

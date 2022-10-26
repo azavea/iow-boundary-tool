@@ -9,17 +9,7 @@ const initialState = {
     basemapType: 'default',
     geocodeResult: null,
     mapZoom: MAP_INITIAL_ZOOM,
-    referenceImages: {},
 };
-
-export const createDefaultReferenceImage = name => ({
-    name,
-    visible: true,
-    corners: null,
-    mode: 'distort',
-    transparent: false,
-    outlined: false,
-});
 
 const DEFAULT_POLYGON = {
     points: [],
@@ -96,16 +86,6 @@ export const mapSlice = createSlice({
         setMapZoom: (state, { payload: mapZoom }) => {
             state.mapZoom = mapZoom;
         },
-        toggleReferenceImageVisibility: (state, { payload: url }) => {
-            state.referenceImages[url].visible =
-                !state.referenceImages[url].visible;
-        },
-        updateReferenceImage: (state, { payload: { url, update } }) => {
-            state.referenceImages[url] = {
-                ...(state.referenceImages?.[url] ?? {}),
-                ...update,
-            };
-        },
     },
 });
 
@@ -123,8 +103,6 @@ export const {
     setGeocodeResult,
     clearGeocodeResult,
     setMapZoom,
-    toggleReferenceImageVisibility,
-    updateReferenceImage,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

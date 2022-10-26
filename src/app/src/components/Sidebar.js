@@ -22,13 +22,15 @@ import BasemapDefaultImage from '../img/basemap-default.jpg';
 import BasemapLandWaterImage from '../img/basemap-landwater.jpg';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    setBasemapType,
-    toggleLayer,
-    toggleReferenceImageVisibility,
-} from '../store/mapSlice';
+import { setBasemapType, toggleLayer } from '../store/mapSlice';
 import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
-import { useAddReferenceImage, useFilePicker } from '../hooks';
+import { useBoundaryId, useEndpointToastError, useFilePicker } from '../hooks';
+import {
+    useDebouncedUpdateReferenceImageMutation,
+    useUploadReferenceImageMutation,
+} from '../api/referenceImages';
+import { useGetBoundaryDetailsQuery } from '../api/boundaries';
+import CenteredSpinner from './CenteredSpinner';
 
 const paddingLeft = 4;
 
@@ -46,11 +48,44 @@ export default function Sidebar() {
 }
 
 function ReferenceLayers() {
-    const dispatch = useDispatch();
-    const addReferenceImage = useAddReferenceImage();
-    const openFileDialog = useFilePicker(files => files.map(addReferenceImage));
+    const boundaryId = useBoundaryId();
 
-    const images = useSelector(state => state.map.referenceImages);
+    const {
+        data: boundary,
+        isLoading,
+        error,
+    } = useGetBoundaryDetailsQuery(boundaryId);
+
+    const [createReferenceImage, { createReferenceImageError }] =
+        useUploadReferenceImageMutation();
+
+    const [updateReferenceImage, { updateReferenceImageError }] =
+        useDebouncedUpdateReferenceImageMutation(boundaryId);
+
+    useEndpointToastError(
+        createReferenceImageError ?? updateReferenceImageError
+    );
+
+    const uploadImage = file => {
+        createReferenceImage({
+            boundaryId,
+            filename: file.name,
+            is_visible: true,
+            distortion: null,
+            opacity: 100,
+        });
+    };
+
+    // TODO support multiple files
+    const openFileDialog = useFilePicker(files => files.map(uploadImage));
+
+    if (isLoading) {
+        return <CenteredSpinner />;
+    }
+
+    if (error || !boundary) {
+        return null;
+    }
 
     return (
         <Box ml={paddingLeft} mt={6} mb={6}>
@@ -71,14 +106,17 @@ function ReferenceLayers() {
                 Upload file
             </Button>
             <Flex direction='column' align='flex-start'>
-                {Object.entries(images).map(([url, image]) => (
+                {boundary.reference_images.map(image => (
                     <VisibilityButton
-                        key={url}
-                        visible={image.visible}
-                        onChange={() =>
-                            dispatch(toggleReferenceImageVisibility(url))
-                        }
-                        label={image.name}
+                        key={image.id}
+                        visible={image.is_visible}
+                        onChange={() => {
+                            updateReferenceImage({
+                                ...image,
+                                is_visible: !image.is_visible,
+                            });
+                        }}
+                        label={image.filename}
                     />
                 ))}
             </Flex>
@@ -142,7 +180,7 @@ function VisibilityButton({ label, visible, onChange, disabled = false }) {
             label={label}
             bg='gray.500'
             hasArrow
-            isDisabled={label.length <= SIDEBAR_TEXT_TOOLTIP_THRESHOLD}
+            isDisabled={label?.length <= SIDEBAR_TEXT_TOOLTIP_THRESHOLD}
         >
             <Button
                 mb={1}

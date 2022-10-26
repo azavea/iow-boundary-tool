@@ -243,6 +243,7 @@ class ReferenceImageViewTests(BoundarySyncAPITestCase):
             "filename": "test_file.jpg",
             "is_visible": True,
             "distortion": {},
+            "opacity": 100,
             "uploaded_by": cls.contributor.pk,
         }
         cls.updated_image = {**cls.new_image, "is_visible": False}
