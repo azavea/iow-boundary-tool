@@ -12,7 +12,7 @@ import {
 } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
-import { useDrawBoundary } from '../DrawContext';
+import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
 import api from '../../api/api';
 
 customizePrototypeIcon(L.Draw.Polyline.prototype, 'edit-poly-marker');
@@ -50,6 +50,7 @@ export default function useEditingPolygon() {
     const id = useBoundaryId();
 
     const shape = useDrawBoundary().submission?.shape;
+    const { canWrite } = useDrawPermissions();
     const { editMode, basemapType, polygonIsVisible } = useSelector(
         state => state.map
     );
@@ -87,7 +88,7 @@ export default function useEditingPolygon() {
                 }
             );
 
-            if (editMode) {
+            if (canWrite && editMode) {
                 polygonLayer.editing.enable();
             }
 
@@ -109,6 +110,7 @@ export default function useEditingPolygon() {
             };
         }
     }, [
+        canWrite,
         shape,
         polygonIsVisible,
         editMode,
