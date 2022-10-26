@@ -33,7 +33,6 @@ export default function DrawTools() {
     return (
         <>
             <EditToolbar />
-            <SaveAndBackButton />
             <SubmitModal
                 isOpen={submitDialogController.isOpen}
                 onClose={submitDialogController.close}
@@ -46,22 +45,6 @@ export default function DrawTools() {
             <ReviewAndSaveButton onClick={submitDialogController.open} />
             <MapControlButtons />
         </>
-    );
-}
-
-function SaveAndBackButton() {
-    return (
-        <Button
-            position='absolute'
-            bottom='16px'
-            left='32px'
-            variant='secondary'
-            zIndex={1000}
-            fontSize='lg'
-            p={6}
-        >
-            Save and back
-        </Button>
     );
 }
 
