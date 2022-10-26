@@ -28,13 +28,14 @@ import {
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
-import { useDrawBoundary } from '../DrawContext.js';
+import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
     const boundary = useDrawBoundary();
+    const { canWrite } = useDrawPermissions();
     const { editMode, polygonIsVisible } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
@@ -80,14 +81,14 @@ export default function EditToolbar() {
                         <EditToolbarButton
                             icon={CursorClickIcon}
                             onClick={() => dispatch(toggleEditMode())}
-                            disabled={!hasShape}
+                            disabled={!canWrite || !hasShape}
                             tooltip='Edit Points'
-                            active={editMode}
+                            active={canWrite && editMode}
                         />
                         <EditToolbarButton
                             icon={TrashIcon}
                             onClick={confirmDeleteDialogController.open}
-                            disabled={!hasShape}
+                            disabled={!canWrite || !hasShape}
                             tooltip='Delete Polygon'
                         />
                     </ButtonGroup>
@@ -109,9 +110,18 @@ export default function EditToolbar() {
 function PolygonButton({ openEditDialog }) {
     const dispatch = useDispatch();
     const boundary = useDrawBoundary();
+    const { canWrite } = useDrawPermissions();
     const { addPolygonMode } = useSelector(state => state.map);
 
     const hasShape = !!boundary.submission?.shape;
+
+    if (!canWrite) {
+        return (
+            <Button variant='toolbar' minW={POLYGON_BUTTON_WIDTH} disabled>
+                {boundary.name}
+            </Button>
+        );
+    }
 
     if (addPolygonMode) {
         return (
