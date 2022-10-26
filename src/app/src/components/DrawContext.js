@@ -19,21 +19,25 @@ export default function DrawContextProvider({ children }) {
     const user = useSelector(state => state.auth.user);
     const id = useBoundaryId();
 
-    const { isFetching, data: details, error } = useGetBoundaryDetailsQuery(id);
+    const {
+        isFetching,
+        data: boundary,
+        error,
+    } = useGetBoundaryDetailsQuery(id);
     useEndpointToastError(error);
 
     if (isFetching) {
         return <LoadingModal isOpen title='Loading boundary data...' />;
     }
 
-    if (error || typeof details !== 'object') {
+    if (error || typeof boundary !== 'object') {
         return null;
     }
 
-    const mode = getDrawMode({ status: details.status, userRole: user.role });
+    const mode = getDrawMode({ status: boundary.status, userRole: user.role });
 
     return (
-        <DrawContext.Provider value={{ boundary: details, mode }}>
+        <DrawContext.Provider value={{ boundary, mode }}>
             {children}
         </DrawContext.Provider>
     );
