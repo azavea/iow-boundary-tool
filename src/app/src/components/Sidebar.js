@@ -29,7 +29,7 @@ import {
     useDebouncedUpdateReferenceImageMutation,
     useUploadReferenceImageMutation,
 } from '../api/referenceImages';
-import { useDrawBoundary } from './DrawContext';
+import { useDrawBoundary, useDrawPermissions } from './DrawContext';
 
 const paddingLeft = 4;
 
@@ -49,6 +49,7 @@ export default function Sidebar() {
 function ReferenceLayers() {
     const boundaryId = useBoundaryId();
     const boundary = useDrawBoundary();
+    const { canWrite } = useDrawPermissions();
 
     const [createReferenceImage, { createReferenceImageError }] =
         useUploadReferenceImageMutation();
@@ -88,6 +89,7 @@ function ReferenceLayers() {
                 leftIcon={<Icon as={PlusIcon} />}
                 mb={4}
                 onClick={openFileDialog}
+                disabled={!canWrite}
             >
                 Upload file
             </Button>
