@@ -4,7 +4,7 @@ import { DATA_LAYERS, MAP_INITIAL_ZOOM } from '../constants';
 const initialState = {
     polygonIsVisible: true,
     addPolygonMode: false,
-    editMode: false,
+    editMode: true,
     layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
     geocodeResult: null,
