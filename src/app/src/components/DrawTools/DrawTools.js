@@ -9,7 +9,11 @@ import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
 import { useGetBoundaryDetailsQuery } from '../../api/boundaries';
-import { useBoundaryId, useEndpointToastError } from '../../hooks';
+import {
+    useBoundaryId,
+    useDialogController,
+    useEndpointToastError,
+} from '../../hooks';
 
 import useAddPolygonCursor from './useAddPolygonCursor';
 import useEditingPolygon from './useEditingPolygon';
@@ -19,6 +23,8 @@ import useTrackMapZoom from './useTrackMapZoom';
 import { setPolygon } from '../../store/mapSlice';
 import { BOUNDARY_STATUS, ROLES } from '../../constants';
 import LoadingModal from '../LoadingModal';
+import SubmitModal from '../SubmitModal';
+import AfterSubmitModal from '../AfterSubmitModal';
 
 const DRAW_MODES = {
     FULLY_EDITABLE: 'fully_editable',
@@ -67,12 +73,26 @@ function DrawTools({ mode, details }) {
     useGeocoderResult();
     useTrackMapZoom();
 
+    const submitDialogController = useDialogController(false);
+    const afterSubmitDialogController = useDialogController(
+        details.status === BOUNDARY_STATUS.SUBMITTED
+    );
+
     return (
         <>
             <ReferenceImageLayer images={details.reference_images} />
             <EditToolbar />
             <SaveAndBackButton />
-            <ReviewAndSaveButton />
+            <SubmitModal
+                isOpen={submitDialogController.isOpen}
+                onClose={submitDialogController.close}
+                onSuccess={afterSubmitDialogController.open}
+            />
+            <AfterSubmitModal
+                isOpen={afterSubmitDialogController.isOpen}
+                onClose={afterSubmitDialogController.close}
+            />
+            <ReviewAndSaveButton onClick={submitDialogController.open} />
             <MapControlButtons />
         </>
     );
@@ -106,7 +126,7 @@ function SaveAndBackButton() {
     );
 }
 
-function ReviewAndSaveButton() {
+function ReviewAndSaveButton({ onClick }) {
     return (
         <Button
             position='absolute'
@@ -117,6 +137,7 @@ function ReviewAndSaveButton() {
             fontSize='lg'
             p={6}
             rightIcon={<Icon as={ArrowRightIcon} />}
+            onClick={onClick}
         >
             Review and submit
         </Button>

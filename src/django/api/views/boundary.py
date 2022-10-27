@@ -1,3 +1,7 @@
+from datetime import datetime
+from pytz import timezone
+
+from django.conf import settings
 from django.db.models import Prefetch, functions
 from django.shortcuts import get_object_or_404
 
@@ -52,6 +56,39 @@ class BoundaryListView(APIView):
         return None
 
 
+class BoundarySubmitView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, id, format=None):
+        if request.user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
+            raise ForbiddenException(
+                "Only contributors and administrators can submit boundaries."
+            )
+
+        boundary_set = get_boundary_queryset_for_user(request.user)
+        boundary_set = boundary_set.prefetch_related("submissions")
+        boundary = get_object_or_404(boundary_set, pk=id)
+        if boundary.status != BOUNDARY_STATUS.DRAFT:
+            raise BadRequestException(
+                "Cannot submit boundary with status: {}".format(boundary.status.value),
+            )
+
+        now = datetime.now(tz=timezone(settings.TIME_ZONE))
+        yyyy_mm_dd = now.isoformat()[:10]
+        fp = f"{boundary.utility.pwsid}_{boundary.utility.address_city}_{yyyy_mm_dd}"
+
+        if "notes" not in request.data:
+            raise BadRequestException("Cannot submit boundary without notes")
+
+        boundary.latest_submission.notes = request.data["notes"]
+        boundary.latest_submission.upload_filename = fp
+        boundary.latest_submission.submitted_by = request.user
+        boundary.latest_submission.submitted_at = now
+        boundary.latest_submission.save()
+
+        return Response(status=HTTP_204_NO_CONTENT)
+
+
 class BoundaryDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -95,7 +132,7 @@ class BoundaryShapeView(APIView):
         if boundary.status != BOUNDARY_STATUS.DRAFT:
             raise BadRequestException(
                 'Cannot update shape of boundary with status: {}'.format(
-                    boundary.status
+                    boundary.status.value
                 ),
             )
 

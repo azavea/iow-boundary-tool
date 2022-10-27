@@ -20,7 +20,7 @@ export function getNewItemTagInvalidator(tag) {
 }
 
 export function getUpdateItemTagInvalidator(tag) {
-    return (result, error, id) => [{ tag, id }];
+    return (result, error, { id }) => [{ tag, id }];
 }
 
 export default TAGS;

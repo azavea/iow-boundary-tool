@@ -44,9 +44,10 @@ const boundaryApi = api.injectEndpoints({
         }),
 
         submitBoundary: build.mutation({
-            query: id => ({
+            query: ({ id, payload }) => ({
                 url: `/boundaries/${id}/submit/`,
-                method: 'POST',
+                method: 'PATCH',
+                data: payload,
             }),
             invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
         }),
