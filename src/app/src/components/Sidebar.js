@@ -55,7 +55,7 @@ function ReferenceLayers() {
         useUploadReferenceImageMutation();
 
     const [updateReferenceImage, { updateReferenceImageError }] =
-        useDebouncedUpdateReferenceImageMutation(boundaryId);
+        useDebouncedUpdateReferenceImageMutation(boundaryId, canWrite);
 
     useEndpointToastError(
         createReferenceImageError ?? updateReferenceImageError

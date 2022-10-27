@@ -44,13 +44,16 @@ const referenceImagesApi = api.injectEndpoints({
     }),
 });
 
-export function useDebouncedUpdateReferenceImageMutation(boundaryId) {
+export function useDebouncedUpdateReferenceImageMutation(
+    boundaryId,
+    canWrite = false
+) {
     const dispatch = useDispatch();
     const [updateReferenceImage, meta] = useUpdateReferenceImageMutation();
 
     const debouncedUpdate = useTrailingDebounceCallback({
         callback: updatedImage => {
-            updateReferenceImage({ boundaryId, ...updatedImage });
+            canWrite && updateReferenceImage({ boundaryId, ...updatedImage });
         },
         immediateCallback: updatedImage => {
             dispatch(
