@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
     Box,
     Button,
@@ -8,19 +9,53 @@ import {
     List,
     ListItem,
     Text,
+    useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 
-import { convertIndexedObjectToArray } from '../../utils';
 import ModalSection from './ModalSection';
-import { useFilePicker } from '../../hooks';
+import {
+    convertIndexedObjectToArray,
+    fileIsImageFile,
+    fileIsShapeFile,
+} from '../../utils';
+import { useEndpointToastError, useFilePicker } from '../../hooks';
+import { useStartNewBoundaryMutation } from '../../api/boundaries';
 
 export default function FileUpload({ PreviousButton }) {
+    const toast = useToast();
     const navigate = useNavigate();
+    const utilityId = useSelector(state => state.auth.utility.id);
 
-    // TODO figure out reference image upload from this page
-    const addFiles = newFiles => newFiles.forEach(() => {});
+    const [startNewBoundary, { error }] = useStartNewBoundaryMutation();
+    useEndpointToastError(error);
+
+    const [files, setFiles] = useState([]);
+    const addFiles = newFiles => setFiles(files => [...files, ...newFiles]);
+
+    const handleContinue = () => {
+        const referenceImages = files.filter(fileIsImageFile);
+        const shapeFiles = files.filter(fileIsShapeFile);
+
+        if (shapeFiles.length > 1) {
+            toast({
+                title: 'Only one shapefile may be uploaded at a time.',
+                status: 'error',
+                isClosable: true,
+                duration: 5000,
+            });
+            return;
+        }
+
+        startNewBoundary({
+            utility_id: utilityId,
+            reference_images: referenceImages,
+            shape: shapeFiles?.[0],
+        })
+            .unwrap()
+            .then(id => navigate(`/draw/${id}`));
+    };
 
     return (
         <ModalSection
@@ -28,7 +63,7 @@ export default function FileUpload({ PreviousButton }) {
             heading='Would you like to add your current map?'
             prevButton={PreviousButton}
             nextButton={
-                <Button variant='cta' onClick={() => navigate('/draw/3')}>
+                <Button variant='cta' onClick={handleContinue}>
                     Continue
                 </Button>
             }
@@ -41,7 +76,7 @@ export default function FileUpload({ PreviousButton }) {
 
             <Flex mt={4} w='100%' grow>
                 <UploadBox addFiles={addFiles} />
-                <FilesBox />
+                <FilesBox files={files} />
             </Flex>
         </ModalSection>
     );
@@ -183,10 +218,8 @@ function Bold({ children }) {
     );
 }
 
-function FilesBox() {
-    const imageEntries = []; // TODO: get images
-
-    if (imageEntries.length === 0) return null;
+function FilesBox({ files }) {
+    if (files.length === 0) return null;
 
     return (
         <Box w='50%' pl={4}>
@@ -194,8 +227,8 @@ function FilesBox() {
                 Uploaded Files
             </Heading>
             <List>
-                {imageEntries.map(([url, { name }]) => (
-                    <ListItem key={url} mb={6}>
+                {files.map(({ name }) => (
+                    <ListItem key={name} mb={6}>
                         <Text mb={2} p={2} color='gray.700' bg='gray.50'>
                             {name}
                         </Text>

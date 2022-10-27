@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router';
 import { useMap } from 'react-leaflet';
 import { useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
-import { useParams } from 'react-router';
+import { FILE_UPLOAD_ACCEPT_STRING } from './constants';
 
 export function useDialogController(initialState = false) {
     const [isOpen, setIsOpen] = useState(initialState);
@@ -86,7 +87,7 @@ export function useFilePicker(onChange) {
         input.type = 'file';
         input.multiple = true;
         input.onchange = handlePickFiles;
-        input.accept = 'image/png, image/jpeg, .png, .jpg, .jpeg';
+        input.accept = FILE_UPLOAD_ACCEPT_STRING;
 
         input.click();
     };

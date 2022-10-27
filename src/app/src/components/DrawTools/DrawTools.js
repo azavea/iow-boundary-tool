@@ -57,7 +57,7 @@ function DrawTools({ mode, details }) {
 
     // Add the polygon indicated by `details` to the state
     useEffect(() => {
-        if (details) {
+        if (details?.submission?.shape) {
             dispatch(
                 setPolygon({
                     points: details.submission.shape.coordinates[0],

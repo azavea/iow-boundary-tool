@@ -5,13 +5,8 @@ import { BASE_API_URL } from '../constants';
 
 import TAGS from './tags';
 
-const axiosBaseQuery = ({ url, method, data, params }) =>
-    apiClient({
-        url: `${BASE_API_URL}${url}`,
-        method,
-        data,
-        params,
-    })
+const axiosBaseQuery = ({ url, ...axiosParams }) =>
+    apiClient({ url: `${BASE_API_URL}${url}`, ...axiosParams })
         .then(result => ({ data: result.data }))
         .catch(error => ({
             error: {

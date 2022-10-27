@@ -1,17 +1,22 @@
+from django.db import transaction
+
 from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     ChoiceField,
     DateTimeField,
     SerializerMethodField,
+    PrimaryKeyRelatedField,
 )
 
 from ..models.boundary import Boundary, BOUNDARY_STATUS
 from ..models.utility import Utility
 from ..models.submission import Submission, Review, Annotation
 from ..models.user import User
+from ..models.reference_image import ReferenceImage
 
 from .reference_image import ReferenceImageSerializer
+from ..fields import ShapefileField
 from .activity_log import (
     ActivityDraftedSerializer,
     ActivitySubmittedSerializer,
@@ -114,3 +119,41 @@ class BoundaryDetailSerializer(ModelSerializer):
             'reference_images',
             'activity_log',
         ]
+
+
+class NewBoundarySerializer(ModelSerializer):
+    utility_id = PrimaryKeyRelatedField(
+        source='utility', queryset=Utility.objects.all()
+    )
+    reference_images_meta = ReferenceImageSerializer(many=True, required=False)
+    shape = ShapefileField(required=False)
+
+    class Meta:
+        model = Boundary
+        fields = ['utility_id', 'reference_images_meta', 'shape']
+
+    @transaction.atomic
+    def create(self, validated_data, created_by_user):
+        boundary = Boundary.objects.create(
+            utility=validated_data['utility'],
+        )
+
+        if 'reference_images_meta' in validated_data:
+            for reference_image in validated_data['reference_images_meta']:
+                ReferenceImage.objects.create(
+                    boundary=boundary,
+                    uploaded_by=created_by_user,
+                    **reference_image,
+                )
+
+        draft = Submission(
+            boundary=boundary,
+            created_by=created_by_user,
+        )
+
+        if 'shape' in validated_data:
+            draft.shape = validated_data['shape']
+
+        draft.save()
+
+        return boundary

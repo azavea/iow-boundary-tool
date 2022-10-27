@@ -9,16 +9,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 
-
-from ..models.boundary import BOUNDARY_STATUS
 from ..serializers import (
     BoundaryListSerializer,
     BoundaryDetailSerializer,
     ShapeSerializer,
+    NewBoundarySerializer,
 )
-from ..models import Boundary, Roles, Submission
-from ..exceptions import ForbiddenException, BadRequestException
+from ..parsers import NewBoundaryParser
+from ..models import Roles, Submission, ReferenceImage
+from ..models.boundary import BOUNDARY_STATUS, Boundary
+from ..exceptions import BadRequestException
 
 
 def get_boundary_queryset_for_user(user):
@@ -36,6 +38,7 @@ def get_boundary_queryset_for_user(user):
 
 class BoundaryListView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [NewBoundaryParser]
 
     def get(self, request, format=None):
         boundaries = get_boundary_queryset_for_user(request.user)
@@ -55,13 +58,48 @@ class BoundaryListView(APIView):
 
         return None
 
+    def post(self, request, format=None):
+        if (
+            request.user.role != Roles.CONTRIBUTOR
+            and request.user.role != Roles.ADMINISTRATOR
+        ):
+            raise PermissionDenied(
+                'Only contributors and validators may create boundaries.'
+            )
+
+        serializer = NewBoundarySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        utility = validated_data['utility']
+
+        if utility not in request.user.utilities.all():
+            raise NotAuthenticated()
+
+        existing_boundary = Boundary.objects.filter(utility=utility).first()
+        if existing_boundary and existing_boundary.status == BOUNDARY_STATUS.DRAFT:
+            for reference_image in validated_data.get('reference_images_meta', []):
+                ReferenceImage.objects.create(
+                    boundary=existing_boundary,
+                    uploaded_by=request.user,
+                    **reference_image,
+                )
+
+            return Response(existing_boundary.id)
+
+        new_boundary = serializer.create(
+            serializer.validated_data,
+            created_by_user=request.user,
+        )
+
+        return Response(new_boundary.id)
+
 
 class BoundarySubmitView(APIView):
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, id, format=None):
         if request.user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
-            raise ForbiddenException(
+            raise PermissionDenied(
                 "Only contributors and administrators can submit boundaries."
             )
 
@@ -125,7 +163,7 @@ class BoundaryShapeView(APIView):
         boundary = get_object_or_404(boundary_set, pk=id)
 
         if request.user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
-            raise ForbiddenException(
+            raise PermissionDenied(
                 'Only contributors and administrators can edit boundaries.'
             )
 

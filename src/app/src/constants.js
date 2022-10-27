@@ -83,3 +83,13 @@ export const ROLES = {
     VALIDATOR: 'V',
     ADMINISTRATOR: 'A',
 };
+
+export const REFERENCE_IMAGE_MIME_TYPES = ['image/png', 'image/jpeg'];
+export const REFERENCE_IMAGE_FILE_EXTENSIONS = ['.png', '.jpg', '.jpeg'];
+export const SHAPE_FILE_EXTENSIONS = ['.shp'];
+
+export const FILE_UPLOAD_ACCEPT_STRING = [
+    ...REFERENCE_IMAGE_MIME_TYPES,
+    ...REFERENCE_IMAGE_FILE_EXTENSIONS,
+    ...SHAPE_FILE_EXTENSIONS,
+].join(', ');

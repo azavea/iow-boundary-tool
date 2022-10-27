@@ -27,11 +27,47 @@ const boundaryApi = api.injectEndpoints({
         }),
 
         startNewBoundary: build.mutation({
-            query: newBoundary => ({
-                url: '/boundaries/',
-                method: 'POST',
-                data: newBoundary,
-            }),
+            query: ({ reference_images, shape, ...details }) => {
+                const formData = new FormData();
+                const referenceImagesMeta = [];
+
+                for (const reference_image of reference_images) {
+                    formData.append(
+                        'reference_images[]',
+                        reference_image,
+                        reference_image.name
+                    );
+
+                    referenceImagesMeta.push(
+                        JSON.stringify({
+                            filename: reference_image.name,
+                            visible: true,
+                            distortion: null,
+                            mode: 'distort',
+                            opacity: 100,
+                        })
+                    );
+                }
+
+                formData.append('reference_images_meta', referenceImagesMeta);
+
+                if (shape) {
+                    formData.append('shape', shape, shape.name);
+                }
+
+                for (const [key, value] of Object.entries(details)) {
+                    formData.append(key, value);
+                }
+
+                return {
+                    url: '/boundaries/',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    data: formData,
+                };
+            },
             invalidatesTags: getNewItemTagInvalidator(TAGS.BOUNDARY),
         }),
 

@@ -7,6 +7,9 @@ import {
     NC_NORTH,
     NC_SOUTH,
     NC_WEST,
+    REFERENCE_IMAGE_FILE_EXTENSIONS,
+    REFERENCE_IMAGE_MIME_TYPES,
+    SHAPE_FILE_EXTENSIONS,
 } from './constants';
 
 export function heroToChakraIcon(icon) {
@@ -105,4 +108,18 @@ export function getBoundaryShapeFilename(boundary) {
         date,
         boundary.utility.name.replaceAll(/\s+/g, '_'),
     ].join('_')}.geojson`;
+}
+
+export function fileIsImageFile(file) {
+    return (
+        REFERENCE_IMAGE_FILE_EXTENSIONS.some(extension =>
+            file.name.endsWith(extension)
+        ) || REFERENCE_IMAGE_MIME_TYPES.includes(file.type)
+    );
+}
+
+export function fileIsShapeFile(file) {
+    return SHAPE_FILE_EXTENSIONS.some(extension =>
+        file.name.endsWith(extension)
+    );
 }
