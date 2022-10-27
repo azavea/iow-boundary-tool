@@ -28,17 +28,21 @@ import {
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
+import { useDrawBoundary } from '../DrawContext.js';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
-    const { polygon, editMode, addPolygonMode } = useSelector(
+    const boundary = useDrawBoundary();
+    const { editMode, addPolygonMode, polygonIsVisible } = useSelector(
         state => state.map
     );
 
     const confirmDeleteDialogController = useDialogController();
     const editDialogController = useDialogController();
+
+    const hasShape = !!boundary.submission?.shape;
 
     return (
         <>
@@ -63,14 +67,14 @@ export default function EditToolbar() {
                         >
                             Cancel
                         </Button>
-                    ) : polygon ? (
+                    ) : hasShape ? (
                         <Button
                             onClick={editDialogController.open}
                             rightIcon={<Icon as={PencilIcon} />}
                             variant='toolbar'
                             minW={POLYGON_BUTTON_WIDTH}
                         >
-                            {polygon.label}
+                            {boundary.name}
                         </Button>
                     ) : (
                         <Button
@@ -91,25 +95,25 @@ export default function EditToolbar() {
                     <ButtonGroup variant='toolbar'>
                         <EditToolbarButton
                             icon={
-                                !polygon || polygon?.visible
+                                !hasShape || polygonIsVisible
                                     ? EyeIcon
                                     : EyeOffIcon
                             }
                             onClick={() => dispatch(togglePolygonVisibility())}
-                            disabled={!polygon}
+                            disabled={!hasShape}
                             tooltip='Show/Hide'
                         />
                         <EditToolbarButton
                             icon={CursorClickIcon}
                             onClick={() => dispatch(toggleEditMode())}
-                            disabled={!polygon}
+                            disabled={!hasShape}
                             tooltip='Edit Points'
                             active={editMode}
                         />
                         <EditToolbarButton
                             icon={TrashIcon}
                             onClick={confirmDeleteDialogController.open}
-                            disabled={!polygon}
+                            disabled={!hasShape}
                             tooltip='Delete Polygon'
                         />
                     </ButtonGroup>
@@ -122,7 +126,7 @@ export default function EditToolbar() {
             <EditPolygonModal
                 isOpen={editDialogController.isOpen}
                 onClose={editDialogController.close}
-                defaultLabel={polygon?.label}
+                defaultLabel={boundary.name}
             />
         </>
     );

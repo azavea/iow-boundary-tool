@@ -1,6 +1,3 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
@@ -16,28 +13,13 @@ import useEditingPolygon from './useEditingPolygon';
 import useGeocoderResult from './useGeocoderResult';
 import useTrackMapZoom from './useTrackMapZoom';
 
-import { setPolygon } from '../../store/mapSlice';
-import { BOUNDARY_STATUS } from '../../constants';
-
 import SubmitModal from '../SubmitModal';
 import AfterSubmitModal from '../AfterSubmitModal';
 
-export default function DrawTools() {
-    const details = useDrawBoundary();
-    const dispatch = useDispatch();
+import { BOUNDARY_STATUS } from '../../constants';
 
-    // Add the polygon indicated by `details` to the state
-    useEffect(() => {
-        if (details?.submission?.shape) {
-            dispatch(
-                setPolygon({
-                    points: details.submission.shape.coordinates[0],
-                    visible: true,
-                    label: details.utility.name,
-                })
-            );
-        }
-    }, [dispatch, details]);
+export default function DrawTools() {
+    const { status, reference_images } = useDrawBoundary();
 
     useEditingPolygon();
     useAddPolygonCursor();
@@ -46,12 +28,12 @@ export default function DrawTools() {
 
     const submitDialogController = useDialogController(false);
     const afterSubmitDialogController = useDialogController(
-        details.status === BOUNDARY_STATUS.SUBMITTED
+        status === BOUNDARY_STATUS.SUBMITTED
     );
 
     return (
         <>
-            <ReferenceImageLayer images={details.reference_images} />
+            <ReferenceImageLayer images={reference_images} />
             <EditToolbar />
             <SaveAndBackButton />
             <SubmitModal

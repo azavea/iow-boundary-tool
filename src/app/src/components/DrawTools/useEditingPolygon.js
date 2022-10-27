@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
+import { useDrawBoundary } from '../DrawContext';
 import api from '../../api/api';
 
 customizePrototypeIcon(L.Draw.Polyline.prototype, 'edit-poly-marker');
@@ -48,7 +49,10 @@ export default function useEditingPolygon() {
     const map = useMap();
     const id = useBoundaryId();
 
-    const { polygon, editMode, basemapType } = useSelector(state => state.map);
+    const shape = useDrawBoundary().submission?.shape;
+    const { editMode, basemapType, polygonIsVisible } = useSelector(
+        state => state.map
+    );
 
     const [updateShape] = useUpdateBoundaryShapeMutation();
 
@@ -72,9 +76,11 @@ export default function useEditingPolygon() {
     });
 
     useEffect(() => {
-        if (polygon && polygon.visible) {
+        if (shape && polygonIsVisible) {
             const polygonLayer = new L.Polygon(
-                polygon.points.map(point => new L.latLng(point[1], point[0])),
+                shape.coordinates[0].map(
+                    point => new L.latLng(point[1], point[0])
+                ),
                 {
                     ...POLYGON_LAYER_OPTIONS,
                     color: basemapType === 'satellite' ? 'white' : 'black',
@@ -102,5 +108,12 @@ export default function useEditingPolygon() {
                 }
             };
         }
-    }, [polygon, editMode, basemapType, map, updatePolygonFromDrawEvent]);
+    }, [
+        shape,
+        polygonIsVisible,
+        editMode,
+        basemapType,
+        map,
+        updatePolygonFromDrawEvent,
+    ]);
 }

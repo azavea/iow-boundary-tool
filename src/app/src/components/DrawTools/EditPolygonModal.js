@@ -13,14 +13,15 @@ import {
     ModalBody,
 } from '@chakra-ui/react';
 import { CloudUploadIcon } from '@heroicons/react/outline';
-import { useDispatch } from 'react-redux';
-import { renamePolygon } from '../../store/mapSlice';
 
 export default function EditPolygonModal({ isOpen, defaultLabel, onClose }) {
-    const dispatch = useDispatch();
     const [label, setLabel] = useState(defaultLabel);
 
     useEffect(() => setLabel(defaultLabel), [defaultLabel]);
+
+    const renamePolygon = () => {
+        // TODO implement this
+    };
 
     return (
         <Modal size='sm' isOpen={isOpen} onClose={onClose} isCentered>
@@ -49,7 +50,7 @@ export default function EditPolygonModal({ isOpen, defaultLabel, onClose }) {
                             <Button
                                 variant='cta'
                                 onClick={() => {
-                                    dispatch(renamePolygon(label));
+                                    renamePolygon(label);
                                     onClose();
                                 }}
                             >
