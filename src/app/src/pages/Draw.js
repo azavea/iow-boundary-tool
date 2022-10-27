@@ -1,4 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
+import DrawContextProvider from '../components/DrawContext';
 
 import DrawTools from '../components/DrawTools';
 import Layers from '../components/Layers';
@@ -11,8 +12,10 @@ export default function Draw() {
             <Sidebar />
             <Box flex={1} position='relative'>
                 <Map>
-                    <Layers />
-                    <DrawTools />
+                    <DrawContextProvider>
+                        <Layers />
+                        <DrawTools />
+                    </DrawContextProvider>
                 </Map>
             </Box>
         </Flex>

@@ -40,8 +40,10 @@ export default function SubmissionDetail() {
         'There was an error fetching boundary details.'
     );
 
-    const [startReview, { isLoading: isStartingReview, startReviewError }] =
-        useStartReviewMutation();
+    const [
+        startReview,
+        { isLoading: isStartingReview, error: startReviewError },
+    ] = useStartReviewMutation();
 
     useEndpointToastError(
         startReviewError,

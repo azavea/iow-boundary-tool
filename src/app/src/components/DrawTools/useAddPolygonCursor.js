@@ -3,13 +3,19 @@ import { useMap } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import { DomUtil } from 'leaflet';
 
-import { setPolygon } from '../../store/mapSlice';
 import { generateInitialPolygonPoints } from '../../utils';
+import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
+import { useBoundaryId, useEndpointToastError } from '../../hooks';
+import api from '../../api/api';
 
 export default function useAddPolygonCursor() {
     const map = useMap();
     const dispatch = useDispatch();
+    const id = useBoundaryId();
+
     const addPolygonMode = useSelector(state => state.map.addPolygonMode);
+    const [updateShape, { error }] = useUpdateBoundaryShapeMutation();
+    useEndpointToastError(error);
 
     const addPolygonFromEvent = useCallback(
         event => {
@@ -18,17 +24,30 @@ export default function useAddPolygonCursor() {
                 return;
             }
 
-            map.flyTo(event.latlng);
-            dispatch(
-                setPolygon({
-                    points: generateInitialPolygonPoints({
+            const polygon = {
+                coordinates: [
+                    generateInitialPolygonPoints({
                         mapBounds: map.getBounds(),
                         center: event.latlng,
                     }),
-                })
+                ],
+            };
+
+            map.flyTo(event.latlng);
+
+            dispatch(
+                api.util.updateQueryData(
+                    'getBoundaryDetails',
+                    id,
+                    draftDetails => {
+                        draftDetails.submission.shape = polygon;
+                    }
+                )
             );
+
+            updateShape({ id, shape: polygon });
         },
-        [map, dispatch]
+        [map, dispatch, id, updateShape]
     );
 
     useEffect(() => {

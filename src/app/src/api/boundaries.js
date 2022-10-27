@@ -79,6 +79,27 @@ const boundaryApi = api.injectEndpoints({
             }),
         }),
 
+        deleteBoundaryShape: build.mutation({
+            query: id => ({
+                url: `/boundaries/${id}/shape/`,
+                method: 'DELETE',
+            }),
+            onQueryStarted: async (id, { dispatch, queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    dispatch(
+                        api.util.updateQueryData(
+                            'getBoundaryDetails',
+                            id,
+                            draftDetails => {
+                                draftDetails.submission.shape = null;
+                            }
+                        )
+                    );
+                } catch {}
+            },
+        }),
+
         submitBoundary: build.mutation({
             query: ({ id, payload }) => ({
                 url: `/boundaries/${id}/submit/`,
@@ -95,5 +116,6 @@ export const {
     useGetBoundaryDetailsQuery,
     useStartNewBoundaryMutation,
     useUpdateBoundaryShapeMutation,
+    useDeleteBoundaryShapeMutation,
     useSubmitBoundaryMutation,
 } = boundaryApi;

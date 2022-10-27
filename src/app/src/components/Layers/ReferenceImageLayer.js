@@ -6,6 +6,7 @@ import { customizePrototypeIcon } from '../../utils';
 import { useBoundaryId, useEndpointToastError } from '../../hooks';
 import { useMap } from 'react-leaflet';
 import { useDebouncedUpdateReferenceImageMutation } from '../../api/referenceImages';
+import { useDrawBoundary } from '../DrawContext';
 
 customizePrototypeIcon(L.DistortHandle.prototype, 'ref-handle');
 customizePrototypeIcon(L.DragHandle.prototype, 'ref-handle');
@@ -19,10 +20,11 @@ const convertCornerFromStateFormat = corner => ({
     lng: corner[1],
 });
 
-export default function ReferenceImageLayer({ images }) {
+export default function ReferenceImageLayer() {
     const map = useMap();
     const boundaryId = useBoundaryId();
     const referenceImageLayers = useRef({});
+    const images = useDrawBoundary().reference_images;
 
     const [updateReferenceImage, { error }] =
         useDebouncedUpdateReferenceImageMutation(boundaryId);

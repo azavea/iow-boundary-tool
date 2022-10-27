@@ -2,59 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 import { DATA_LAYERS, MAP_INITIAL_ZOOM } from '../constants';
 
 const initialState = {
-    polygon: null,
+    polygonIsVisible: true,
     addPolygonMode: false,
-    editMode: false,
+    editMode: true,
     layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
     geocodeResult: null,
     mapZoom: MAP_INITIAL_ZOOM,
 };
 
-const DEFAULT_POLYGON = {
-    points: [],
-    visible: true,
-    label: 'New Polygon',
-};
-
-function checkPolygonIsSet(state) {
-    if (!state.polygon) {
-        throw Error('No polygon saved');
-    }
-}
-
 export const mapSlice = createSlice({
     name: 'map',
     initialState,
     reducers: {
-        setPolygon: (state, { payload: newPolygon }) => {
-            state.polygon = {
-                ...DEFAULT_POLYGON,
-                ...newPolygon,
-            };
-            state.addPolygonMode = false;
-            state.editMode = true;
-        },
-        updatePolygon: (state, { payload: polygonUpdate }) => {
-            checkPolygonIsSet(state);
-
-            state.polygon = {
-                ...state.polygon,
-                ...polygonUpdate,
-            };
-        },
-        deletePolygon: state => {
-            state.polygon = null;
-        },
         togglePolygonVisibility: state => {
-            checkPolygonIsSet(state);
-
-            state.polygon.visible = !state.polygon.visible;
-        },
-        renamePolygon: (state, { payload: newLabel }) => {
-            checkPolygonIsSet(state);
-
-            state.polygon.label = newLabel;
+            state.polygonIsVisible = !state.polygonIsVisible;
         },
         startAddPolygon: state => {
             state.addPolygonMode = true;
@@ -90,11 +52,7 @@ export const mapSlice = createSlice({
 });
 
 export const {
-    setPolygon,
-    updatePolygon,
-    deletePolygon,
     togglePolygonVisibility,
-    renamePolygon,
     startAddPolygon,
     cancelAddPolygon,
     toggleEditMode,
