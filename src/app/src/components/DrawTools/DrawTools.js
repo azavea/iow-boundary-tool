@@ -1,6 +1,8 @@
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
+import { useDrawPermissions } from '../DrawContext.js';
+
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
@@ -29,6 +31,7 @@ export default function DrawTools() {
     const afterSubmitDialogController = useDialogController(
         status === BOUNDARY_STATUS.SUBMITTED
     );
+    const { canWrite } = useDrawPermissions();
 
     return (
         <>
@@ -42,7 +45,9 @@ export default function DrawTools() {
                 isOpen={afterSubmitDialogController.isOpen}
                 onClose={afterSubmitDialogController.close}
             />
-            <ReviewAndSaveButton onClick={submitDialogController.open} />
+            {canWrite && (
+                <ReviewAndSaveButton onClick={submitDialogController.open} />
+            )}
             <MapControlButtons />
         </>
     );
