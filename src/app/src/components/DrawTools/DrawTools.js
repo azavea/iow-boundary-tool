@@ -1,13 +1,11 @@
 import { Button, Icon } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@heroicons/react/outline';
 
-import { useDrawPermissions } from '../DrawContext.js';
-
 import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
 import { useDialogController } from '../../hooks';
-import { useDrawBoundary } from '../DrawContext';
+import { useDrawPermissions } from '../DrawContext.js';
 
 import useAddPolygonCursor from './useAddPolygonCursor';
 import useEditingPolygon from './useEditingPolygon';
@@ -17,20 +15,15 @@ import useTrackMapZoom from './useTrackMapZoom';
 import SubmitModal from '../SubmitModal';
 import AfterSubmitModal from '../AfterSubmitModal';
 
-import { BOUNDARY_STATUS } from '../../constants';
-
 export default function DrawTools() {
-    const { status } = useDrawBoundary();
-
     useEditingPolygon();
     useAddPolygonCursor();
     useGeocoderResult();
     useTrackMapZoom();
 
     const submitDialogController = useDialogController(false);
-    const afterSubmitDialogController = useDialogController(
-        status === BOUNDARY_STATUS.SUBMITTED
-    );
+    const afterSubmitDialogController = useDialogController(false);
+
     const { canWrite } = useDrawPermissions();
 
     return (
