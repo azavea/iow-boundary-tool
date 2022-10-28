@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-draw';
@@ -19,6 +19,10 @@ customizePrototypeIcon(L.Draw.Polyline.prototype, 'edit-poly-marker');
 customizePrototypeIcon(L.Edit.PolyVerticesEdit.prototype, 'edit-poly-marker');
 
 const markerElements = document.getElementsByClassName('edit-poly-marker');
+
+const featureGroup = L.featureGroup([], {
+    pane: PANES.USER_POLYGON.label,
+});
 
 function styleMarkers() {
     for (const element of markerElements) {
@@ -92,22 +96,22 @@ export default function useEditingPolygon() {
                 polygonLayer.editing.enable();
             }
 
-            const featureGroup = L.featureGroup([polygonLayer], {
-                pane: PANES.USER_POLYGON.label,
-            });
+            featureGroup.addLayer(polygonLayer);
 
             featureGroup.addTo(map);
             styleMarkers();
 
             map.on(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);
 
-            map.fitBounds(featureGroup.getBounds());
-
             return () => {
                 map.off(L.Draw.Event.EDITVERTEX, updatePolygonFromDrawEvent);
 
-                if (map.hasLayer(polygonLayer)) {
-                    map.removeLayer(polygonLayer);
+                if (featureGroup.hasLayer(polygonLayer)) {
+                    featureGroup.removeLayer(polygonLayer);
+                }
+
+                if (map.hasLayer(featureGroup)) {
+                    map.removeLayer(featureGroup);
                 }
             };
         }
@@ -120,4 +124,14 @@ export default function useEditingPolygon() {
         map,
         updatePolygonFromDrawEvent,
     ]);
+
+    const [hasZoomedToShape, setHasZoomedToShape] = useState(false);
+
+    // Fit map bounds to shape exactly once after loading
+    useEffect(() => {
+        if (shape && !hasZoomedToShape) {
+            map.fitBounds(featureGroup.getBounds());
+            setHasZoomedToShape(true);
+        }
+    }, [shape, map, hasZoomedToShape, setHasZoomedToShape]);
 }
