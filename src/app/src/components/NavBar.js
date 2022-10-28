@@ -7,13 +7,14 @@ import {
     IconButton,
     Spacer,
 } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeftIcon, CogIcon, LogoutIcon } from '@heroicons/react/outline';
 import apiClient from '../api/client';
 import { API_URLS, NAVBAR_HEIGHT } from '../constants';
 import { logout } from '../store/authSlice';
 import UtilityControl from './UtilityControl';
+import { getBoundaryPermissions } from '../utils';
 
 const NAVBAR_VARIANTS = {
     DRAW: 'draw',
@@ -73,9 +74,24 @@ function SettingsButton({ variant }) {
 function ExitButton({ variant }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const user = useSelector(state => state.auth.user);
     const { '*': params } = useParams();
 
     const boundaryId = params.startsWith('draw/') ? params.substring(5) : '';
+
+    const queries = useSelector(state => state.api.queries);
+    let boundary = null;
+    if (`getBoundaryDetails("${boundaryId}")` in queries) {
+        boundary = queries[`getBoundaryDetails("${boundaryId}")`].data;
+    }
+
+    let canWrite = false;
+    let canReview = false;
+    if (user && boundary?.status) {
+        const permissions = getBoundaryPermissions({ boundary, user });
+        canWrite = permissions.canWrite;
+        canReview = permissions.canReview;
+    }
 
     return variant === NAVBAR_VARIANTS.SUBMISSION ? (
         <Button
@@ -94,7 +110,7 @@ function ExitButton({ variant }) {
             onClick={() => navigate(`/submissions/${boundaryId}`)}
             rightIcon={<Icon as={ArrowLeftIcon} />}
         >
-            Save and back
+            {canWrite || canReview ? 'Save and back' : 'Back'}
         </Button>
     );
 }
