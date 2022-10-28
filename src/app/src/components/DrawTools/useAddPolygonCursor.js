@@ -7,6 +7,7 @@ import { generateInitialPolygonPoints } from '../../utils';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useEndpointToastError } from '../../hooks';
 import api from '../../api/api';
+import { stopAddPolygon } from '../../store/mapSlice';
 
 export default function useAddPolygonCursor() {
     const map = useMap();
@@ -44,7 +45,7 @@ export default function useAddPolygonCursor() {
                     }
                 )
             );
-
+            dispatch(stopAddPolygon());
             updateShape({ id, shape: polygon });
         },
         [map, dispatch, id, updateShape]
