@@ -1,4 +1,5 @@
 import api from './api';
+import TAGS, { getUpdateItemTagInvalidator } from './tags';
 
 const reviewApi = api.injectEndpoints({
     endpoints: build => ({
@@ -7,6 +8,7 @@ const reviewApi = api.injectEndpoints({
                 url: `/boundaries/${boundaryId}/review`,
                 method: 'POST',
             }),
+            invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
         }),
     }),
 });
