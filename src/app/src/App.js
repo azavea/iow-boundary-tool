@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import {
     BrowserRouter,
     Outlet,
@@ -16,24 +17,9 @@ import Submissions from './pages/Submissions';
 import NotFound from './pages/NotFound';
 import NavBar from './components/NavBar';
 
-import PrivateRoute from './components/PrivateRoute';
+import AuthenticationGuard from './components/AuthenticationGuard';
 
-const privateRoutes = (
-    <PrivateRoute>
-        <Routes>
-            <Route path='/welcome' element={<Outlet />} />
-            <Route path='*' element={<NavBar />} />
-        </Routes>
-
-        <Routes>
-            <Route path='/welcome' element={<Welcome />} />
-            <Route path='/draw' element={<NotFound />} />
-            <Route path='/draw/:boundaryId' element={<Draw />} />
-            <Route path='/submissions/*' element={<Submissions />} />
-            <Route path='*' element={<Navigate to='/welcome' replace />} />
-        </Routes>
-    </PrivateRoute>
-);
+import { ROLES } from './constants';
 
 function App() {
     return (
@@ -46,9 +32,55 @@ function App() {
                     path='/confirm_password_reset/reset/*'
                     element={<ResetPassword />}
                 />
-                <Route path='*' element={privateRoutes} />
+
+                <Route
+                    path='*'
+                    element={
+                        <AuthenticationGuard>
+                            <PrivateRoutes />
+                        </AuthenticationGuard>
+                    }
+                ></Route>
             </Routes>
         </BrowserRouter>
+    );
+}
+
+function PrivateRoutes() {
+    const userRole = useSelector(state => state.auth.user.role);
+    const hasWelcomePageAccess = userRole === ROLES.CONTRIBUTOR;
+
+    return (
+        <>
+            <Routes>
+                {hasWelcomePageAccess && (
+                    <Route path='/welcome' element={<Outlet />} />
+                )}
+                <Route path='*' element={<NavBar />} />
+            </Routes>
+
+            <Routes>
+                {hasWelcomePageAccess && (
+                    <Route path='/welcome' element={<Welcome />} />
+                )}
+                <Route path='/draw' element={<NotFound />} />
+                <Route path='/draw/:boundaryId' element={<Draw />} />
+                <Route path='/submissions/*' element={<Submissions />} />
+                <Route
+                    path='*'
+                    element={
+                        <Navigate
+                            to={
+                                hasWelcomePageAccess
+                                    ? '/welcome'
+                                    : '/submissions'
+                            }
+                            replace
+                        />
+                    }
+                />
+            </Routes>
+        </>
     );
 }
 
