@@ -5,14 +5,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
 import { API_URLS } from '../constants';
 import { login, setLocationBeforeAuth } from '../store/authSlice';
+import CenteredSpinner from './CenteredSpinner';
 
 export default function PrivateRoute({ children }) {
     const user = useSelector(state => state.auth.user);
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const locationIsLogin = location.pathname.startsWith('/login');
 
     // Log in this user if they have an authenticated session
     // Handles losing Redux state on refresh
@@ -25,12 +24,14 @@ export default function PrivateRoute({ children }) {
                     dispatch(login(user));
                 })
                 .catch(() => {
-                    if (!locationIsLogin) {
-                        navigate('/login');
-                    }
+                    navigate('/login');
                 });
         }
-    }, [user, location, locationIsLogin, navigate, dispatch]);
+    }, [user, location, navigate, dispatch]);
 
-    return locationIsLogin ? null : children;
+    if (!user) {
+        return <CenteredSpinner />;
+    }
+
+    return children;
 }
