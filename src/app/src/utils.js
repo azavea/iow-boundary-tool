@@ -40,10 +40,10 @@ export function generateInitialPolygonPoints({ mapBounds, center }) {
     const southWest = polygonBounds.getSouthWest();
 
     return [
-        [northWest.lat, northWest.lng],
-        [northEast.lat, northEast.lng],
-        [southEast.lat, southEast.lng],
-        [southWest.lat, southWest.lng],
+        [northWest.lng, northWest.lat],
+        [northEast.lng, northEast.lat],
+        [southEast.lng, southEast.lat],
+        [southWest.lng, southWest.lat],
     ];
 }
 
