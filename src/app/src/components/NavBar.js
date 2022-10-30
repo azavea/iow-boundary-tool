@@ -74,24 +74,9 @@ function SettingsButton({ variant }) {
 function ExitButton({ variant }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector(state => state.auth.user);
     const { '*': params } = useParams();
 
     const boundaryId = params.startsWith('draw/') ? params.substring(5) : '';
-
-    const queries = useSelector(state => state.api.queries);
-    let boundary = null;
-    if (`getBoundaryDetails("${boundaryId}")` in queries) {
-        boundary = queries[`getBoundaryDetails("${boundaryId}")`].data;
-    }
-
-    let canWrite = false;
-    let canReview = false;
-    if (user && boundary?.status) {
-        const permissions = getBoundaryPermissions({ boundary, user });
-        canWrite = permissions.canWrite;
-        canReview = permissions.canReview;
-    }
 
     return variant === NAVBAR_VARIANTS.SUBMISSION ? (
         <Button
@@ -110,7 +95,7 @@ function ExitButton({ variant }) {
             onClick={() => navigate(`/submissions/${boundaryId}`)}
             rightIcon={<Icon as={ArrowLeftIcon} />}
         >
-            {canWrite || canReview ? 'Save and back' : 'Back'}
+            Back
         </Button>
     );
 }
