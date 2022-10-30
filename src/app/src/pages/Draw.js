@@ -8,16 +8,16 @@ import Sidebar from '../components/Sidebar';
 
 export default function Draw() {
     return (
-        <Flex>
-            <Sidebar />
-            <Box flex={1} position='relative'>
-                <Map>
-                    <DrawContextProvider>
+        <DrawContextProvider>
+            <Flex>
+                <Sidebar />
+                <Box flex={1} position='relative'>
+                    <Map>
                         <Layers />
                         <DrawTools />
-                    </DrawContextProvider>
-                </Map>
-            </Box>
-        </Flex>
+                    </Map>
+                </Box>
+            </Flex>
+        </DrawContextProvider>
     );
 }

@@ -29,8 +29,7 @@ import {
     useDebouncedUpdateReferenceImageMutation,
     useUploadReferenceImageMutation,
 } from '../api/referenceImages';
-import { useGetBoundaryDetailsQuery } from '../api/boundaries';
-import CenteredSpinner from './CenteredSpinner';
+import { useDrawBoundary, useDrawPermissions } from './DrawContext';
 
 const paddingLeft = 4;
 
@@ -49,18 +48,14 @@ export default function Sidebar() {
 
 function ReferenceLayers() {
     const boundaryId = useBoundaryId();
-
-    const {
-        data: boundary,
-        isLoading,
-        error,
-    } = useGetBoundaryDetailsQuery(boundaryId);
+    const boundary = useDrawBoundary();
+    const { canWrite } = useDrawPermissions();
 
     const [createReferenceImage, { createReferenceImageError }] =
         useUploadReferenceImageMutation();
 
     const [updateReferenceImage, { updateReferenceImageError }] =
-        useDebouncedUpdateReferenceImageMutation(boundaryId);
+        useDebouncedUpdateReferenceImageMutation(boundaryId, canWrite);
 
     useEndpointToastError(
         createReferenceImageError ?? updateReferenceImageError
@@ -79,14 +74,6 @@ function ReferenceLayers() {
     // TODO support multiple files
     const openFileDialog = useFilePicker(files => files.map(uploadImage));
 
-    if (isLoading) {
-        return <CenteredSpinner />;
-    }
-
-    if (error || !boundary) {
-        return null;
-    }
-
     return (
         <Box ml={paddingLeft} mt={6} mb={6}>
             <Flex mb={4} align='center'>
@@ -102,6 +89,7 @@ function ReferenceLayers() {
                 leftIcon={<Icon as={PlusIcon} />}
                 mb={4}
                 onClick={openFileDialog}
+                disabled={!canWrite}
             >
                 Upload file
             </Button>

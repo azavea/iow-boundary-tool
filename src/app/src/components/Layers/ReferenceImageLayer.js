@@ -6,7 +6,7 @@ import { customizePrototypeIcon } from '../../utils';
 import { useBoundaryId, useEndpointToastError } from '../../hooks';
 import { useMap } from 'react-leaflet';
 import { useDebouncedUpdateReferenceImageMutation } from '../../api/referenceImages';
-import { useDrawBoundary } from '../DrawContext';
+import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
 
 customizePrototypeIcon(L.DistortHandle.prototype, 'ref-handle');
 customizePrototypeIcon(L.DragHandle.prototype, 'ref-handle');
@@ -25,9 +25,10 @@ export default function ReferenceImageLayer() {
     const boundaryId = useBoundaryId();
     const referenceImageLayers = useRef({});
     const images = useDrawBoundary().reference_images;
+    const { canWrite } = useDrawPermissions();
 
     const [updateReferenceImage, { error }] =
-        useDebouncedUpdateReferenceImageMutation(boundaryId);
+        useDebouncedUpdateReferenceImageMutation(boundaryId, canWrite);
     useEndpointToastError(error);
 
     const visibleImages = useMemo(
@@ -55,6 +56,7 @@ export default function ReferenceImageLayer() {
                     L.BorderAction,
                 ],
                 selected: true,
+                editable: canWrite,
                 mode,
                 corners: corners
                     ? corners.map(convertCornerFromStateFormat)
@@ -97,7 +99,7 @@ export default function ReferenceImageLayer() {
 
             return layer;
         },
-        [updateReferenceImage]
+        [canWrite, updateReferenceImage]
     );
 
     /**

@@ -1,7 +1,13 @@
 import { useSelector } from 'react-redux';
 import { Box, Button, Flex, HStack, Icon, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ChatAltIcon, DownloadIcon, MailIcon } from '@heroicons/react/outline';
+import {
+    ChatAltIcon,
+    DownloadIcon,
+    EyeIcon,
+    MailIcon,
+    PencilIcon,
+} from '@heroicons/react/outline';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import { MapContainer } from 'react-leaflet';
 import L from 'leaflet';
@@ -17,7 +23,11 @@ import {
     ROLES,
 } from '../../../constants';
 import { useMapLayer } from '../../../hooks';
-import { downloadData, getBoundaryShapeFilename } from '../../../utils';
+import {
+    downloadData,
+    getBoundaryShapeFilename,
+    getBoundaryPermissions,
+} from '../../../utils';
 
 export default function Map({ boundary, startReview }) {
     const StatusBar = useSubmissionStatusBar(boundary);
@@ -46,59 +56,10 @@ export default function Map({ boundary, startReview }) {
 }
 
 function MapButtons({ boundary, startReview }) {
-    const navigate = useNavigate();
-    const userRole = useSelector(state => state.auth.user.role);
-
-    const canEdit =
-        userRole === ROLES.CONTRIBUTOR || userRole === ROLES.ADMINISTRATOR;
-    const canReview =
-        userRole === ROLES.VALIDATOR || userRole === ROLES.ADMINISTRATOR;
-
-    const getDrawButtonText = () => {
-        switch (boundary.status) {
-            case BOUNDARY_STATUS.DRAFT:
-                return canEdit ? 'Edit boundary' : null;
-            case BOUNDARY_STATUS.SUBMITTED:
-                return canReview ? 'Start review' : null;
-            case BOUNDARY_STATUS.IN_REVIEW:
-                return canReview ? 'Continue review' : null;
-            case BOUNDARY_STATUS.NEEDS_REVISIONS:
-                return canEdit ? 'Revise boundary' : null;
-            default:
-                return null;
-        }
-    };
-
-    const goToDrawPage = () => navigate(`/draw/${boundary.id}`);
-
-    const getDrawButtonOnClick = () => {
-        switch (boundary.status) {
-            case BOUNDARY_STATUS.DRAFT:
-            case BOUNDARY_STATUS.NEEDS_REVISIONS:
-                return canEdit ? goToDrawPage : null;
-            case BOUNDARY_STATUS.SUBMITTED:
-                return canReview
-                    ? () => startReview(boundary.id).unwrap().then(goToDrawPage)
-                    : null;
-            case BOUNDARY_STATUS.IN_REVIEW:
-                return canReview ? goToDrawPage : null;
-
-            default:
-                return null;
-        }
-    };
-
-    const drawButtonText = getDrawButtonText();
-    const drawButtonOnClick = getDrawButtonOnClick();
-
     return (
         <Box position='absolute' zIndex={1000} top={22} w='100%'>
             <Flex justify='space-evenly'>
-                {drawButtonText ? (
-                    <MapButton icon={ChatAltIcon} onClick={drawButtonOnClick}>
-                        {drawButtonText}
-                    </MapButton>
-                ) : null}
+                <DrawButton boundary={boundary} startReview={startReview} />
                 <MapButton icon={MailIcon}>
                     <a
                         href={`mailto:${boundary.submission.primary_contact.email}`}
@@ -123,6 +84,45 @@ function MapButtons({ boundary, startReview }) {
     );
 }
 
+function DrawButton({ boundary, startReview }) {
+    const navigate = useNavigate();
+    const user = useSelector(state => state.auth.user);
+    const { canWrite, canReview } = getBoundaryPermissions({ boundary, user });
+
+    const goToDrawPage = () => navigate(`/draw/${boundary.id}`);
+
+    let label = 'View boundary';
+    let icon = EyeIcon;
+    let onClick = goToDrawPage;
+
+    if (canWrite && boundary.status === BOUNDARY_STATUS.DRAFT) {
+        label = 'Edit boundary';
+        icon = PencilIcon;
+    }
+
+    if (canReview && boundary.status === BOUNDARY_STATUS.SUBMITTED) {
+        label = 'Start review';
+        icon = ChatAltIcon;
+        onClick = () => startReview(boundary.id).unwrap().then(goToDrawPage);
+    }
+
+    if (canReview && boundary.status === BOUNDARY_STATUS.IN_REVIEW) {
+        label = 'Continue review';
+        icon = ChatAltIcon;
+    }
+
+    if (canWrite && boundary.status === BOUNDARY_STATUS.NEEDS_REVISIONS) {
+        label = 'Revise boundary';
+        icon = PencilIcon;
+    }
+
+    return (
+        <MapButton icon={icon} onClick={onClick}>
+            {label}
+        </MapButton>
+    );
+}
+
 function MapButton({ icon, children, onClick }) {
     return (
         <Button
@@ -138,13 +138,9 @@ function MapButton({ icon, children, onClick }) {
 }
 
 function useSubmissionStatusBar(boundary) {
-    const userRole = useSelector(state => state.auth.user.role);
+    const role = useSelector(state => state.auth.user.role);
 
-    if (userRole === ROLES.VALIDATOR) {
-        return null;
-    }
-
-    if (userRole === ROLES.VALIDATOR) {
+    if (role !== ROLES.CONTRIBUTOR) {
         return null;
     }
 

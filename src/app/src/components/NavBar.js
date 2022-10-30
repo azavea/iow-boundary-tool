@@ -7,13 +7,14 @@ import {
     IconButton,
     Spacer,
 } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeftIcon, CogIcon, LogoutIcon } from '@heroicons/react/outline';
 import apiClient from '../api/client';
 import { API_URLS, NAVBAR_HEIGHT } from '../constants';
 import { logout } from '../store/authSlice';
 import UtilityControl from './UtilityControl';
+import { getBoundaryPermissions } from '../utils';
 
 const NAVBAR_VARIANTS = {
     DRAW: 'draw',
@@ -73,6 +74,9 @@ function SettingsButton({ variant }) {
 function ExitButton({ variant }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { '*': params } = useParams();
+
+    const boundaryId = params.startsWith('draw/') ? params.substring(5) : '';
 
     return variant === NAVBAR_VARIANTS.SUBMISSION ? (
         <Button
@@ -88,12 +92,10 @@ function ExitButton({ variant }) {
         </Button>
     ) : (
         <Button
-            onClick={() => {
-                navigate('/submissions');
-            }}
+            onClick={() => navigate(`/submissions/${boundaryId}`)}
             rightIcon={<Icon as={ArrowLeftIcon} />}
         >
-            Save and back
+            Back
         </Button>
     );
 }
