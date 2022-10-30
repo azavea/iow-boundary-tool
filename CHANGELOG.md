@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Save reference image metadata on draw page [#144](https://github.com/azavea/iow-boundary-tool/pull/144)
 - Wire up create boundary [#145](https://github.com/azavea/iow-boundary-tool/pull/145)
 - Add Draw page React context [#154](https://github.com/azavea/iow-boundary-tool/pull/154)
+- Add User Permissions per Boundary [#156](https://github.com/azavea/iow-boundary-tool/pull/156)
 
 ### Changed
 
@@ -66,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Drop `Role` table and refactor as choice field on User [#117](https://github.com/azavea/iow-boundary-tool/pull/117)
 - Return user information from login endpoint [#136](https://github.com/azavea/iow-boundary-tool/pull/136)
 - Limit boundary list by contributor's selected utility [#148](https://github.com/azavea/iow-boundary-tool/pull/148)
+- Guard Draw Page Actions [#156](https://github.com/azavea/iow-boundary-tool/pull/156)
 
 ### Fixed
 
