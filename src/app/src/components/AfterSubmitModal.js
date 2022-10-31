@@ -16,11 +16,13 @@ import {
 import { DownloadIcon, LogoutIcon } from '@heroicons/react/outline';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 
+import { useBoundaryId } from '../hooks';
 import { logout } from '../store/authSlice';
 
-export default function AfterSubmitModal({ isOpen, onClose, details }) {
+export default function AfterSubmitModal({ isOpen, onClose }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const id = useBoundaryId();
 
     return (
         <Modal
@@ -64,7 +66,7 @@ export default function AfterSubmitModal({ isOpen, onClose, details }) {
                         <Button
                             variant='secondary'
                             onClick={() => {
-                                navigate('/submissions/');
+                                navigate(`/submissions/${id}/`);
                             }}
                         >
                             View submission status
