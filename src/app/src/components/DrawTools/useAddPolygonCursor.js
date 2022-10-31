@@ -26,6 +26,7 @@ export default function useAddPolygonCursor() {
             }
 
             const polygon = {
+                type: 'Polygon',
                 coordinates: [
                     generateInitialPolygonPoints({
                         mapBounds: map.getBounds(),
