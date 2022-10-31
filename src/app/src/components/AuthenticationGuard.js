@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import apiClient from '../api/client';
 import { API_URLS } from '../constants';
@@ -9,6 +9,7 @@ import CenteredSpinner from './CenteredSpinner';
 
 export default function AuthenticationGuard({ children }) {
     const dispatch = useDispatch();
+    const location = useLocation();
     const user = useSelector(state => state.auth.user);
     const [authChecked, setAuthChecked] = useState(false);
 
@@ -31,7 +32,12 @@ export default function AuthenticationGuard({ children }) {
     }
 
     if (!user) {
-        return <Navigate to='/login' />;
+        return (
+            <Navigate
+                to='/login'
+                state={{ pathname: location.pathname, search: location.search }}
+            />
+        );
     }
 
     return children;

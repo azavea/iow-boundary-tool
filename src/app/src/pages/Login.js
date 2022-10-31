@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 
 import apiClient from '../api/client';
 import { API_URLS, API_STATUSES, APP_URLS, ROLES } from '../constants';
-import { login, setUtilityByPwsid } from '../store/authSlice';
+import { login } from '../store/authSlice';
 import LoginForm from '../components/LoginForm';
-import SelectUtility from './SelectUtility';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorDetail, setErrorDetail] = useState('');
-    const [forgotPassword, setForgotPassword] = useState(false);
-    const [showUtilityControl, setShowUtilityControl] = useState(false);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const loginRequest = () => {
         apiClient
@@ -37,29 +36,24 @@ export default function Login() {
     };
 
     const user = useSelector(state => state.auth.user);
-    const locationBeforeAuth = useSelector(
-        state => state.auth.locationBeforeAuth
-    );
+
+    const locationBeforeAuth = location.state
+        ? location.state.pathname + location.state.search
+        : null;
+
+    const defaultPage =
+        user.role === ROLES.CONTRIBUTOR ? '/welcome' : '/submissions';
+
+    const destination = locationBeforeAuth ?? defaultPage;
 
     // Upon successful sign in, redirect if specified (e.g. by /login route)
     useEffect(() => {
         if (user) {
-            if (user.utilities.length > 1 && user.role === ROLES.CONTRIBUTOR) {
-                setShowUtilityControl(true);
-                // Go ahead and set this, they'll have an opportunity to change it.
-                dispatch(setUtilityByPwsid(user.utilities[0].pwsid));
-            } else {
-                navigate(locationBeforeAuth, { replace: true });
-            }
-        } else {
-            setShowUtilityControl(false);
+            navigate(destination, { replace: true });
         }
-        if (forgotPassword) {
-            navigate('/forgot');
-        }
-    }, [dispatch, navigate, user, forgotPassword, locationBeforeAuth]);
+    }, [dispatch, navigate, user, destination]);
 
-    const loginForm = (
+    return (
         <LoginForm>
             <Text textStyle='loginHeader'>Boundary Sync</Text>
             <Box>
@@ -98,15 +92,10 @@ export default function Login() {
                 >
                     Login
                 </Button>
-                <Button
-                    variant='minimal'
-                    onClick={() => setForgotPassword(true)}
-                >
+                <Button variant='minimal' onClick={() => navigate('/forgot')}>
                     Forgot password?
                 </Button>
             </VStack>
         </LoginForm>
     );
-
-    return showUtilityControl ? <SelectUtility /> : loginForm;
 }

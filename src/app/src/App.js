@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound';
 import NavBar from './components/NavBar';
 
 import AuthenticationGuard from './components/AuthenticationGuard';
+import UtilityGuard from './components/UtilityGuard';
 
 import { ROLES } from './constants';
 
@@ -37,7 +38,9 @@ function App() {
                     path='*'
                     element={
                         <AuthenticationGuard>
-                            <PrivateRoutes />
+                            <UtilityGuard>
+                                <PrivateRoutes />
+                            </UtilityGuard>
                         </AuthenticationGuard>
                     }
                 ></Route>
