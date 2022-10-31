@@ -17,12 +17,15 @@ import { DownloadIcon, LogoutIcon } from '@heroicons/react/outline';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 
 import { useBoundaryId } from '../hooks';
+import { downloadData, getBoundaryShapeFilename } from '../utils';
 import { logout } from '../store/authSlice';
+import { useDrawBoundary } from './DrawContext';
 
 export default function AfterSubmitModal({ isOpen, onClose }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const id = useBoundaryId();
+    const boundary = useDrawBoundary();
 
     return (
         <Modal
@@ -74,7 +77,12 @@ export default function AfterSubmitModal({ isOpen, onClose }) {
                         <Button
                             variant='secondary'
                             leftIcon={<Icon as={DownloadIcon} />}
-                            onClick={() => {}}
+                            onClick={() => {
+                                downloadData(
+                                    JSON.stringify(boundary.submission.shape),
+                                    getBoundaryShapeFilename(boundary)
+                                );
+                            }}
                         >
                             Download file
                         </Button>
