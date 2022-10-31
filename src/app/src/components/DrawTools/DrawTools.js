@@ -5,7 +5,7 @@ import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
 import { useDialogController } from '../../hooks';
-import { useDrawPermissions } from '../DrawContext.js';
+import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
 
 import useAddPolygonCursor from './useAddPolygonCursor';
 import useEditingPolygon from './useEditingPolygon';
@@ -47,6 +47,8 @@ export default function DrawTools() {
 }
 
 function ReviewAndSaveButton({ onClick }) {
+    const hasShape = !!useDrawBoundary().submission?.shape;
+
     return (
         <Button
             position='absolute'
@@ -58,6 +60,9 @@ function ReviewAndSaveButton({ onClick }) {
             p={6}
             rightIcon={<Icon as={ArrowRightIcon} />}
             onClick={onClick}
+            isDisabled={!hasShape}
+            _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
+            _hover={!hasShape ? { opacity: 0.7 } : {}}
         >
             Review and submit
         </Button>
