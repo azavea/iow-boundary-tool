@@ -50,7 +50,7 @@ function ReviewAndSaveButton({ onClick }) {
     return (
         <Button
             position='absolute'
-            bottom='16px'
+            bottom='32px'
             right='32px'
             variant='cta'
             zIndex={1000}
