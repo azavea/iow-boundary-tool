@@ -21,7 +21,7 @@ export const mapSlice = createSlice({
         startAddPolygon: state => {
             state.addPolygonMode = true;
         },
-        cancelAddPolygon: state => {
+        stopAddPolygon: state => {
             state.addPolygonMode = false;
         },
         toggleEditMode: state => {
@@ -54,7 +54,7 @@ export const mapSlice = createSlice({
 export const {
     togglePolygonVisibility,
     startAddPolygon,
-    cancelAddPolygon,
+    stopAddPolygon,
     toggleEditMode,
     toggleLayer,
     setBasemapType,

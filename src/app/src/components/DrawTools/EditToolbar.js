@@ -23,7 +23,7 @@ import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
 import {
-    cancelAddPolygon,
+    stopAddPolygon,
     startAddPolygon,
     toggleEditMode,
     togglePolygonVisibility,
@@ -126,7 +126,7 @@ function PolygonButton({ openEditDialog }) {
     if (addPolygonMode) {
         return (
             <Button
-                onClick={() => dispatch(cancelAddPolygon())}
+                onClick={() => dispatch(stopAddPolygon())}
                 w={POLYGON_BUTTON_WIDTH}
             >
                 Cancel

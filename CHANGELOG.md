@@ -78,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update AWS_PROFILE env var [#105](https://github.com/azavea/iow-boundary-tool/pull/105)
 - Prevent empty Map component from blocking submissions page from loading [#103](https://github.com/azavea/iow-boundary-tool/pull/103)
 - Fix `./scripts/console database` [#121](https://github.com/azavea/iow-boundary-tool/pull/121)
+- Fix add polygon [#169](https://github.com/azavea/iow-boundary-tool/pull/169)
 
 ### Deprecated
 

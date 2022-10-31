@@ -42,6 +42,7 @@ function styleMidpointElement(element) {
 
 function getShapeFromDrawEvent(event) {
     return {
+        type: 'Polygon',
         coordinates: [
             event.poly.getLatLngs()[0].map(point => [point.lng, point.lat]),
         ],
