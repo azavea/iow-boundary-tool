@@ -31,6 +31,7 @@ import {
 
 export default function Map({ boundary, startReview }) {
     const StatusBar = useSubmissionStatusBar(boundary);
+    const shape = boundary.submission?.shape;
 
     return (
         <>
@@ -47,7 +48,7 @@ export default function Map({ boundary, startReview }) {
                 <MapPanes>
                     <DefaultBasemap />
                     <MapButtons boundary={boundary} startReview={startReview} />
-                    <Polygon shape={boundary.submission.shape} />
+                    {shape && <Polygon shape={boundary.submission.shape} />}
                 </MapPanes>
             </MapContainer>
             {StatusBar}
@@ -56,6 +57,8 @@ export default function Map({ boundary, startReview }) {
 }
 
 function MapButtons({ boundary, startReview }) {
+    const shape = boundary.submission?.shape;
+
     return (
         <Box position='absolute' zIndex={1000} top={22} w='100%'>
             <Flex justify='space-evenly'>
@@ -68,17 +71,19 @@ function MapButtons({ boundary, startReview }) {
                         Email
                     </a>
                 </MapButton>
-                <MapButton
-                    icon={DownloadIcon}
-                    onClick={() =>
-                        downloadData(
-                            JSON.stringify(boundary.submission.shape),
-                            getBoundaryShapeFilename(boundary)
-                        )
-                    }
-                >
-                    Download
-                </MapButton>
+                {shape && (
+                    <MapButton
+                        icon={DownloadIcon}
+                        onClick={() =>
+                            downloadData(
+                                JSON.stringify(boundary.submission.shape),
+                                getBoundaryShapeFilename(boundary)
+                            )
+                        }
+                    >
+                        Download
+                    </MapButton>
+                )}
             </Flex>
         </Box>
     );
