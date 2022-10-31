@@ -1,30 +1,43 @@
-import { Select, Text } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Select } from '@chakra-ui/react';
+
+import UtilityLabel from './UtilityLabel';
 
 import { setUtilityByPwsid } from '../store/authSlice';
 
-export default function UtilityControl({ readOnly, width = '250px' }) {
+export default function UtilityControl({ readOnly = false }) {
     const dispatch = useDispatch();
-
-    const utilities = useSelector(state => state.auth.user.utilities);
-    let utility = useSelector(state => state.auth.utility);
+    const utility = useSelector(state => state.auth.utility);
 
     if (!utility) {
-        if (utilities?.length) {
-            utility = utilities[0];
-        } else {
-            return null;
-        }
+        return null;
     }
 
-    return !readOnly && utilities?.length > 1 ? (
+    if (readOnly) {
+        return <UtilityLabel utility={utility} />;
+    }
+
+    return (
+        <UtilitySelector
+            selectedPwsid={utility.pwsid}
+            onChange={newPwsid => {
+                dispatch(setUtilityByPwsid(newPwsid));
+            }}
+        />
+    );
+}
+
+export function UtilitySelector({ selectedPwsid, onChange, width = '250px' }) {
+    const utilities = useSelector(state => state.auth.user.utilities);
+
+    return (
         <Select
             variant='filled'
             h='40px'
             w={width}
-            value={utility.pwsid}
+            value={selectedPwsid}
             onChange={e => {
-                dispatch(setUtilityByPwsid(e.target.value));
+                onChange(e.target.value);
             }}
             style={{ background: 'white' }}
             _focus={{ background: 'white' }}
@@ -37,7 +50,5 @@ export default function UtilityControl({ readOnly, width = '250px' }) {
                 );
             })}
         </Select>
-    ) : (
-        <Text textStyle='selectedUtility'>{utility.name}</Text>
     );
 }
