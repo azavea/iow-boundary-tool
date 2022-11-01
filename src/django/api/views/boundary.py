@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_204_NO_CONTENT
-from rest_framework.exceptions import NotAuthenticated, PermissionDenied
+from rest_framework.exceptions import NotAuthenticated
 
 from ..serializers import (
     BoundaryListSerializer,
@@ -21,6 +21,7 @@ from ..parsers import NewBoundaryParser
 from ..models import Roles, Submission, ReferenceImage
 from ..models.boundary import BOUNDARY_STATUS, Boundary
 from ..exceptions import BadRequestException
+from ..permissions import UserCanWriteBoundaries
 
 
 def get_boundary_queryset_for_user(user):
@@ -37,7 +38,7 @@ def get_boundary_queryset_for_user(user):
 
 
 class BoundaryListView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, UserCanWriteBoundaries]
     parser_classes = [NewBoundaryParser]
 
     def get(self, request, format=None):
@@ -59,14 +60,6 @@ class BoundaryListView(APIView):
         return None
 
     def post(self, request, format=None):
-        if (
-            request.user.role != Roles.CONTRIBUTOR
-            and request.user.role != Roles.ADMINISTRATOR
-        ):
-            raise PermissionDenied(
-                'Only contributors and validators may create boundaries.'
-            )
-
         serializer = NewBoundarySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
@@ -95,14 +88,9 @@ class BoundaryListView(APIView):
 
 
 class BoundarySubmitView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, UserCanWriteBoundaries]
 
     def patch(self, request, id, format=None):
-        if request.user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
-            raise PermissionDenied(
-                "Only contributors and administrators can submit boundaries."
-            )
-
         boundary_set = get_boundary_queryset_for_user(request.user)
         boundary_set = boundary_set.prefetch_related("submissions")
         boundary = get_object_or_404(boundary_set, pk=id)
@@ -155,11 +143,10 @@ class BoundaryDetailView(APIView):
 
 
 class BoundaryShapeView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, UserCanWriteBoundaries]
 
     def put(self, request, id, format=None):
         boundary = BoundaryShapeView.get_boundary(request, id)
-        BoundaryShapeView.check_user_has_access_to_shape(request.user)
         BoundaryShapeView.check_boundary_is_editable(boundary)
 
         serializer = ShapeSerializer(data=request.data)
@@ -172,7 +159,6 @@ class BoundaryShapeView(APIView):
 
     def delete(self, request, id, format=None):
         boundary = BoundaryShapeView.get_boundary(request, id)
-        BoundaryShapeView.check_user_has_access_to_shape(request.user)
         BoundaryShapeView.check_boundary_is_editable(boundary)
 
         boundary.latest_submission.shape = None
@@ -185,13 +171,6 @@ class BoundaryShapeView(APIView):
         boundary_set = get_boundary_queryset_for_user(request.user)
         boundary_set = boundary_set.prefetch_related('submissions')
         return get_object_or_404(boundary_set, pk=id)
-
-    @staticmethod
-    def check_user_has_access_to_shape(user):
-        if user.role not in [Roles.CONTRIBUTOR, Roles.ADMINISTRATOR]:
-            raise PermissionDenied(
-                'Only contributors and administrators can edit boundaries.'
-            )
 
     @staticmethod
     def check_boundary_is_editable(boundary):
