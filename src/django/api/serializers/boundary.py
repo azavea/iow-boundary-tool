@@ -71,7 +71,7 @@ class BoundaryDetailSerializer(ModelSerializer):
             class AnnotationSerializer(ModelSerializer):
                 class Meta:
                     model = Annotation
-                    fields = ['location', 'comment', 'resolved']
+                    fields = ['id', 'location', 'comment', 'resolved']
 
             annotations = AnnotationSerializer(many=True)
 

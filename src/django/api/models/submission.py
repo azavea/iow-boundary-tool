@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as gis_models
@@ -92,3 +94,6 @@ class Annotation(models.Model):
     @property
     def resolved(self):
         return self.resolved_at is not None
+
+    def resolve(self):
+        self.resolved_at = datetime.now(tz=timezone.utc)
