@@ -13,14 +13,10 @@ export default function DrawContextProvider({ children }) {
     const user = useSelector(state => state.auth.user);
     const id = useBoundaryId();
 
-    const {
-        isFetching,
-        data: boundary,
-        error,
-    } = useGetBoundaryDetailsQuery(id);
+    const { isLoading, data: boundary, error } = useGetBoundaryDetailsQuery(id);
     useEndpointToastError(error);
 
-    if (isFetching) {
+    if (isLoading) {
         return <LoadingModal isOpen title='Loading boundary data...' />;
     }
 
