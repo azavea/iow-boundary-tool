@@ -73,6 +73,15 @@ class BoundaryListView(APIView):
                 meta['file'] = data['reference_images[]'][idx]
                 data['reference_images_meta'][idx] = meta
 
+        # If shape specified as a file, ingest and also upload it
+        if 'shape' in data:
+            # If the shape is uploaded with reference images
+            # it comes through as a singleton list, otherwise just a file.
+            shape = data['shape']
+            shape = shape[0] if isinstance(shape, list) else shape
+            data['shape'] = shape
+            data['upload_file'] = shape
+
         serializer = NewBoundarySerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data

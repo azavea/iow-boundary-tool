@@ -5,6 +5,7 @@ from rest_framework.serializers import (
     CharField,
     ChoiceField,
     DateTimeField,
+    FileField,
     SerializerMethodField,
     PrimaryKeyRelatedField,
 )
@@ -127,10 +128,11 @@ class NewBoundarySerializer(ModelSerializer):
     )
     reference_images_meta = ReferenceImageSerializer(many=True, required=False)
     shape = ShapefileField(required=False)
+    upload_file = FileField(required=False)
 
     class Meta:
         model = Boundary
-        fields = ['utility_id', 'reference_images_meta', 'shape']
+        fields = ['utility_id', 'reference_images_meta', 'shape', "upload_file"]
 
     @transaction.atomic
     def create(self, validated_data, created_by_user):
@@ -153,6 +155,10 @@ class NewBoundarySerializer(ModelSerializer):
 
         if 'shape' in validated_data:
             draft.shape = validated_data['shape']
+
+        if "upload_file" in validated_data:
+            draft.upload_file = validated_data["upload_file"]
+            draft.upload_filename = validated_data["upload_file"].name
 
         draft.save()
 
