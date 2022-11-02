@@ -131,8 +131,11 @@ export default function useEditingPolygon() {
     // Fit map bounds to shape exactly once after loading
     useEffect(() => {
         if (shape && !hasZoomedToShape) {
-            map.fitBounds(featureGroup.getBounds());
-            setHasZoomedToShape(true);
+            // This can fail if fired before the reference images are loaded
+            try {
+                map.fitBounds(featureGroup.getBounds());
+                setHasZoomedToShape(true);
+            } catch {}
         }
     }, [shape, map, hasZoomedToShape, setHasZoomedToShape]);
 }
