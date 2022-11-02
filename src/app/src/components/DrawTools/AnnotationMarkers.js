@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { renderToString } from 'react-dom/server';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -8,9 +9,13 @@ import { AnnotationIcon } from '@heroicons/react/solid';
 import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
 
 import { PANES } from '../../constants';
+import { DeleteAnnotationModal, ViewAnnotationModal } from './AnnotationModals';
 
 export default function AnnotationMarkers() {
     const annotations = useDrawBoundary().submission?.review?.annotations;
+
+    const [annotationToDelete, setAnnotationToDelete] = useState(null);
+    const [annotationToView, setAnnotationToView] = useState(null);
 
     if (!annotations) {
         return null;
@@ -19,18 +24,32 @@ export default function AnnotationMarkers() {
     return (
         <>
             {annotations.map(annotation => (
-                <AnnotationMarker key={annotation.id} annotation={annotation} />
+                <AnnotationMarker
+                    key={annotation.id}
+                    annotation={annotation}
+                    setAnnotationToDelete={setAnnotationToDelete}
+                    setAnnotationToView={setAnnotationToView}
+                />
             ))}
+
+            <DeleteAnnotationModal
+                annotation={annotationToDelete}
+                onClose={() => setAnnotationToDelete(null)}
+            />
+            <ViewAnnotationModal
+                annotation={annotationToView}
+                onClose={() => setAnnotationToView(null)}
+            />
         </>
     );
 }
 
 function AnnotationMarker({
-    annotation: {
-        id,
-        location: { coordinates },
-    },
+    annotation,
+    setAnnotationToDelete,
+    setAnnotationToView,
 }) {
+    const coordinates = annotation.location.coordinates;
     const { canReview } = useDrawPermissions();
 
     return (
@@ -58,7 +77,12 @@ function AnnotationMarker({
                     marginLeft={3}
                     marginRight={3}
                 >
-                    <Button variant='annotationLink'>View</Button>
+                    <Button
+                        variant='annotationLink'
+                        onClick={() => setAnnotationToView(annotation)}
+                    >
+                        View
+                    </Button>
                     {canReview && (
                         <>
                             <Divider
@@ -66,7 +90,14 @@ function AnnotationMarker({
                                 height='17px'
                                 color='gray.600'
                             />
-                            <Button variant='annotationLink'>Delete</Button>
+                            <Button
+                                variant='annotationLink'
+                                onClick={() =>
+                                    setAnnotationToDelete(annotation)
+                                }
+                            >
+                                Delete
+                            </Button>
                         </>
                     )}
                 </Flex>

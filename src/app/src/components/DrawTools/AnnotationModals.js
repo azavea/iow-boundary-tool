@@ -8,11 +8,18 @@ import {
     ModalHeader,
     ModalOverlay,
     Spacer,
+    Text,
     Textarea,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { useCreateAnnotationMutation } from '../../api/annotations';
+import { useEffect, useState } from 'react';
+
+import {
+    useCreateAnnotationMutation,
+    useDeleteAnnotationMutation,
+    useUpdateAnnotationMutation,
+} from '../../api/annotations';
 import { useBoundaryId, useEndpointToastError } from '../../hooks';
+import { useDrawPermissions } from '../DrawContext';
 
 export function AddAnnotationModal({ location, onClose }) {
     const boundaryId = useBoundaryId();
@@ -21,50 +28,146 @@ export function AddAnnotationModal({ location, onClose }) {
         useCreateAnnotationMutation();
     useEndpointToastError(error);
 
-    const onSubmit = comment => {
+    const onSubmit = () => {
         createAnnotation({ boundaryId, comment, location })
             .unwrap()
             .then(onClose);
     };
 
+    const { Textarea, comment } = useAnnotationComment('');
+
     return (
-        <AnnotationModal
+        <AnnotationModalBase
+            headerText='Add comment'
             isOpen={!!location}
             onClose={onClose}
             onSubmit={onSubmit}
             isLoading={isLoading}
-            isAdd
+            body={Textarea}
         />
     );
 }
 
-function AnnotationModal({
-    isOpen,
-    onClose: externalOnClose,
-    onSubmit,
-    isLoading,
-    isAdd = false,
-}) {
-    const [comment, setComment] = useState('');
+export function ViewAnnotationModal({ annotation, onClose }) {
+    const { canReview } = useDrawPermissions();
 
-    const onClose = () => {
-        setComment('');
-        externalOnClose();
+    if (canReview) {
+        return (
+            <EditAnnotationModal annotation={annotation} onClose={onClose} />
+        );
+    }
+
+    return (
+        <ReadOnlyAnnotationModal annotation={annotation} onClose={onClose} />
+    );
+}
+
+function EditAnnotationModal({ annotation, onClose }) {
+    const boundaryId = useBoundaryId();
+
+    const [updateAnnotation, { error, isLoading }] =
+        useUpdateAnnotationMutation();
+    useEndpointToastError(error);
+
+    const onSubmit = () => {
+        updateAnnotation({ boundaryId, ...annotation, comment })
+            .unwrap()
+            .then(onClose);
+    };
+
+    const { Textarea, comment } = useAnnotationComment(annotation?.comment);
+
+    return (
+        <AnnotationModalBase
+            headerText='Edit comment'
+            isOpen={!!annotation}
+            onClose={onClose}
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+            body={Textarea}
+        />
+    );
+}
+
+function ReadOnlyAnnotationModal({ annotation, onClose }) {
+    return (
+        <AnnotationModalBase
+            headerText='View comment'
+            isOpen={!!annotation}
+            onClose={onClose}
+            body={<Textarea value={annotation?.comment} disabled />}
+        />
+    );
+}
+
+export function DeleteAnnotationModal({ annotation, onClose }) {
+    const boundaryId = useBoundaryId();
+
+    const [deleteAnnotation, { error, isLoading }] =
+        useDeleteAnnotationMutation();
+    useEndpointToastError(error);
+
+    const onSubmit = () => {
+        deleteAnnotation({ boundaryId, id: annotation.id })
+            .unwrap()
+            .then(onClose);
     };
 
     return (
-        <Modal size='sm' isOpen={isOpen} onClose={onClose} isCentered>
+        <AnnotationModalBase
+            headerText='Delete comment'
+            isOpen={!!annotation}
+            onClose={onClose}
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+            ctaLabel='Delete'
+            body={
+                <>
+                    <Text mb={2}>
+                        Are you sure you want to delete this comment?
+                    </Text>
+                    <Textarea value={annotation?.comment} disabled />
+                </>
+            }
+        />
+    );
+}
+
+function useAnnotationComment(commentProp) {
+    const [comment, setComment] = useState(commentProp ?? '');
+
+    useEffect(() => {
+        setComment(commentProp ?? '');
+    }, [commentProp]);
+
+    return {
+        Textarea: (
+            <Textarea
+                value={comment}
+                onChange={event => setComment(event.target.value)}
+            />
+        ),
+        comment,
+    };
+}
+
+function AnnotationModalBase({
+    isOpen,
+    onClose,
+    onSubmit,
+    headerText,
+    ctaLabel = 'Save',
+    body,
+    isLoading,
+}) {
+    return (
+        <Modal size='md' isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay>
                 <ModalContent>
                     <ModalHeader textAlign='center' m={4} mb={2}>
-                        {isAdd ? 'Add' : 'Edit'} comment
+                        {headerText}
                     </ModalHeader>
-                    <ModalBody mx={4}>
-                        <Textarea
-                            value={comment}
-                            onChange={event => setComment(event.target.value)}
-                        ></Textarea>
-                    </ModalBody>
+                    <ModalBody mx={4}>{body}</ModalBody>
                     <ModalFooter>
                         <Flex w='100%' m={4} mt={2}>
                             <Button
@@ -78,11 +181,11 @@ function AnnotationModal({
                             <Button
                                 variant='cta'
                                 onClick={() => {
-                                    onSubmit(comment);
+                                    onSubmit();
                                 }}
                                 isLoading={isLoading}
                             >
-                                Save
+                                {ctaLabel}
                             </Button>
                         </Flex>
                     </ModalFooter>
