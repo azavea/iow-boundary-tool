@@ -64,7 +64,7 @@ class BoundaryListView(APIView):
             and request.user.role != Roles.ADMINISTRATOR
         ):
             raise PermissionDenied(
-                'Only contributors and validators may create boundaries.'
+                'Only contributors and administrators may create boundaries.'
             )
 
         data = request.data
