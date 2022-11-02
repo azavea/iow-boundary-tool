@@ -81,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `./scripts/console database` [#121](https://github.com/azavea/iow-boundary-tool/pull/121)
 - Fix add polygon [#169](https://github.com/azavea/iow-boundary-tool/pull/169)
 - Fix user authentication [#170](https://github.com/azavea/iow-boundary-tool/pull/170)
+- Fix view submission details link destination [#174](https://github.com/azavea/iow-boundary-tool/pull/174)
 
 ### Deprecated
 
