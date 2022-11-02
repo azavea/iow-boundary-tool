@@ -135,7 +135,7 @@ function UploadBox({ addFiles }) {
                     <Bold>ACCEPTED FILES</Bold>
                 </Text>
                 <Text color='gray.400'>
-                    <Bold>Shapefiles:</Bold> .SHP, .SHX and .DBF
+                    <Bold>Shapes:</Bold> Shapefile ZIP, GEOJSON
                     <br />
                     <Bold>Reference Images:</Bold> JPEG, PNG
                 </Text>
@@ -224,7 +224,7 @@ function FilesBox({ files }) {
     return (
         <Box w='50%' pl={4}>
             <Heading pb={4} size='small'>
-                Uploaded Files
+                Selected Files
             </Heading>
             <List>
                 {files.map(({ name }) => (
