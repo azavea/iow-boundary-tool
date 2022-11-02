@@ -17,3 +17,18 @@ class ReferenceImageSerializer(ModelSerializer):
             # DRF already validates negative values for PositiveIntegerField
             raise ValidationError("Opacity takes values from 0-100.")
         return value
+
+    def get_file(self, reference_image):
+        return reference_image.file.url
+
+
+class ReferenceImageUpdateSerializer(ReferenceImageSerializer):
+    class Meta:
+        model = ReferenceImage
+        exclude = ("boundary",)
+        read_only_fields = [
+            "uploaded_at",
+            "uploaded_by",
+            "file",
+            "filename",
+        ]

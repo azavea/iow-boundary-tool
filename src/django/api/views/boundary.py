@@ -67,7 +67,20 @@ class BoundaryListView(APIView):
                 'Only contributors and validators may create boundaries.'
             )
 
-        serializer = NewBoundarySerializer(data=request.data)
+        data = request.data
+
+        # Associate reference images with metadata, if any
+        if 'reference_images_meta' in data:
+            if len(data['reference_images_meta']) != len(data['reference_images[]']):
+                raise BadRequestException(
+                    'Mismatch between reference image files and metadata'
+                )
+
+            for idx, meta in enumerate(data['reference_images_meta']):
+                meta['file'] = data['reference_images[]'][idx]
+                data['reference_images_meta'][idx] = meta
+
+        serializer = NewBoundarySerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         utility = validated_data['utility']
