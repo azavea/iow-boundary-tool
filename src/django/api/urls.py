@@ -16,7 +16,7 @@ urlpatterns = [
     path("auth/login/", Login.as_view()),
     path("auth/logout/", Logout.as_view()),
     path("auth/", include("dj_rest_auth.urls")),
-    path("boundaries/", BoundaryListView.as_view()),
+    path("boundaries/", BoundaryListView.as_view(), name="boundary_list"),
     path("boundaries/<int:id>/", BoundaryDetailView.as_view()),
     path("boundaries/<int:id>/shape/", BoundaryShapeView.as_view()),
     path("boundaries/<int:id>/submit/", BoundarySubmitView.as_view()),
