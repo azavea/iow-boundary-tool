@@ -12,6 +12,12 @@ def limit_by_validator_or_admin():
     return models.Q(role__in=[Roles.VALIDATOR, Roles.ADMINISTRATOR])
 
 
+def shape_upload_path(instance, filename):
+    return (
+        f"boundaries/{instance.boundary.id}/submissions/{instance.id}/shape/{filename}"
+    )
+
+
 class Submission(models.Model):
     boundary = models.ForeignKey(
         Boundary, on_delete=models.PROTECT, related_name='submissions'
@@ -26,6 +32,7 @@ class Submission(models.Model):
         User, on_delete=models.PROTECT, blank=True, null=True, related_name="submitter"
     )
     updated_at = models.DateTimeField(auto_now=True)
+    upload_file = models.FileField(null=True, blank=True, upload_to=shape_upload_path)
     upload_filename = models.CharField(max_length=255, blank=True)
     upload_edited_at = models.DateTimeField(null=True, blank=True)
     notes = models.TextField(blank=True)
