@@ -277,3 +277,8 @@ else:
     EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
 
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@staging.iow.azavea.com')
+
+# User Imagery Storage
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME = f'iow-{ENVIRONMENT.lower()}-data-us-east-1'
