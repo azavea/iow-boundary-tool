@@ -68,6 +68,7 @@ function ReferenceLayers() {
             is_visible: true,
             distortion: null,
             opacity: 100,
+            file,
         });
     };
 
