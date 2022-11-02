@@ -7,6 +7,7 @@ COPY requirements.txt /usr/local/src/
 RUN set -ex \
     && buildDeps=" \
        build-essential \
+       libgdal-dev \
        libpq-dev \
     " \
     && deps=" \
