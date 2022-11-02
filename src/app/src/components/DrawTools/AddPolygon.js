@@ -1,30 +1,23 @@
-import { useCallback, useEffect } from 'react';
-import { useMap } from 'react-leaflet';
-import { useDispatch, useSelector } from 'react-redux';
-import { DomUtil } from 'leaflet';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { generateInitialPolygonPoints } from '../../utils';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useEndpointToastError } from '../../hooks';
 import api from '../../api/api';
-import { stopAddPolygon } from '../../store/mapSlice';
+import { useMap } from 'react-leaflet';
+import useAddCursor from './useAddCursor';
 
-export default function useAddPolygonCursor() {
-    const map = useMap();
+export default function AddPolygon() {
     const dispatch = useDispatch();
+    const map = useMap();
     const id = useBoundaryId();
 
-    const addPolygonMode = useSelector(state => state.map.addPolygonMode);
     const [updateShape, { error }] = useUpdateBoundaryShapeMutation();
     useEndpointToastError(error);
 
     const addPolygonFromEvent = useCallback(
         event => {
-            if (event.originalEvent.target !== map._container) {
-                // Ignore UI element clicks
-                return;
-            }
-
             const polygon = {
                 type: 'Polygon',
                 coordinates: [
@@ -46,21 +39,11 @@ export default function useAddPolygonCursor() {
                     }
                 )
             );
-            dispatch(stopAddPolygon());
+
             updateShape({ id, shape: polygon });
         },
         [map, dispatch, id, updateShape]
     );
 
-    useEffect(() => {
-        if (addPolygonMode) {
-            DomUtil.addClass(map._container, 'crosshair-cursor-enabled');
-            map.on('click', addPolygonFromEvent);
-
-            return () => {
-                DomUtil.removeClass(map._container, 'crosshair-cursor-enabled');
-                map.off('click', addPolygonFromEvent);
-            };
-        }
-    }, [map, addPolygonMode, addPolygonFromEvent]);
+    useAddCursor(addPolygonFromEvent);
 }

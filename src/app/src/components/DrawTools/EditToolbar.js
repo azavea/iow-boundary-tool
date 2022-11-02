@@ -23,8 +23,8 @@ import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
 import {
-    stopAddPolygon,
-    startAddPolygon,
+    disableAddCursor,
+    enableAddCursor,
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
@@ -111,7 +111,7 @@ function PolygonButton({ openEditDialog }) {
     const dispatch = useDispatch();
     const boundary = useDrawBoundary();
     const { canWrite } = useDrawPermissions();
-    const { addPolygonMode } = useSelector(state => state.map);
+    const { showAddCursor } = useSelector(state => state.map);
 
     const hasShape = !!boundary.submission?.shape;
 
@@ -123,10 +123,10 @@ function PolygonButton({ openEditDialog }) {
         );
     }
 
-    if (addPolygonMode) {
+    if (showAddCursor) {
         return (
             <Button
-                onClick={() => dispatch(stopAddPolygon())}
+                onClick={() => dispatch(disableAddCursor())}
                 w={POLYGON_BUTTON_WIDTH}
             >
                 Cancel
@@ -149,7 +149,7 @@ function PolygonButton({ openEditDialog }) {
 
     return (
         <Button
-            onClick={() => dispatch(startAddPolygon())}
+            onClick={() => dispatch(enableAddCursor())}
             rightIcon={<AddPolygonIcon />}
             w={POLYGON_BUTTON_WIDTH}
         >
