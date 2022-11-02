@@ -15,6 +15,7 @@ import {
     TrashIcon,
     EyeOffIcon,
     PencilIcon,
+    ChatAltIcon,
 } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 
@@ -29,13 +30,14 @@ import {
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
 import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
+import { BOUNDARY_STATUS } from '../../constants.js';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
     const boundary = useDrawBoundary();
-    const { canWrite } = useDrawPermissions();
+    const { canWrite, canReview } = useDrawPermissions();
     const { editMode, polygonIsVisible } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
@@ -78,19 +80,31 @@ export default function EditToolbar() {
                             disabled={!hasShape}
                             tooltip='Show/Hide'
                         />
-                        <EditToolbarButton
-                            icon={CursorClickIcon}
-                            onClick={() => dispatch(toggleEditMode())}
-                            disabled={!canWrite || !hasShape}
-                            tooltip='Edit Points'
-                            active={canWrite && editMode}
-                        />
-                        <EditToolbarButton
-                            icon={TrashIcon}
-                            onClick={confirmDeleteDialogController.open}
-                            disabled={!canWrite || !hasShape}
-                            tooltip='Delete Polygon'
-                        />
+                        {boundary.status === BOUNDARY_STATUS.DRAFT && (
+                            <>
+                                <EditToolbarButton
+                                    icon={CursorClickIcon}
+                                    onClick={() => dispatch(toggleEditMode())}
+                                    disabled={!canWrite || !hasShape}
+                                    tooltip='Edit Points'
+                                    active={canWrite && editMode}
+                                />
+                                <EditToolbarButton
+                                    icon={TrashIcon}
+                                    onClick={confirmDeleteDialogController.open}
+                                    disabled={!canWrite || !hasShape}
+                                    tooltip='Delete Polygon'
+                                />
+                            </>
+                        )}
+                        {boundary.status === BOUNDARY_STATUS.IN_REVIEW && (
+                            <EditToolbarButton
+                                icon={ChatAltIcon}
+                                onClick={() => dispatch(enableAddCursor())}
+                                disabled={!canReview}
+                                tooltip='Add comment'
+                            />
+                        )}
                     </ButtonGroup>
                 </Flex>
             </Box>
