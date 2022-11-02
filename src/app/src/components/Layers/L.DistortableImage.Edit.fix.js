@@ -66,4 +66,22 @@ L.DistortableImage.Edit.prototype._refresh = function () {
     this._overlay.fire('refresh');
 };
 
+// Prevent unbinding listeners on layers that have already been removed.
+// Same as https://github.com/publiclab/Leaflet.DistortableImage/blob/2b743c747dcdfe2c3de51b50283084aa327348b6/src/edit/handles/EditHandle.js#L58-L68
+// except handles nulls more gracefully.
+L.EditHandle.prototype._unbindListeners = function () {
+    this?.off(
+        {
+            contextmenu: L.DomEvent.stop,
+            dragstart: this._onHandleDragStart,
+            drag: this._onHandleDrag,
+            dragend: this._onHandleDragEnd,
+        },
+        this
+    );
+
+    this?._handled?._map?.off('zoomend', this.updateHandle, this);
+    this?._handled?.off('update', this.updateHandle, this);
+};
+
 export default L;
