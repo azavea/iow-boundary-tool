@@ -14,6 +14,7 @@ import useTrackMapZoom from './useTrackMapZoom';
 import SubmitModal from '../SubmitModal';
 import AfterSubmitModal from '../AfterSubmitModal';
 import AddPolygon from './AddPolygon';
+import AddAnnotation from './AddAnnotation';
 
 import { BOUNDARY_STATUS } from '../../constants';
 
@@ -30,7 +31,6 @@ export default function DrawTools() {
 
     return (
         <>
-            {status === BOUNDARY_STATUS.DRAFT && <AddPolygon />}
             <EditToolbar />
             <SubmitModal
                 isOpen={submitDialogController.isOpen}
@@ -45,6 +45,9 @@ export default function DrawTools() {
                 <ReviewAndSaveButton onClick={submitDialogController.open} />
             )}
             <MapControlButtons />
+
+            {status === BOUNDARY_STATUS.DRAFT && <AddPolygon />}
+            {status === BOUNDARY_STATUS.IN_REVIEW && <AddAnnotation />}
         </>
     );
 }

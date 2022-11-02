@@ -15,7 +15,7 @@ import {
     TrashIcon,
     EyeOffIcon,
     PencilIcon,
-    ChatAltIcon,
+    AnnotationIcon,
 } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 
@@ -99,7 +99,7 @@ export default function EditToolbar() {
                         )}
                         {boundary.status === BOUNDARY_STATUS.IN_REVIEW && (
                             <EditToolbarButton
-                                icon={ChatAltIcon}
+                                icon={AnnotationIcon}
                                 onClick={() => dispatch(enableAddCursor())}
                                 disabled={!canReview}
                                 tooltip='Add comment'
