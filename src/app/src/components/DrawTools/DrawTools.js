@@ -17,6 +17,7 @@ import AddPolygon from './AddPolygon';
 import AddAnnotation from './AddAnnotation';
 
 import { BOUNDARY_STATUS } from '../../constants';
+import AnnotationMarkers from './AnnotationMarkers';
 
 export default function DrawTools() {
     useEditingPolygon();
@@ -45,6 +46,7 @@ export default function DrawTools() {
                 <ReviewAndSaveButton onClick={submitDialogController.open} />
             )}
             <MapControlButtons />
+            <AnnotationMarkers />
 
             {status === BOUNDARY_STATUS.DRAFT && <AddPolygon />}
             {status === BOUNDARY_STATUS.IN_REVIEW && <AddAnnotation />}

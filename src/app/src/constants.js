@@ -48,6 +48,8 @@ export const PANES = {
     MUNICIPAL_BOUNDARIES: { label: 'muni', zIndex: 220 },
     MUNICIPAL_BOUNDARY_LABELS: { label: 'muni-labels', zIndex: 225 },
     USER_POLYGON: { label: 'user-polygon', zIndex: 490 },
+    ANNOTATION_MARKERS: { label: 'annotation-markers', zIndex: 495 },
+    ANNOTATION_POPUPS: { label: 'annotation-popups', zIndex: 496 },
 };
 
 export const BASE_API_URL = 'api';
