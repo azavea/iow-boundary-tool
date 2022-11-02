@@ -13,6 +13,7 @@ djangorestframework-gis==1.0
 dj-rest-auth==2.2.5
 factory-boy==3.2.1
 filetype==1.0.13
+fiona==1.8.22
 flake8==4.0.1
 gunicorn==20.1.0
 psycopg2==2.9.3
