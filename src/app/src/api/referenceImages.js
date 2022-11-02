@@ -6,11 +6,24 @@ import api from './api';
 const referenceImagesApi = api.injectEndpoints({
     endpoints: build => ({
         uploadReferenceImage: build.mutation({
-            query: ({ boundaryId, ...details }) => ({
-                url: `/boundaries/${boundaryId}/reference-images/`,
-                method: 'POST',
-                data: details,
-            }),
+            query: ({ boundaryId, file, ...details }) => {
+                const data = new FormData();
+
+                data.append('file', file, file.name);
+
+                for (const [key, value] of Object.entries(details)) {
+                    data.append(key, value);
+                }
+
+                return {
+                    url: `/boundaries/${boundaryId}/reference-images/`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    data,
+                };
+            },
             onQueryStarted: async (
                 { boundaryId },
                 { dispatch, queryFulfilled }
@@ -33,7 +46,7 @@ const referenceImagesApi = api.injectEndpoints({
             },
         }),
         updateReferenceImage: build.mutation({
-            query: ({ boundaryId, id, ...details }) => ({
+            query: ({ boundaryId, id, file, ...details }) => ({
                 url: `/boundaries/${boundaryId}/reference-images/${id}/`,
                 method: 'PUT',
                 data: details,

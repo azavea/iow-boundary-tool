@@ -49,7 +49,12 @@ const boundaryApi = api.injectEndpoints({
                     );
                 }
 
-                formData.append('reference_images_meta', referenceImagesMeta);
+                if (referenceImagesMeta.length > 0) {
+                    formData.append(
+                        'reference_images_meta',
+                        referenceImagesMeta
+                    );
+                }
 
                 if (shape) {
                     formData.append('shape', shape, shape.name);

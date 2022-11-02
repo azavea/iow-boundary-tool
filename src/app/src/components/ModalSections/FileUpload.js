@@ -137,7 +137,7 @@ function UploadBox({ addFiles }) {
                 <Text color='gray.400'>
                     <Bold>Shapefiles:</Bold> .SHP, .SHX and .DBF
                     <br />
-                    <Bold>Other map files:</Bold> JPEG, PNG
+                    <Bold>Reference Images:</Bold> JPEG, PNG
                 </Text>
             </Flex>
         </Box>

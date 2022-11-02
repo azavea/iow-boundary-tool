@@ -42,9 +42,8 @@ export default function ReferenceImageLayer() {
     );
 
     const createLayer = useCallback(
-        ({ id, corners, mode }) => {
-            // TODO use reference image url here
-            const layer = new L.distortableImageOverlay('', {
+        ({ id, corners, mode, file }) => {
+            const layer = new L.distortableImageOverlay(file, {
                 actions: [
                     L.DragAction,
                     L.ScaleAction,
@@ -112,12 +111,15 @@ export default function ReferenceImageLayer() {
         const imageShouldBeAdded = id => !(id in referenceImageLayers.current);
         const imageShouldBeHidden = id => !(id in visibleImages);
 
-        for (const { id, distortion, mode } of Object.values(visibleImages)) {
+        for (const { id, distortion, mode, file } of Object.values(
+            visibleImages
+        )) {
             if (imageShouldBeAdded(id)) {
                 referenceImageLayers.current[id] = createLayer({
                     id,
                     corners: distortion,
                     mode,
+                    file,
                 });
 
                 map.addLayer(referenceImageLayers.current[id]);
