@@ -95,6 +95,10 @@ class BoundarySyncAPITestCase(TestCase):
             utility=test_utility,
             name="Boundary 5",
         )
+        cls.boundary_6 = Boundary.objects.create(
+            utility=test_utility,
+            name="Boundary 6",
+        )
 
         # Submissions activities should follow
         # Draft-->Submission-->Approved/Revisions flow
@@ -133,6 +137,12 @@ class BoundarySyncAPITestCase(TestCase):
             created_by=cls.contributor,
         )
 
+        submission_6 = Submission.objects.create(
+            boundary=cls.boundary_6,
+            shape=RALEIGH_FAKE_ZIGZAG,
+            created_by=cls.contributor,
+        )
+
         # submitted
         Submission.objects.filter(pk=submission_2.pk).update(
             submitted_at=datetime.now(tz=timezone.utc),
@@ -158,6 +168,12 @@ class BoundarySyncAPITestCase(TestCase):
             notes="Notes for the test submission.",
         )
 
+        Submission.objects.filter(pk=submission_6.pk).update(
+            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_by=cls.contributor,
+            notes="Notes for the test submission.",
+        )
+
         # reviewing
         review_submission_3 = Review.objects.create(
             submission=submission_3,
@@ -168,6 +184,13 @@ class BoundarySyncAPITestCase(TestCase):
 
         review_submission_4 = Review.objects.create(
             submission=submission_4,
+            reviewed_by=cls.validator,
+            notes="Notes for the review.",
+            created_at=datetime.now(tz=timezone.utc),
+        )
+
+        review_submission_6 = Review.objects.create(
+            submission=submission_6,
             reviewed_by=cls.validator,
             notes="Notes for the review.",
             created_at=datetime.now(tz=timezone.utc),
@@ -187,6 +210,13 @@ class BoundarySyncAPITestCase(TestCase):
             created_at=datetime.now(tz=timezone.utc),
         )
 
+        Annotation.objects.create(
+            review=review_submission_6,
+            location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
+            comment="Comment on review",
+            created_at=datetime.now(tz=timezone.utc),
+        )
+
         # needs revision
         Review.objects.filter(pk=review_submission_4.pk).update(
             reviewed_at=datetime.now(tz=timezone.utc),
@@ -194,17 +224,23 @@ class BoundarySyncAPITestCase(TestCase):
             notes="Final notes for the review.",
         )
 
+        Review.objects.filter(pk=review_submission_6.pk).update(
+            reviewed_at=datetime.now(tz=timezone.utc),
+            reviewed_by=cls.validator,
+            notes="Final notes for the review.",
+        )
+
         # new submission draft
 
-        resubmission_4 = Submission.objects.create(
-            boundary=cls.boundary_4,
+        resubmission_6 = Submission.objects.create(
+            boundary=cls.boundary_6,
             shape=RALEIGH_FAKE_TRIANGLE,
             created_by=cls.contributor,
         )
 
         # re-submit for review
 
-        Submission.objects.filter(pk=resubmission_4.pk).update(
+        Submission.objects.filter(pk=resubmission_6.pk).update(
             submitted_at=datetime.now(tz=timezone.utc),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
@@ -212,7 +248,7 @@ class BoundarySyncAPITestCase(TestCase):
 
         # approved
         Approval.objects.create(
-            submission=resubmission_4,
+            submission=resubmission_6,
             approved_at=datetime.now(tz=timezone.utc),
             approved_by=cls.validator,
         )
