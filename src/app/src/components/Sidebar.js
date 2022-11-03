@@ -23,7 +23,11 @@ import BasemapLandWaterImage from '../img/basemap-landwater.jpg';
 import BasemapSatelliteImage from '../img/basemap-satellite.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBasemapType, toggleLayer } from '../store/mapSlice';
-import { DATA_LAYERS, SIDEBAR_TEXT_TOOLTIP_THRESHOLD } from '../constants';
+import {
+    ACCEPT_IMAGES,
+    DATA_LAYERS,
+    SIDEBAR_TEXT_TOOLTIP_THRESHOLD,
+} from '../constants';
 import { useBoundaryId, useEndpointToastError, useFilePicker } from '../hooks';
 import {
     useDebouncedUpdateReferenceImageMutation,
@@ -72,8 +76,11 @@ function ReferenceLayers() {
         });
     };
 
-    // TODO support multiple files
-    const openFileDialog = useFilePicker(files => files.map(uploadImage));
+    const openFileDialog = useFilePicker({
+        onChange: files => files.map(uploadImage),
+        multiple: true,
+        accept: ACCEPT_IMAGES,
+    });
 
     return (
         <Box ml={paddingLeft} mt={6} mb={6}>
