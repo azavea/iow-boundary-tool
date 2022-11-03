@@ -9,6 +9,7 @@ const initialState = {
     basemapType: 'default',
     geocodeResult: null,
     mapZoom: MAP_INITIAL_ZOOM,
+    hasZoomedToShape: false,
 };
 
 export const mapSlice = createSlice({
@@ -48,6 +49,9 @@ export const mapSlice = createSlice({
         setMapZoom: (state, { payload: mapZoom }) => {
             state.mapZoom = mapZoom;
         },
+        setHasZoomedToShape: (state, { payload: hasZoomedToShape }) => {
+            state.hasZoomedToShape = hasZoomedToShape;
+        },
     },
 });
 
@@ -61,6 +65,7 @@ export const {
     setGeocodeResult,
     clearGeocodeResult,
     setMapZoom,
+    setHasZoomedToShape,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

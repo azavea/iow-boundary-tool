@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-draw';
@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 import { useUpdateBoundaryShapeMutation } from '../../api/boundaries';
 import { useBoundaryId, useTrailingDebounceCallback } from '../../hooks';
+import { setHasZoomedToShape } from '../../store/mapSlice';
 import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
 import api from '../../api/api';
 
@@ -56,9 +57,8 @@ export default function useEditingPolygon() {
 
     const shape = useDrawBoundary().submission?.shape;
     const { canWrite } = useDrawPermissions();
-    const { editMode, basemapType, polygonIsVisible } = useSelector(
-        state => state.map
-    );
+    const { editMode, basemapType, polygonIsVisible, hasZoomedToShape } =
+        useSelector(state => state.map);
 
     const [updateShape] = useUpdateBoundaryShapeMutation();
 
@@ -126,16 +126,14 @@ export default function useEditingPolygon() {
         updatePolygonFromDrawEvent,
     ]);
 
-    const [hasZoomedToShape, setHasZoomedToShape] = useState(false);
-
     // Fit map bounds to shape exactly once after loading
     useEffect(() => {
         if (shape && !hasZoomedToShape) {
             // This can fail if fired before the reference images are loaded
             try {
                 map.fitBounds(featureGroup.getBounds());
-                setHasZoomedToShape(true);
+                dispatch(setHasZoomedToShape(true));
             } catch {}
         }
-    }, [shape, map, hasZoomedToShape, setHasZoomedToShape]);
+    }, [dispatch, shape, map, hasZoomedToShape]);
 }

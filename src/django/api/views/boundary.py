@@ -1,3 +1,5 @@
+import json
+
 from datetime import datetime
 from pytz import timezone
 
@@ -14,7 +16,7 @@ from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from ..serializers import (
     BoundaryListSerializer,
     BoundaryDetailSerializer,
-    ShapeSerializer,
+    ShapeUpdateSerializer,
     NewBoundarySerializer,
 )
 from ..parsers import NewBoundaryParser
@@ -184,13 +186,31 @@ class BoundaryShapeView(APIView):
         BoundaryShapeView.check_user_has_access_to_shape(request.user)
         BoundaryShapeView.check_boundary_is_editable(boundary)
 
-        serializer = ShapeSerializer(data=request.data)
+        data = request.data
+        if 'file' in data:
+            data['upload_file'] = data['file']
+
+        serializer = ShapeUpdateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        boundary.latest_submission.shape = serializer.validated_data
+        if 'shape' in serializer.validated_data:
+            boundary.latest_submission.shape = \
+                serializer.validated_data['shape']
+
+        if 'file' in serializer.validated_data:
+            boundary.latest_submission.shape = \
+                serializer.validated_data['file']
+            boundary.latest_submission.upload_file = \
+                serializer.validated_data['upload_file']
+            boundary.latest_submission.upload_filename = \
+                serializer.validated_data['upload_file'].name
+
         boundary.latest_submission.save()
 
-        return Response(status=HTTP_204_NO_CONTENT)
+        if boundary.latest_submission.shape:
+            return Response(json.loads(boundary.latest_submission.shape.geojson))
+        else:
+            return Response(status=HTTP_204_NO_CONTENT)
 
     def delete(self, request, id, format=None):
         boundary = BoundaryShapeView.get_boundary(request, id)

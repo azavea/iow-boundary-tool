@@ -7,5 +7,5 @@ from .boundary import (
     BoundaryDetailSerializer,
     NewBoundarySerializer,
 )
-from .shape import ShapeSerializer
+from .shape import ShapeSerializer, ShapeUpdateSerializer
 from .reference_image import ReferenceImageSerializer
