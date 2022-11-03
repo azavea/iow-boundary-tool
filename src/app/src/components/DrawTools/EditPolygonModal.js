@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
     Button,
     Flex,
@@ -14,14 +13,22 @@ import {
 } from '@chakra-ui/react';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 
-export default function EditPolygonModal({ isOpen, defaultLabel, onClose }) {
-    const [label, setLabel] = useState(defaultLabel);
+import { ACCEPT_SHAPES } from '../../constants';
+import { useBoundaryId, useFilePicker } from '../../hooks';
+import { useReplaceBoundaryShapeMutation } from '../../api/boundaries';
 
-    useEffect(() => setLabel(defaultLabel), [defaultLabel]);
+export default function EditPolygonModal({ isOpen, label, onClose }) {
+    const [replaceShape, { isLoading }] = useReplaceBoundaryShapeMutation();
+    const id = useBoundaryId();
 
-    const renamePolygon = () => {
-        // TODO implement this
-    };
+    const uploadShape = file =>
+        replaceShape({ id, file }).unwrap().then(onClose);
+
+    const openFileDialog = useFilePicker({
+        onChange: files => uploadShape(files[0]),
+        multiple: false,
+        accept: ACCEPT_SHAPES,
+    });
 
     return (
         <Modal size='sm' isOpen={isOpen} onClose={onClose} isCentered>
@@ -31,30 +38,25 @@ export default function EditPolygonModal({ isOpen, defaultLabel, onClose }) {
                         Edit polygon
                     </ModalHeader>
                     <ModalBody mx={4}>
-                        <Input
-                            value={label}
-                            onChange={({ target: { value } }) =>
-                                setLabel(value)
-                            }
-                        />
+                        <Input value={label} disabled />
                     </ModalBody>
                     <ModalFooter>
                         <Flex w='100%' m={4} mt={2}>
                             <Button
                                 variant='secondary'
                                 leftIcon={<Icon as={CloudUploadIcon} />}
+                                onClick={openFileDialog}
+                                isLoading={isLoading}
                             >
                                 Upload File
                             </Button>
                             <Spacer />
                             <Button
                                 variant='cta'
-                                onClick={() => {
-                                    renamePolygon(label);
-                                    onClose();
-                                }}
+                                onClick={onClose}
+                                disabled={isLoading}
                             >
-                                Save changes
+                                Cancel
                             </Button>
                         </Flex>
                     </ModalFooter>
