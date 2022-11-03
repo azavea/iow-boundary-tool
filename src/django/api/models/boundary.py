@@ -33,6 +33,12 @@ class Boundary(models.Model):
             return self.latest_submission.updated_at
 
         if self.status == BOUNDARY_STATUS.SUBMITTED:
+            if (
+                self.latest_submission.latest_approval is not None
+                and self.latest_submission.latest_approval.revoked
+            ):
+                return self.latest_submission.latest_approval.unapproved_at
+
             return self.latest_submission.submitted_at
 
         if self.status == BOUNDARY_STATUS.IN_REVIEW:
@@ -42,14 +48,17 @@ class Boundary(models.Model):
             return self.latest_submission.review.reviewed_at
 
         if self.status == BOUNDARY_STATUS.APPROVED:
-            return self.latest_submission.approval.approved_at
+            return self.latest_submission.latest_approval.approved_at
 
     @cached_property
     def status(self):
         if self.latest_submission.submitted_at is None:
             return BOUNDARY_STATUS.DRAFT
 
-        if hasattr(self.latest_submission, 'approval'):
+        if (
+            self.latest_submission.latest_approval is not None
+            and not self.latest_submission.latest_approval.revoked
+        ):
             return BOUNDARY_STATUS.APPROVED
 
         if hasattr(self.latest_submission, 'review'):
