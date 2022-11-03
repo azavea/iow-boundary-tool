@@ -58,6 +58,8 @@ function getActionString(action) {
             return ' requested revisions.';
         case BOUNDARY_STATUS.APPROVED:
             return ' approved this map.';
+        case 'Unapproved':
+            return ' unapproved this map.';
 
         default:
             throw new Error(`Invalid action type: ${action}`);

@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from django.db import transaction
 
 from rest_framework.serializers import (
@@ -24,6 +26,7 @@ from .activity_log import (
     ActivityReviewStartedSerializer,
     ActivityReviewedSerializer,
     ActivityApprovedSerializer,
+    ActivityUnapprovedSerializer,
 )
 
 
@@ -95,19 +98,29 @@ class BoundaryDetailSerializer(ModelSerializer):
 
     def get_activity_log(self, value):
         log = []
-        # Submissions already in desc order through pre-fetch
+
         for submission in value.submissions.all():
-            if hasattr(submission, 'approval'):
-                log.append(ActivityApprovedSerializer(submission).data)
+            log.append(ActivityDraftedSerializer(submission).data)
+
+            if submission.submitted_at is not None:
+                log.append(ActivitySubmittedSerializer(submission).data)
+
             if hasattr(submission, 'review'):
+                log.append(ActivityReviewStartedSerializer(submission.review).data)
+
                 # Log when a review starts as well as when a review is complete
                 # Complete review will log notes as well as if annotations
                 if submission.review.reviewed_at:
-                    log.append(ActivityReviewedSerializer(submission).data)
-                log.append(ActivityReviewStartedSerializer(submission).data)
-            if submission.submitted_at is not None:
-                log.append(ActivitySubmittedSerializer(submission).data)
-            log.append(ActivityDraftedSerializer(submission).data)
+                    log.append(ActivityReviewedSerializer(submission.review).data)
+
+            for approval in submission.approvals.all():
+                log.append(ActivityApprovedSerializer(approval).data)
+
+                if approval.revoked:
+                    log.append(ActivityUnapprovedSerializer(approval).data)
+
+        log.sort(key=itemgetter('time'), reverse=True)
+
         return log
 
     class Meta:
