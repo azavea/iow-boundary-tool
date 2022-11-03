@@ -80,7 +80,7 @@ const boundaryApi = api.injectEndpoints({
             query: ({ id, shape }) => ({
                 url: `/boundaries/${id}/shape/`,
                 method: 'PUT',
-                data: shape,
+                data: { shape },
             }),
         }),
 
