@@ -15,6 +15,7 @@ import {
     TrashIcon,
     EyeOffIcon,
     PencilIcon,
+    AnnotationIcon,
 } from '@heroicons/react/outline';
 import { CursorClickIcon } from '@heroicons/react/solid';
 
@@ -23,19 +24,20 @@ import DeletePolygonConfirmModal from './DeletePolygonConfirmModal.js';
 import { useDialogController } from '../../hooks.js';
 import EditPolygonModal from './EditPolygonModal.js';
 import {
-    stopAddPolygon,
-    startAddPolygon,
+    disableAddCursor,
+    enableAddCursor,
     toggleEditMode,
     togglePolygonVisibility,
 } from '../../store/mapSlice.js';
 import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
+import { BOUNDARY_STATUS } from '../../constants.js';
 
 const POLYGON_BUTTON_WIDTH = 40;
 
 export default function EditToolbar() {
     const dispatch = useDispatch();
     const boundary = useDrawBoundary();
-    const { canWrite } = useDrawPermissions();
+    const { canWrite, canReview } = useDrawPermissions();
     const { editMode, polygonIsVisible } = useSelector(state => state.map);
 
     const confirmDeleteDialogController = useDialogController();
@@ -78,19 +80,31 @@ export default function EditToolbar() {
                             disabled={!hasShape}
                             tooltip='Show/Hide'
                         />
-                        <EditToolbarButton
-                            icon={CursorClickIcon}
-                            onClick={() => dispatch(toggleEditMode())}
-                            disabled={!canWrite || !hasShape}
-                            tooltip='Edit Points'
-                            active={canWrite && editMode}
-                        />
-                        <EditToolbarButton
-                            icon={TrashIcon}
-                            onClick={confirmDeleteDialogController.open}
-                            disabled={!canWrite || !hasShape}
-                            tooltip='Delete Polygon'
-                        />
+                        {boundary.status === BOUNDARY_STATUS.DRAFT && (
+                            <>
+                                <EditToolbarButton
+                                    icon={CursorClickIcon}
+                                    onClick={() => dispatch(toggleEditMode())}
+                                    disabled={!canWrite || !hasShape}
+                                    tooltip='Edit Points'
+                                    active={canWrite && editMode}
+                                />
+                                <EditToolbarButton
+                                    icon={TrashIcon}
+                                    onClick={confirmDeleteDialogController.open}
+                                    disabled={!canWrite || !hasShape}
+                                    tooltip='Delete Polygon'
+                                />
+                            </>
+                        )}
+                        {boundary.status === BOUNDARY_STATUS.IN_REVIEW && (
+                            <EditToolbarButton
+                                icon={AnnotationIcon}
+                                onClick={() => dispatch(enableAddCursor())}
+                                disabled={!canReview}
+                                tooltip='Add comment'
+                            />
+                        )}
                     </ButtonGroup>
                 </Flex>
             </Box>
@@ -111,7 +125,7 @@ function PolygonButton({ openEditDialog }) {
     const dispatch = useDispatch();
     const boundary = useDrawBoundary();
     const { canWrite } = useDrawPermissions();
-    const { addPolygonMode } = useSelector(state => state.map);
+    const { showAddCursor } = useSelector(state => state.map);
 
     const hasShape = !!boundary.submission?.shape;
 
@@ -123,10 +137,10 @@ function PolygonButton({ openEditDialog }) {
         );
     }
 
-    if (addPolygonMode) {
+    if (showAddCursor) {
         return (
             <Button
-                onClick={() => dispatch(stopAddPolygon())}
+                onClick={() => dispatch(disableAddCursor())}
                 w={POLYGON_BUTTON_WIDTH}
             >
                 Cancel
@@ -149,7 +163,7 @@ function PolygonButton({ openEditDialog }) {
 
     return (
         <Button
-            onClick={() => dispatch(startAddPolygon())}
+            onClick={() => dispatch(enableAddCursor())}
             rightIcon={<AddPolygonIcon />}
             w={POLYGON_BUTTON_WIDTH}
         >

@@ -7,17 +7,20 @@ import MapControlButtons from './MapControlButtons';
 import { useDialogController } from '../../hooks';
 import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
 
-import useAddPolygonCursor from './useAddPolygonCursor';
 import useEditingPolygon from './useEditingPolygon';
 import useGeocoderResult from './useGeocoderResult';
 import useTrackMapZoom from './useTrackMapZoom';
 
 import SubmitModal from '../SubmitModal';
 import AfterSubmitModal from '../AfterSubmitModal';
+import AddPolygon from './AddPolygon';
+import AddAnnotation from './AddAnnotation';
+
+import { BOUNDARY_STATUS } from '../../constants';
+import AnnotationMarkers from './AnnotationMarkers';
 
 export default function DrawTools() {
     useEditingPolygon();
-    useAddPolygonCursor();
     useGeocoderResult();
     useTrackMapZoom();
 
@@ -25,6 +28,7 @@ export default function DrawTools() {
     const afterSubmitDialogController = useDialogController(false);
 
     const { canWrite } = useDrawPermissions();
+    const { status } = useDrawBoundary();
 
     return (
         <>
@@ -42,6 +46,10 @@ export default function DrawTools() {
                 <ReviewAndSaveButton onClick={submitDialogController.open} />
             )}
             <MapControlButtons />
+            <AnnotationMarkers />
+
+            {status === BOUNDARY_STATUS.DRAFT && <AddPolygon />}
+            {status === BOUNDARY_STATUS.IN_REVIEW && <AddAnnotation />}
         </>
     );
 }

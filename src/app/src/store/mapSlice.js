@@ -3,7 +3,7 @@ import { DATA_LAYERS, MAP_INITIAL_ZOOM } from '../constants';
 
 const initialState = {
     polygonIsVisible: true,
-    addPolygonMode: false,
+    showAddCursor: false,
     editMode: true,
     layers: Object.keys(DATA_LAYERS),
     basemapType: 'default',
@@ -18,11 +18,11 @@ export const mapSlice = createSlice({
         togglePolygonVisibility: state => {
             state.polygonIsVisible = !state.polygonIsVisible;
         },
-        startAddPolygon: state => {
-            state.addPolygonMode = true;
+        enableAddCursor: state => {
+            state.showAddCursor = true;
         },
-        stopAddPolygon: state => {
-            state.addPolygonMode = false;
+        disableAddCursor: state => {
+            state.showAddCursor = false;
         },
         toggleEditMode: state => {
             state.editMode = !state.editMode;
@@ -53,8 +53,8 @@ export const mapSlice = createSlice({
 
 export const {
     togglePolygonVisibility,
-    startAddPolygon,
-    stopAddPolygon,
+    enableAddCursor,
+    disableAddCursor,
     toggleEditMode,
     toggleLayer,
     setBasemapType,

@@ -61,6 +61,18 @@ const Button = {
             textDecoration: 'underline',
             color: 'gray.700',
         },
+        annotationLink: props => ({
+            ...theme.components.Button.variants.link(props),
+            fontFamily: `'Inter', sans-serif`,
+            color: 'white',
+            fontWeight: 600,
+            fontSize: 12,
+            lineHeight: 14,
+            textDecoration: 'none',
+            _hover: {
+                textDecoration: 'underline',
+            },
+        }),
         minimal: {
             fontWeight: 400,
             fontSize: 'sm',

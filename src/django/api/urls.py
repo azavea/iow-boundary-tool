@@ -10,6 +10,7 @@ from .views.boundary import (
 )
 from .views.reference_image import ReferenceImageList, ReferenceImageDetail
 from .views.review import ReviewCreateView
+from .views.annotations import AnnotationCreateView, AnnotationUpdateView
 
 urlpatterns = [
     path("auth/login/", Login.as_view()),
@@ -33,6 +34,16 @@ urlpatterns = [
         "boundaries/<int:boundary_id>/review",
         ReviewCreateView.as_view(),
         name='start_review',
+    ),
+    path(
+        "boundaries/<int:boundary_id>/review/annotations/",
+        AnnotationCreateView.as_view(),
+        name='create_annotation',
+    ),
+    path(
+        "boundaries/<int:boundary_id>/review/annotations/<int:annotation_id>/",
+        AnnotationUpdateView.as_view(),
+        name='update_annotation',
     ),
 ]
 
