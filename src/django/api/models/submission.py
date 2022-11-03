@@ -82,8 +82,25 @@ class Approval(models.Model):
     )
     approved_at = models.DateTimeField(auto_now_add=True)
     approved_by = models.ForeignKey(
-        User, on_delete=models.PROTECT, limit_choices_to=limit_by_validator_or_admin
+        User,
+        on_delete=models.PROTECT,
+        limit_choices_to=limit_by_validator_or_admin,
+        related_name='approver',
     )
+    unapproved_at = models.DateTimeField(null=True, blank=True)
+    unapproved_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        limit_choices_to=limit_by_validator_or_admin,
+        related_name='unapprover',
+    )
+
+    def clean(self):
+        if self.unapproved_at is not None and self.unapproved_by is None:
+            raise ValidationError("Must define User unapproving.")
+        super().clean()
 
 
 class Annotation(models.Model):
