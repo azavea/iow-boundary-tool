@@ -18,9 +18,6 @@ class ReferenceImageSerializer(ModelSerializer):
             raise ValidationError("Opacity takes values from 0-100.")
         return value
 
-    def get_file(self, reference_image):
-        return reference_image.file.url
-
 
 class ReferenceImageUpdateSerializer(ReferenceImageSerializer):
     class Meta:

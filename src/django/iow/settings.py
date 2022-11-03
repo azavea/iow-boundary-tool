@@ -280,5 +280,9 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@staging.iow.azavea
 
 # User Imagery Storage
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+if ENVIRONMENT != 'Development':
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = f"/media/"
 AWS_STORAGE_BUCKET_NAME = f'iow-{ENVIRONMENT.lower()}-data-us-east-1'
