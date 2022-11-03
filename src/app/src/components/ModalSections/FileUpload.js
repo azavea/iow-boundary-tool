@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 
+import LoadingModal from '../LoadingModal';
 import ModalSection from './ModalSection';
 import {
     convertIndexedObjectToArray,
@@ -27,6 +28,7 @@ export default function FileUpload({ PreviousButton }) {
     const toast = useToast();
     const navigate = useNavigate();
     const utilityId = useSelector(state => state.auth.utility.id);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [startNewBoundary, { error }] = useStartNewBoundaryMutation();
     useEndpointToastError(error);
@@ -48,37 +50,43 @@ export default function FileUpload({ PreviousButton }) {
             return;
         }
 
+        setIsLoading(true);
+
         startNewBoundary({
             utility_id: utilityId,
             reference_images: referenceImages,
             shape: shapeFiles?.[0],
         })
             .unwrap()
-            .then(id => navigate(`/draw/${id}`));
+            .then(id => navigate(`/draw/${id}`))
+            .finally(() => setIsLoading(false));
     };
 
     return (
-        <ModalSection
-            preHeading='Optional'
-            heading='Would you like to add your current map?'
-            prevButton={PreviousButton}
-            nextButton={
-                <Button variant='cta' onClick={handleContinue}>
-                    Continue
-                </Button>
-            }
-        >
-            <Text>
-                If you would like to look at a reference or start from an
-                existing map you can upload it here. If you have a Shapefile, we
-                recommend adding it.
-            </Text>
+        <>
+            <LoadingModal isOpen={isLoading} />
+            <ModalSection
+                preHeading='Optional'
+                heading='Would you like to add your current map?'
+                prevButton={PreviousButton}
+                nextButton={
+                    <Button variant='cta' onClick={handleContinue}>
+                        Continue
+                    </Button>
+                }
+            >
+                <Text>
+                    If you would like to look at a reference or start from an
+                    existing map you can upload it here. If you have a
+                    Shapefile, we recommend adding it.
+                </Text>
 
-            <Flex mt={4} w='100%' grow>
-                <UploadBox addFiles={addFiles} />
-                <FilesBox files={files} />
-            </Flex>
-        </ModalSection>
+                <Flex mt={4} w='100%' grow>
+                    <UploadBox addFiles={addFiles} />
+                    <FilesBox files={files} />
+                </Flex>
+            </ModalSection>
+        </>
     );
 }
 
