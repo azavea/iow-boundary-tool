@@ -22,6 +22,7 @@ from ..serializers import (
 from ..parsers import NewBoundaryParser
 from ..models import Roles, Submission, ReferenceImage
 from ..models.boundary import BOUNDARY_STATUS, Boundary
+from ..models.submission import Approval
 from ..exceptions import BadRequestException
 from ..permissions import UserCanWriteBoundaries
 
@@ -148,11 +149,16 @@ class BoundaryDetailView(APIView):
         boundary_set = boundary_set.prefetch_related(
             Prefetch(
                 'submissions',
-                queryset=Submission.objects.select_related('review', 'approval')
+                queryset=Submission.objects.select_related('review')
                 .prefetch_related('review__annotations')
+                .prefetch_related(
+                    Prefetch(
+                        'approvals',
+                        queryset=Approval.objects.order_by('-approved_at'),
+                    )
+                )
                 .order_by(
                     functions.Coalesce(
-                        'approval__approved_at',
                         'review__reviewed_at',
                         'submitted_at',
                         'created_at',
