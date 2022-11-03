@@ -23,6 +23,7 @@ import {
 } from '../../utils';
 import { useEndpointToastError, useFilePicker } from '../../hooks';
 import { useStartNewBoundaryMutation } from '../../api/boundaries';
+import { ACCEPT_BOTH } from '../../constants';
 
 export default function FileUpload({ PreviousButton }) {
     const toast = useToast();
@@ -91,7 +92,11 @@ function UploadBox({ addFiles }) {
     const { hovering, handleUpload, startDrag, endDrag } =
         useFileUpload(addFiles);
 
-    const openFileDialog = useFilePicker(addFiles);
+    const openFileDialog = useFilePicker({
+        onChange: addFiles,
+        multiple: true,
+        accept: ACCEPT_BOTH,
+    });
 
     const onLeaveDragBox = event => {
         const enteredElement = event.relatedTarget;
