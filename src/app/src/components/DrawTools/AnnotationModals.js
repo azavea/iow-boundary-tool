@@ -28,19 +28,24 @@ export function AddAnnotationModal({ location, onClose }) {
         useCreateAnnotationMutation();
     useEndpointToastError(error);
 
+    const { Textarea, comment, resetComment } = useAnnotationComment('');
+
+    const resetCommentAndClose = () => {
+        resetComment();
+        onClose();
+    };
+
     const onSubmit = () => {
         createAnnotation({ boundaryId, comment, location })
             .unwrap()
-            .then(onClose);
+            .then(resetCommentAndClose);
     };
-
-    const { Textarea, comment } = useAnnotationComment('');
 
     return (
         <AnnotationModalBase
             headerText='Add comment'
             isOpen={!!location}
-            onClose={onClose}
+            onClose={resetCommentAndClose}
             onSubmit={onSubmit}
             isLoading={isLoading}
             body={Textarea}
@@ -148,6 +153,7 @@ function useAnnotationComment(commentProp) {
             />
         ),
         comment,
+        resetComment: () => setComment(''),
     };
 }
 
