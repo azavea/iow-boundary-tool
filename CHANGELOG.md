@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Draw page React context [#154](https://github.com/azavea/iow-boundary-tool/pull/154)
 - Add User Permissions per Boundary [#156](https://github.com/azavea/iow-boundary-tool/pull/156)
 - Handle boundaries with no shape [#173](https://github.com/azavea/iow-boundary-tool/pull/173)
+- Add annotation support [#176](https://github.com/azavea/iow-boundary-tool/pull/176)
 
 ### Changed
 
