@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 
+import LoadingModal from '../LoadingModal';
 import ModalSection from './ModalSection';
 import {
     convertIndexedObjectToArray,
@@ -28,7 +29,8 @@ export default function FileUpload({ PreviousButton }) {
     const navigate = useNavigate();
     const utilityId = useSelector(state => state.auth.utility.id);
 
-    const [startNewBoundary, { error }] = useStartNewBoundaryMutation();
+    const [startNewBoundary, { error, isLoading }] =
+        useStartNewBoundaryMutation();
     useEndpointToastError(error);
 
     const [files, setFiles] = useState([]);
@@ -58,27 +60,30 @@ export default function FileUpload({ PreviousButton }) {
     };
 
     return (
-        <ModalSection
-            preHeading='Optional'
-            heading='Would you like to add your current map?'
-            prevButton={PreviousButton}
-            nextButton={
-                <Button variant='cta' onClick={handleContinue}>
-                    Continue
-                </Button>
-            }
-        >
-            <Text>
-                If you would like to look at a reference or start from an
-                existing map you can upload it here. If you have a Shapefile, we
-                recommend adding it.
-            </Text>
+        <>
+            <LoadingModal isOpen={isLoading} />
+            <ModalSection
+                preHeading='Optional'
+                heading='Would you like to add your current map?'
+                prevButton={PreviousButton}
+                nextButton={
+                    <Button variant='cta' onClick={handleContinue}>
+                        Continue
+                    </Button>
+                }
+            >
+                <Text>
+                    If you would like to look at a reference or start from an
+                    existing map you can upload it here. If you have a
+                    Shapefile, we recommend adding it.
+                </Text>
 
-            <Flex mt={4} w='100%' grow>
-                <UploadBox addFiles={addFiles} />
-                <FilesBox files={files} />
-            </Flex>
-        </ModalSection>
+                <Flex mt={4} w='100%' grow>
+                    <UploadBox addFiles={addFiles} />
+                    <FilesBox files={files} />
+                </Flex>
+            </ModalSection>
+        </>
     );
 }
 
