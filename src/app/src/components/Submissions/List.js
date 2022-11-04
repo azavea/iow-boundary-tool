@@ -62,7 +62,11 @@ export default function SubmissionsList() {
             <Flex>
                 <Heading size='lg'>Submissions</Heading>
                 <Spacer />
-                <Button mr={4} onClick={() => navigate('/welcome')}>
+                <Button
+                    mr={4}
+                    disabled={boundaries?.length > 0}
+                    onClick={() => navigate('/welcome')}
+                >
                     Add map
                 </Button>
             </Flex>
