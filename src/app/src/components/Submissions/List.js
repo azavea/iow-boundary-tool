@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
     HStack,
     Box,
@@ -27,7 +28,7 @@ import {
     LocationMarkerIcon,
 } from '@heroicons/react/solid';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { heroToChakraIcon } from '../../utils';
 import { useGetBoundariesQuery } from '../../api/boundaries';
@@ -37,6 +38,24 @@ import { ROLES } from '../../constants';
 
 export default function SubmissionsList() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const user = useSelector(state => state.auth.user);
+    const utilityId = useSelector(state => state.auth.utility?.id);
+
+    const {
+        isFetching,
+        data: boundaries,
+        error,
+    } = useGetBoundariesQuery({
+        utilities: user.role === ROLES.CONTRIBUTOR ? utilityId : undefined,
+    });
+
+    // Navigate to /welcome if coming from /login and no boundaries already
+    useEffect(() => {
+        if (boundaries?.length === 0 && location.state?.pathname === '/login') {
+            navigate('/welcome');
+        }
+    }, [location.state, boundaries, navigate]);
 
     return (
         <Box paddingLeft={8} paddingRight={8} mt={6}>
@@ -59,7 +78,11 @@ export default function SubmissionsList() {
                             <Table variant='submissions'>
                                 <TableHeader />
                                 <Tbody>
-                                    <TableRows />
+                                    <TableRows
+                                        isFetching={isFetching}
+                                        error={error}
+                                        boundaries={boundaries}
+                                    />
                                 </Tbody>
                             </Table>
                         </TableContainer>
@@ -99,18 +122,7 @@ function TableHeader() {
     );
 }
 
-function TableRows() {
-    const user = useSelector(state => state.auth.user);
-    const utilityId = useSelector(state => state.auth.utility?.id);
-
-    const {
-        isFetching,
-        data: boundaries,
-        error,
-    } = useGetBoundariesQuery({
-        utilities: user.role === ROLES.CONTRIBUTOR ? utilityId : undefined,
-    });
-
+function TableRows({ isFetching, error, boundaries }) {
     if (isFetching) {
         return <LoadingRow />;
     }
