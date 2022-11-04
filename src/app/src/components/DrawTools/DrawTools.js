@@ -13,6 +13,7 @@ import useTrackMapZoom from './useTrackMapZoom';
 
 import SubmitModal from '../SubmitModal';
 import AfterSubmitModal from '../AfterSubmitModal';
+import ReviewModal from '../ReviewModal';
 import AddPolygon from './AddPolygon';
 import AddAnnotation from './AddAnnotation';
 
@@ -70,12 +71,19 @@ function DraftTools() {
 }
 
 function ReviewTools() {
+    const reviewDialogController = useDialogController(false);
+
     return (
         <>
             <AddAnnotation />
 
+            <ReviewModal
+                isOpen={reviewDialogController.isOpen}
+                onClose={reviewDialogController.close}
+            />
+
             <ReviewAndSaveButton
-                onClick={() => {}}
+                onClick={reviewDialogController.open}
                 text={SUBMIT_REVIEW_BUTTON_TEXT}
             />
         </>
