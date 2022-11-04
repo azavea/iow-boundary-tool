@@ -10,7 +10,18 @@ const reviewApi = api.injectEndpoints({
             }),
             invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
         }),
+
+        finishReview: build.mutation({
+            query: ({ boundaryId, notes }) => ({
+                url: `/boundaries/${boundaryId}/review/finish/`,
+                method: 'POST',
+                data: { notes },
+            }),
+            invalidatesTags: (result, error, { boundaryId }) => [
+                { tag: TAGS.BOUNDARY, id: boundaryId },
+            ],
+        }),
     }),
 });
 
-export const { useStartReviewMutation } = reviewApi;
+export const { useStartReviewMutation, useFinishReviewMutation } = reviewApi;
