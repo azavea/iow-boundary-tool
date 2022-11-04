@@ -98,3 +98,5 @@ export const ACCEPT_IMAGES = [
 export const ACCEPT_SHAPES = SHAPE_FILE_EXTENSIONS.join(', ');
 
 export const ACCEPT_BOTH = `${ACCEPT_IMAGES}, ${ACCEPT_SHAPES}`;
+
+export const SUBMIT_REVIEW_BUTTON_TEXT = 'Request changes';

@@ -16,7 +16,7 @@ import AfterSubmitModal from '../AfterSubmitModal';
 import AddPolygon from './AddPolygon';
 import AddAnnotation from './AddAnnotation';
 
-import { BOUNDARY_STATUS } from '../../constants';
+import { BOUNDARY_STATUS, SUBMIT_REVIEW_BUTTON_TEXT } from '../../constants';
 import AnnotationMarkers from './AnnotationMarkers';
 
 export default function DrawTools() {
@@ -24,15 +24,33 @@ export default function DrawTools() {
     useGeocoderResult();
     useTrackMapZoom();
 
-    const submitDialogController = useDialogController(false);
-    const afterSubmitDialogController = useDialogController(false);
-
-    const { canWrite } = useDrawPermissions();
     const { status } = useDrawBoundary();
+    const { canWrite, canReview } = useDrawPermissions();
+
+    const draftMode = status === BOUNDARY_STATUS.DRAFT && canWrite;
+    const reviewMode = status === BOUNDARY_STATUS.IN_REVIEW && canReview;
 
     return (
         <>
             <EditToolbar />
+            <MapControlButtons />
+
+            {draftMode && <DraftTools />}
+            {reviewMode && <ReviewTools />}
+
+            <AnnotationMarkers />
+        </>
+    );
+}
+
+function DraftTools() {
+    const submitDialogController = useDialogController(false);
+    const afterSubmitDialogController = useDialogController(false);
+
+    return (
+        <>
+            <AddPolygon />
+
             <SubmitModal
                 isOpen={submitDialogController.isOpen}
                 onClose={submitDialogController.close}
@@ -42,19 +60,29 @@ export default function DrawTools() {
                 isOpen={afterSubmitDialogController.isOpen}
                 onClose={afterSubmitDialogController.close}
             />
-            {canWrite && (
-                <ReviewAndSaveButton onClick={submitDialogController.open} />
-            )}
-            <MapControlButtons />
-            <AnnotationMarkers />
 
-            {status === BOUNDARY_STATUS.DRAFT && <AddPolygon />}
-            {status === BOUNDARY_STATUS.IN_REVIEW && <AddAnnotation />}
+            <ReviewAndSaveButton
+                onClick={submitDialogController.open}
+                text='Review and submit'
+            />
         </>
     );
 }
 
-function ReviewAndSaveButton({ onClick }) {
+function ReviewTools() {
+    return (
+        <>
+            <AddAnnotation />
+
+            <ReviewAndSaveButton
+                onClick={() => {}}
+                text={SUBMIT_REVIEW_BUTTON_TEXT}
+            />
+        </>
+    );
+}
+
+function ReviewAndSaveButton({ onClick, text }) {
     const hasShape = !!useDrawBoundary().submission?.shape;
 
     return (
@@ -72,7 +100,7 @@ function ReviewAndSaveButton({ onClick }) {
             _disabled={{ opacity: 0.4, cursor: 'not-allowed' }}
             _hover={!hasShape ? { opacity: 0.7 } : {}}
         >
-            Review and submit
+            {text}
         </Button>
     );
 }
