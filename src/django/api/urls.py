@@ -9,7 +9,7 @@ from .views.boundary import (
     BoundarySubmitView,
 )
 from .views.reference_image import ReferenceImageList, ReferenceImageDetail
-from .views.review import ReviewCreateView
+from .views.review import ReviewCreateView, ReviewFinishView
 from .views.annotations import AnnotationCreateView, AnnotationUpdateView
 
 urlpatterns = [
@@ -34,6 +34,11 @@ urlpatterns = [
         "boundaries/<int:boundary_id>/review",
         ReviewCreateView.as_view(),
         name='start_review',
+    ),
+    path(
+        "boundaries/<int:boundary_id>/review/finish/",
+        ReviewFinishView.as_view(),
+        name='finish_review',
     ),
     path(
         "boundaries/<int:boundary_id>/review/annotations/",
