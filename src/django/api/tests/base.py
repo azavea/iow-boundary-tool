@@ -8,7 +8,6 @@ from api.models import (
     Annotation,
     Approval,
     Boundary,
-    ReferenceImage,
     Review,
     Roles,
     State,
@@ -260,13 +259,6 @@ class BoundarySyncAPITestCase(TestCase):
             submission=submission_5,
             approved_at=datetime.now(tz=timezone.utc),
             approved_by=cls.validator,
-        )
-
-        cls.reference_image = ReferenceImage.objects.create(
-            filename="test_file.jpg",
-            is_visible=True,
-            boundary=cls.boundary_1,
-            uploaded_by=cls.contributor,
         )
 
     def setUp(self):
