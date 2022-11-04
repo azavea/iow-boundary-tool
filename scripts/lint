@@ -54,13 +54,16 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                 --exclude settings.py,manage.py,*.pyc,api/migrations/*
 
             docker-compose \
+                run --rm --no-deps --entrypoint isort django . --check
+
+            docker-compose \
                 run --rm --no-deps --entrypoint black django \
                 --skip-string-normalization --check --diff \
                 --extend-exclude migrations .
 
             docker-compose \
                 run --rm --entrypoint python django \
-                manage.py makemigrations
+                manage.py makemigrations --check --dry-run
         fi
     fi
 fi
