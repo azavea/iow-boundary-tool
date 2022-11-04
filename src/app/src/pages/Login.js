@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
 
 import apiClient from '../api/client';
-import { API_URLS, API_STATUSES, APP_URLS, ROLES } from '../constants';
+import { API_URLS, API_STATUSES, APP_URLS } from '../constants';
 import { login } from '../store/authSlice';
 import LoginForm from '../components/LoginForm';
 
@@ -41,15 +41,15 @@ export default function Login() {
         ? location.state.pathname + location.state.search
         : null;
 
-    const defaultPage =
-        user.role === ROLES.CONTRIBUTOR ? '/welcome' : '/submissions';
-
-    const destination = locationBeforeAuth ?? defaultPage;
+    const destination = locationBeforeAuth ?? '/submissions';
 
     // Upon successful sign in, redirect if specified (e.g. by /login route)
     useEffect(() => {
         if (user) {
-            navigate(destination, { replace: true });
+            navigate(destination, {
+                replace: true,
+                state: { pathname: '/login' },
+            });
         }
     }, [dispatch, navigate, user, destination]);
 
