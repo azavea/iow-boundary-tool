@@ -1,7 +1,6 @@
 import json
 
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, timezone
 
 from django.conf import settings
 from django.db.models import Prefetch, functions
@@ -24,7 +23,7 @@ from ..models import Roles, Submission, ReferenceImage
 from ..models.boundary import BOUNDARY_STATUS, Boundary
 from ..models.submission import Approval
 from ..exceptions import BadRequestException
-from ..permissions import UserCanWriteBoundaries
+from ..permissions import UserCanWriteBoundaries, UserCanUnapproveBoundaries
 
 
 def get_boundary_queryset_for_user(user):
@@ -251,3 +250,55 @@ class BoundaryDraftView(BoundaryView):
         )
 
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class BoundaryApproveView(BoundaryView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, boundary_id, format=None):
+        boundary = self.get_boundary(request, boundary_id)
+        self.check_boundary_is_approvable(boundary, request.user.role)
+
+        boundary.latest_submission.approvals.create(approved_by=request.user)
+
+        return Response(status=HTTP_204_NO_CONTENT)
+
+    def check_boundary_is_approvable(self, boundary, user_role):
+        if user_role == Roles.ADMINISTRATOR:
+            if boundary.status not in [
+                BOUNDARY_STATUS.SUBMITTED,
+                BOUNDARY_STATUS.IN_REVIEW,
+                BOUNDARY_STATUS.NEEDS_REVISIONS,
+            ]:
+                raise BadRequestException(
+                    'This boundary is not in an approvable state.',
+                )
+
+        elif user_role == Roles.VALIDATOR:
+            if boundary.status != BOUNDARY_STATUS.SUBMITTED:
+                raise BadRequestException(
+                    'This boundary must be submitted to be approved.',
+                )
+
+        else:
+            raise BadRequestException('You are not able to approve boundaries.')
+
+
+class BoundaryUnapproveView(BoundaryView):
+    permission_classes = [IsAuthenticated, UserCanUnapproveBoundaries]
+
+    def post(self, request, boundary_id, format=None):
+        boundary = self.get_boundary(request, boundary_id)
+        self.check_boundary_is_unapprovable(boundary, request.user.role)
+
+        approval = boundary.latest_submission.latest_approval
+        approval.unapprove(request.user)
+        approval.save()
+
+        return Response(status=HTTP_204_NO_CONTENT)
+
+    def check_boundary_is_unapprovable(self, boundary, user_role):
+        if boundary.status != BOUNDARY_STATUS.APPROVED:
+            raise BadRequestException(
+                'Only approved boundaries can be unapproved',
+            )

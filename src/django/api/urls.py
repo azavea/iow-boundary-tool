@@ -8,6 +8,8 @@ from .views.boundary import (
     BoundaryShapeView,
     BoundarySubmitView,
     BoundaryDraftView,
+    BoundaryApproveView,
+    BoundaryUnapproveView,
 )
 from .views.reference_image import ReferenceImageList, ReferenceImageDetail
 from .views.review import ReviewCreateView, ReviewFinishView
@@ -55,6 +57,16 @@ urlpatterns = [
         "boundaries/<int:boundary_id>/draft/",
         BoundaryDraftView.as_view(),
         name='start_draft',
+    ),
+    path(
+        "boundaries/<int:boundary_id>/approve/",
+        BoundaryApproveView.as_view(),
+        name='approve_boundary',
+    ),
+    path(
+        "boundaries/<int:boundary_id>/unapprove/",
+        BoundaryUnapproveView.as_view(),
+        name='unapprove_boundary',
     ),
 ]
 

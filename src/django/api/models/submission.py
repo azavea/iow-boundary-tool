@@ -121,6 +121,10 @@ class Approval(models.Model):
     def revoked(self):
         return self.unapproved_at is not None
 
+    def unapprove(self, unapproved_by):
+        self.unapproved_at = datetime.now(tz=timezone.utc)
+        self.unapproved_by = unapproved_by
+
 
 class Annotation(models.Model):
     review = models.ForeignKey(

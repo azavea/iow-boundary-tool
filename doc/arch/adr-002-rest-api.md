@@ -33,8 +33,8 @@ Also present are `/auth/password/reset/` and `/auth/password/reset/confirm/` end
 | `/boundaries/{id}/review/annotations/{id}/` | PUT    | `{ annotation }` | Validator      | 200 OK,<br />404 Not Found                                 | Updates an annotation in the latest review. Older reviews are read-only, so no need to specify review id.          |
 | `/boundaries/{id}/review/annotations/{id}/` | DELETE | -                | Validator      | 204 NO Content,<br />404 Not Found                         | Deletes an annotation in the latest review. Older reviews are read-only, so no need to specify review id.          |
 | `/boundaries/{id}/draft/`                   | POST   | -                | Contributor    | 204 No Content,<br />404 Not Found                         | Creates a new draft submission for a boundary after a review                                                       |
-| `/boundaries/{id}/approve/`                 | POST   | -                | Validator      | 200 OK,<br />404 Not Found                                 | Approves a boundary                                                                                                |
-| `/boundaries/{id}/unapprove/`               | POST   | -                | Validator      | 200 OK,<br />404 Not Found                                 | Unapproves a boundary                                                                                              |
+| `/boundaries/{id}/approve/`                 | POST   | -                | Validator      | 204 No Content,<br />404 Not Found                         | Approves a boundary                                                                                                |
+| `/boundaries/{id}/unapprove/`               | POST   | -                | Validator      | 204 No Content,<br />404 Not Found                         | Unapproves a boundary                                                                                              |
 
 ### User
 
