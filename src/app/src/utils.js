@@ -131,6 +131,7 @@ export function getBoundaryPermissions({ boundary, user }) {
         canWrite: false,
         canReview: false,
         canApprove: false,
+        canCreateDraft: false,
     };
 
     const status = boundary?.status;
@@ -140,22 +141,34 @@ export function getBoundaryPermissions({ boundary, user }) {
         return permissions;
     }
 
+    const boundaryInReviewMode = [
+        BOUNDARY_STATUS.SUBMITTED,
+        BOUNDARY_STATUS.IN_REVIEW,
+    ].includes(status);
+
     if (role === ROLES.ADMINISTRATOR) {
-        permissions.canWrite = true;
-        permissions.canReview = true;
-        permissions.canApprove = true;
+        return {
+            canWrite: status === BOUNDARY_STATUS.DRAFT,
+            canReview: boundaryInReviewMode,
+            canApprove: boundaryInReviewMode,
+            canCreateDraft: status === BOUNDARY_STATUS.NEEDS_REVISIONS,
+        };
     }
 
     if (role === ROLES.CONTRIBUTOR && status === BOUNDARY_STATUS.DRAFT) {
         permissions.canWrite = true;
     }
 
-    if (
-        role === ROLES.VALIDATOR &&
-        [BOUNDARY_STATUS.SUBMITTED, BOUNDARY_STATUS.IN_REVIEW].includes(status)
-    ) {
+    if (role === ROLES.VALIDATOR && boundaryInReviewMode) {
         permissions.canReview = true;
         permissions.canApprove = true;
+    }
+
+    if (
+        role === ROLES.CONTRIBUTOR &&
+        status === BOUNDARY_STATUS.NEEDS_REVISIONS
+    ) {
+        permissions.canCreateDraft = true;
     }
 
     return permissions;
