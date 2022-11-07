@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as gis_models
+from django.utils.functional import cached_property
 
 from .boundary import Boundary
 from .user import User, Roles
@@ -54,6 +55,13 @@ class Submission(models.Model):
     def primary_contact(self):
         return self.created_by
 
+    @cached_property
+    def latest_approval(self):
+        if self.approvals.count() == 0:
+            return None
+
+        return self.approvals.latest()
+
 
 class Review(models.Model):
     submission = models.OneToOneField(
@@ -77,13 +85,37 @@ class Review(models.Model):
 
 
 class Approval(models.Model):
-    submission = models.OneToOneField(
-        Submission, on_delete=models.PROTECT, related_name='approval'
+    submission = models.ForeignKey(
+        Submission, on_delete=models.PROTECT, related_name='approvals'
     )
     approved_at = models.DateTimeField(auto_now_add=True)
     approved_by = models.ForeignKey(
-        User, on_delete=models.PROTECT, limit_choices_to=limit_by_validator_or_admin
+        User,
+        on_delete=models.PROTECT,
+        limit_choices_to=limit_by_validator_or_admin,
+        related_name='approver',
     )
+    unapproved_at = models.DateTimeField(null=True, blank=True)
+    unapproved_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        limit_choices_to=limit_by_validator_or_admin,
+        related_name='unapprover',
+    )
+
+    class Meta:
+        get_latest_by = 'approved_at'
+
+    def clean(self):
+        if self.unapproved_at is not None and self.unapproved_by is None:
+            raise ValidationError("Must define User unapproving.")
+        super().clean()
+
+    @cached_property
+    def revoked(self):
+        return self.unapproved_at is not None
 
 
 class Annotation(models.Model):

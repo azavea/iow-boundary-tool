@@ -249,11 +249,15 @@ class BoundarySyncAPITestCase(TestCase):
         )
 
         # approved
-        Approval.objects.create(
+        approval_6 = Approval.objects.create(
             submission=resubmission_6,
             approved_at=datetime.now(tz=timezone.utc),
             approved_by=cls.validator,
         )
+
+        approval_6.unapproved_by = cls.validator
+        approval_6.unapproved_at = datetime.now(tz=timezone.utc)
+        approval_6.save()
 
         Approval.objects.create(
             submission=submission_5,
