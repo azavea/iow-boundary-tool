@@ -93,6 +93,7 @@ class BoundaryDetailSerializer(ModelSerializer):
     utility = UtilitySerializer()
     status = StatusField()
     submission = SubmissionSerializer(source='latest_submission')
+    previous_submission = SubmissionSerializer()
     reference_images = ReferenceImageSerializer(many=True)
     activity_log = SerializerMethodField()
 
@@ -130,6 +131,7 @@ class BoundaryDetailSerializer(ModelSerializer):
             'utility',
             'status',
             'submission',
+            'previous_submission',
             'reference_images',
             'activity_log',
         ]
