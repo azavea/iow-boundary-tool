@@ -29,7 +29,7 @@ import {
     getBoundaryPermissions,
 } from '../../../utils';
 
-export default function Map({ boundary, startReview }) {
+export default function Map({ boundary, startReview, createDraft }) {
     const StatusBar = useSubmissionStatusBar(boundary);
     const shape = boundary.submission?.shape;
 
@@ -47,7 +47,11 @@ export default function Map({ boundary, startReview }) {
             >
                 <MapPanes>
                     <DefaultBasemap />
-                    <MapButtons boundary={boundary} startReview={startReview} />
+                    <MapButtons
+                        boundary={boundary}
+                        startReview={startReview}
+                        createDraft={createDraft}
+                    />
                     {shape && <Polygon shape={boundary.submission.shape} />}
                 </MapPanes>
             </MapContainer>
@@ -56,13 +60,17 @@ export default function Map({ boundary, startReview }) {
     );
 }
 
-function MapButtons({ boundary, startReview }) {
+function MapButtons({ boundary, startReview, createDraft }) {
     const shape = boundary.submission?.shape;
 
     return (
         <Box position='absolute' zIndex={1000} top={22} w='100%'>
             <Flex justify='space-evenly'>
-                <DrawButton boundary={boundary} startReview={startReview} />
+                <DrawButton
+                    boundary={boundary}
+                    startReview={startReview}
+                    createDraft={createDraft}
+                />
                 <MapButton icon={MailIcon}>
                     <a
                         href={`mailto:${boundary.submission.primary_contact.email}`}
@@ -89,10 +97,13 @@ function MapButtons({ boundary, startReview }) {
     );
 }
 
-function DrawButton({ boundary, startReview }) {
+function DrawButton({ boundary, startReview, createDraft }) {
     const navigate = useNavigate();
     const user = useSelector(state => state.auth.user);
-    const { canWrite, canReview } = getBoundaryPermissions({ boundary, user });
+    const { canWrite, canReview, canCreateDraft } = getBoundaryPermissions({
+        boundary,
+        user,
+    });
 
     const goToDrawPage = () => navigate(`/draw/${boundary.id}`);
 
@@ -116,9 +127,10 @@ function DrawButton({ boundary, startReview }) {
         icon = ChatAltIcon;
     }
 
-    if (canWrite && boundary.status === BOUNDARY_STATUS.NEEDS_REVISIONS) {
+    if (canCreateDraft && boundary.status === BOUNDARY_STATUS.NEEDS_REVISIONS) {
         label = 'Revise boundary';
         icon = PencilIcon;
+        onClick = () => createDraft(boundary.id).unwrap().then(goToDrawPage);
     }
 
     return (
