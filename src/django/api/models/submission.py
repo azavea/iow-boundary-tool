@@ -83,6 +83,10 @@ class Review(models.Model):
             raise ValidationError("Must define User submitting review.")
         super().clean()
 
+    def finish(self, reviewed_by):
+        self.reviewed_at = datetime.now(tz=timezone.utc)
+        self.reviewed_by = reviewed_by
+
 
 class Approval(models.Model):
     submission = models.ForeignKey(

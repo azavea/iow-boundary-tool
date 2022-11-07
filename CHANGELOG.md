@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add "Needs Revision" test submission [#177](https://github.com/azavea/iow-boundary-tool/pull/177)
 - Add support for uploading files [#175](https://github.com/azavea/iow-boundary-tool/pull/175)
 - Add unapproving to data model [#178](https://github.com/azavea/iow-boundary-tool/pull/178)
+- Add ability to submit reviews [#181](https://github.com/azavea/iow-boundary-tool/pull/181)
 
 ### Changed
 

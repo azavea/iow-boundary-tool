@@ -227,6 +227,11 @@ const theme = extendTheme({
             fontSize: '20px',
             color: 'gray.700',
         },
+        modalDetailSmall: {
+            fontWeight: 500,
+            fontSize: '16px',
+            color: 'gray.700',
+        },
         selectedUtility: {
             fontFamily: `'Inter', sans-serif`,
             fontWeight: 400,
