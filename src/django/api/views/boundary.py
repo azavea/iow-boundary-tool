@@ -40,6 +40,29 @@ def get_boundary_queryset_for_user(user):
     raise RuntimeError('Invalid role: {}'.format(user.role))
 
 
+class BoundaryView(APIView):
+    def get_boundary(self, request, boundary_id):
+        return get_object_or_404(
+            get_boundary_queryset_for_user(request.user), pk=boundary_id
+        )
+
+    def check_boundary_is_editable(self, boundary):
+        if boundary.status != BOUNDARY_STATUS.DRAFT:
+            raise BadRequestException(
+                'Cannot update shape of boundary with status: {}'.format(
+                    boundary.status
+                ),
+            )
+
+    def check_boundary_needs_revisions(self, boundary):
+        if boundary.status != BOUNDARY_STATUS.NEEDS_REVISIONS:
+            raise BadRequestException(
+                'Cannot create a new submission for boundary with status {}'.format(
+                    boundary.status
+                ),
+            )
+
+
 class BoundaryListView(APIView):
     permission_classes = [IsAuthenticated, UserCanWriteBoundaries]
     parser_classes = [NewBoundaryParser]
@@ -172,12 +195,12 @@ class BoundaryDetailView(APIView):
         return Response(BoundaryDetailSerializer(boundary).data)
 
 
-class BoundaryShapeView(APIView):
+class BoundaryShapeView(BoundaryView):
     permission_classes = [IsAuthenticated, UserCanWriteBoundaries]
 
     def put(self, request, id, format=None):
-        boundary = BoundaryShapeView.get_boundary(request, id)
-        BoundaryShapeView.check_boundary_is_editable(boundary)
+        boundary = self.get_boundary(request, id)
+        self.check_boundary_is_editable(boundary)
 
         data = request.data
         if "file" in data:
@@ -206,25 +229,25 @@ class BoundaryShapeView(APIView):
             return Response(status=HTTP_204_NO_CONTENT)
 
     def delete(self, request, id, format=None):
-        boundary = BoundaryShapeView.get_boundary(request, id)
-        BoundaryShapeView.check_boundary_is_editable(boundary)
+        boundary = self.get_boundary(request, id)
+        self.check_boundary_is_editable(boundary)
 
         boundary.latest_submission.shape = None
         boundary.latest_submission.save()
 
         return Response(status=HTTP_204_NO_CONTENT)
 
-    @staticmethod
-    def get_boundary(request, id):
-        boundary_set = get_boundary_queryset_for_user(request.user)
-        boundary_set = boundary_set.prefetch_related('submissions')
-        return get_object_or_404(boundary_set, pk=id)
 
-    @staticmethod
-    def check_boundary_is_editable(boundary):
-        if boundary.status != BOUNDARY_STATUS.DRAFT:
-            raise BadRequestException(
-                'Cannot update shape of boundary with status: {}'.format(
-                    boundary.status
-                ),
-            )
+class BoundaryDraftView(BoundaryView):
+    permission_classes = [IsAuthenticated, UserCanWriteBoundaries]
+
+    def post(self, request, boundary_id, format=None):
+        boundary = self.get_boundary(request, boundary_id)
+        self.check_boundary_needs_revisions(boundary)
+
+        boundary.submissions.create(
+            created_by=request.user,
+            shape=boundary.latest_submission.shape,
+        )
+
+        return Response(status=HTTP_204_NO_CONTENT)
