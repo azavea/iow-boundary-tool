@@ -10,7 +10,11 @@ import {
 } from '@chakra-ui/react';
 import { ArrowLeftIcon } from '@heroicons/react/outline';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetBoundaryDetailsQuery } from '../../../api/boundaries';
+import {
+    useApproveBoundaryMutation,
+    useGetBoundaryDetailsQuery,
+    useUnapproveBoundaryMutation,
+} from '../../../api/boundaries';
 import CenteredSpinner from '../../CenteredSpinner';
 import { CheckCircleIcon } from '@heroicons/react/outline';
 
@@ -51,6 +55,16 @@ export default function SubmissionDetail() {
         { isLoading: isCreatingDraft, error: createDraftMutationError },
     ] = useCreateDraftMutation();
 
+    const [
+        approveBoundary,
+        { isLoading: isApprovingBoundary, error: approveBoundaryError },
+    ] = useApproveBoundaryMutation();
+
+    const [
+        unapproveBoundary,
+        { isLoading: isUnpprovingBoundary, error: unapproveBoundaryError },
+    ] = useUnapproveBoundaryMutation();
+
     useEndpointToastError(
         startReviewError,
         'There was an error starting a review.'
@@ -61,7 +75,23 @@ export default function SubmissionDetail() {
         'There was an error creating a new submission.'
     );
 
-    if (isFetching || isStartingReview || isCreatingDraft) {
+    useEndpointToastError(
+        approveBoundaryError,
+        'There was an error approving the submission.'
+    );
+
+    useEndpointToastError(
+        unapproveBoundaryError,
+        'There was an error unapproving the submission'
+    );
+
+    if (
+        isFetching ||
+        isStartingReview ||
+        isCreatingDraft ||
+        isApprovingBoundary ||
+        isUnpprovingBoundary
+    ) {
         return <CenteredSpinner />;
     }
 
@@ -69,7 +99,10 @@ export default function SubmissionDetail() {
         return null;
     }
 
-    const { canApprove } = getBoundaryPermissions({ boundary, user });
+    const { canApprove, canUnapprove } = getBoundaryPermissions({
+        boundary,
+        user,
+    });
 
     return (
         <VStack
@@ -104,8 +137,19 @@ export default function SubmissionDetail() {
                             mb={4}
                             alignSelf='flex-end'
                             rightIcon={heroToChakraIcon(CheckCircleIcon)()}
+                            onClick={() => approveBoundary(boundary.id)}
                         >
                             Mark approved
+                        </Button>
+                    )}
+                    {canUnapprove && (
+                        <Button
+                            mb={4}
+                            alignSelf='flex-end'
+                            rightIcon={heroToChakraIcon(CheckCircleIcon)()}
+                            onClick={() => unapproveBoundary(boundary.id)}
+                        >
+                            Mark unapproved
                         </Button>
                     )}
 
