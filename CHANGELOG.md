@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handle boundaries with no shape [#173](https://github.com/azavea/iow-boundary-tool/pull/173)
 - Add annotation support [#176](https://github.com/azavea/iow-boundary-tool/pull/176)
 - Add "Needs Revision" test submission [#177](https://github.com/azavea/iow-boundary-tool/pull/177)
+- Add support for uploading files [#175](https://github.com/azavea/iow-boundary-tool/pull/175)
 
 ### Changed
 
@@ -71,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Return user information from login endpoint [#136](https://github.com/azavea/iow-boundary-tool/pull/136)
 - Limit boundary list by contributor's selected utility [#148](https://github.com/azavea/iow-boundary-tool/pull/148)
 - Guard Draw Page Actions [#156](https://github.com/azavea/iow-boundary-tool/pull/156)
+- Only redirect to /welcome for new boundaries [#175](https://github.com/azavea/iow-boundary-tool/pull/175)
 
 ### Fixed
 

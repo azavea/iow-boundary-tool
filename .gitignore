@@ -21,6 +21,7 @@ deployment/ansible/roles/azavea.*
 # Django
 /src/django/static/
 /src/django/data/
+/src/django/media/
 /.venv
 
 # JS

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/react';
 
 import { convertIndexedObjectToArray } from './utils';
-import { FILE_UPLOAD_ACCEPT_STRING } from './constants';
+import { ACCEPT_BOTH } from './constants';
 
 export function useDialogController(initialState = false) {
     const [isOpen, setIsOpen] = useState(initialState);
@@ -81,13 +81,17 @@ export function useLayerVisibility(layer) {
     return useSelector(state => state.map.layers).includes(layer);
 }
 
-export function useFilePicker(onChange) {
+export function useFilePicker({
+    onChange,
+    multiple = false,
+    accept = ACCEPT_BOTH,
+}) {
     const openFileDialog = () => {
         const input = document.createElement('input');
         input.type = 'file';
-        input.multiple = true;
+        input.multiple = multiple;
         input.onchange = handlePickFiles;
-        input.accept = FILE_UPLOAD_ACCEPT_STRING;
+        input.accept = accept;
 
         input.click();
     };

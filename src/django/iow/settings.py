@@ -14,6 +14,7 @@ import os
 import requests
 
 from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -276,3 +277,12 @@ else:
     EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
 
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@staging.iow.azavea.com')
+
+# User Imagery Storage
+
+if ENVIRONMENT != 'Development':
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = f"/media/"
+AWS_STORAGE_BUCKET_NAME = f'iow-{ENVIRONMENT.lower()}-data-us-east-1'

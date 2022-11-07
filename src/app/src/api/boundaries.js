@@ -1,3 +1,4 @@
+import { setHasZoomedToShape } from '../store/mapSlice';
 import api from './api';
 import TAGS, {
     getListTagProvider,
@@ -49,7 +50,12 @@ const boundaryApi = api.injectEndpoints({
                     );
                 }
 
-                formData.append('reference_images_meta', referenceImagesMeta);
+                if (referenceImagesMeta.length > 0) {
+                    formData.append(
+                        'reference_images_meta',
+                        referenceImagesMeta
+                    );
+                }
 
                 if (shape) {
                     formData.append('shape', shape, shape.name);
@@ -75,8 +81,53 @@ const boundaryApi = api.injectEndpoints({
             query: ({ id, shape }) => ({
                 url: `/boundaries/${id}/shape/`,
                 method: 'PUT',
-                data: shape,
+                data: { shape },
             }),
+        }),
+
+        replaceBoundaryShape: build.mutation({
+            query: ({ id, file }) => {
+                const data = new FormData();
+                data.append('file', file, file.name);
+
+                return {
+                    url: `/boundaries/${id}/shape/`,
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    data,
+                };
+            },
+            onQueryStarted: async ({ id }, { dispatch, queryFulfilled }) => {
+                const patchResult = dispatch(
+                    api.util.updateQueryData(
+                        'getBoundaryDetails',
+                        id,
+                        draftDetails => {
+                            draftDetails.submission.shape = null;
+                        }
+                    )
+                );
+
+                dispatch(setHasZoomedToShape(false));
+
+                try {
+                    const { data: shape } = await queryFulfilled;
+                    dispatch(
+                        api.util.updateQueryData(
+                            'getBoundaryDetails',
+                            id,
+                            draftDetails => {
+                                draftDetails.submission.shape = shape;
+                            }
+                        )
+                    );
+                } catch {
+                    patchResult.undo();
+                    dispatch(setHasZoomedToShape(false));
+                }
+            },
         }),
 
         deleteBoundaryShape: build.mutation({
@@ -116,6 +167,7 @@ export const {
     useGetBoundaryDetailsQuery,
     useStartNewBoundaryMutation,
     useUpdateBoundaryShapeMutation,
+    useReplaceBoundaryShapeMutation,
     useDeleteBoundaryShapeMutation,
     useSubmitBoundaryMutation,
 } = boundaryApi;

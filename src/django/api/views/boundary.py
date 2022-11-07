@@ -1,3 +1,5 @@
+import json
+
 from datetime import datetime
 from pytz import timezone
 
@@ -14,7 +16,7 @@ from rest_framework.exceptions import NotAuthenticated
 from ..serializers import (
     BoundaryListSerializer,
     BoundaryDetailSerializer,
-    ShapeSerializer,
+    ShapeUpdateSerializer,
     NewBoundarySerializer,
 )
 from ..parsers import NewBoundaryParser
@@ -60,7 +62,29 @@ class BoundaryListView(APIView):
         return None
 
     def post(self, request, format=None):
-        serializer = NewBoundarySerializer(data=request.data)
+        data = request.data
+
+        # Associate reference images with metadata, if any
+        if 'reference_images_meta' in data:
+            if len(data['reference_images_meta']) != len(data['reference_images[]']):
+                raise BadRequestException(
+                    'Mismatch between reference image files and metadata'
+                )
+
+            for idx, meta in enumerate(data['reference_images_meta']):
+                meta['file'] = data['reference_images[]'][idx]
+                data['reference_images_meta'][idx] = meta
+
+        # If shape specified as a file, ingest and also upload it
+        if 'shape' in data:
+            # If the shape is uploaded with reference images
+            # it comes through as a singleton list, otherwise just a file.
+            shape = data['shape']
+            shape = shape[0] if isinstance(shape, list) else shape
+            data['shape'] = shape
+            data['upload_file'] = shape
+
+        serializer = NewBoundarySerializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         utility = validated_data['utility']
@@ -149,13 +173,31 @@ class BoundaryShapeView(APIView):
         boundary = BoundaryShapeView.get_boundary(request, id)
         BoundaryShapeView.check_boundary_is_editable(boundary)
 
-        serializer = ShapeSerializer(data=request.data)
+        data = request.data
+        if "file" in data:
+            data["upload_file"] = data["file"]
+
+        serializer = ShapeUpdateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
-        boundary.latest_submission.shape = serializer.validated_data
+        if "shape" in serializer.validated_data:
+            boundary.latest_submission.shape = serializer.validated_data["shape"]
+
+        if "file" in serializer.validated_data:
+            boundary.latest_submission.shape = serializer.validated_data["file"]
+            boundary.latest_submission.upload_file = serializer.validated_data[
+                "upload_file"
+            ]
+            boundary.latest_submission.upload_filename = serializer.validated_data[
+                "upload_file"
+            ].name
+
         boundary.latest_submission.save()
 
-        return Response(status=HTTP_204_NO_CONTENT)
+        if boundary.latest_submission.shape:
+            return Response(json.loads(boundary.latest_submission.shape.geojson))
+        else:
+            return Response(status=HTTP_204_NO_CONTENT)
 
     def delete(self, request, id, format=None):
         boundary = BoundaryShapeView.get_boundary(request, id)

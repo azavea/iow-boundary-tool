@@ -1,6 +1,8 @@
 from rest_framework.serializers import Serializer
-from rest_framework.fields import ListField, FloatField
+from rest_framework.fields import ListField, FileField, FloatField
 from django.contrib.gis.geos import Polygon
+
+from api.fields import ShapefileField
 
 
 class ShapeSerializer(Serializer):
@@ -30,3 +32,9 @@ class ShapeSerializer(Serializer):
     def get_closed_coordinates(coordinates):
         coordinates[0].append(coordinates[0][0])
         return coordinates
+
+
+class ShapeUpdateSerializer(Serializer):
+    shape = ShapeSerializer(required=False)
+    file = ShapefileField(required=False)
+    upload_file = FileField(required=False)

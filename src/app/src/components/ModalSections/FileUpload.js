@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 
+import LoadingModal from '../LoadingModal';
 import ModalSection from './ModalSection';
 import {
     convertIndexedObjectToArray,
@@ -22,13 +23,15 @@ import {
 } from '../../utils';
 import { useEndpointToastError, useFilePicker } from '../../hooks';
 import { useStartNewBoundaryMutation } from '../../api/boundaries';
+import { ACCEPT_BOTH } from '../../constants';
 
 export default function FileUpload({ PreviousButton }) {
     const toast = useToast();
     const navigate = useNavigate();
     const utilityId = useSelector(state => state.auth.utility.id);
 
-    const [startNewBoundary, { error }] = useStartNewBoundaryMutation();
+    const [startNewBoundary, { error, isLoading }] =
+        useStartNewBoundaryMutation();
     useEndpointToastError(error);
 
     const [files, setFiles] = useState([]);
@@ -58,27 +61,30 @@ export default function FileUpload({ PreviousButton }) {
     };
 
     return (
-        <ModalSection
-            preHeading='Optional'
-            heading='Would you like to add your current map?'
-            prevButton={PreviousButton}
-            nextButton={
-                <Button variant='cta' onClick={handleContinue}>
-                    Continue
-                </Button>
-            }
-        >
-            <Text>
-                If you would like to look at a reference or start from an
-                existing map you can upload it here. If you have a Shapefile, we
-                recommend adding it.
-            </Text>
+        <>
+            <LoadingModal isOpen={isLoading} />
+            <ModalSection
+                preHeading='Optional'
+                heading='Would you like to add your current map?'
+                prevButton={PreviousButton}
+                nextButton={
+                    <Button variant='cta' onClick={handleContinue}>
+                        Continue
+                    </Button>
+                }
+            >
+                <Text>
+                    If you would like to look at a reference or start from an
+                    existing map you can upload it here. If you have a
+                    Shapefile, we recommend adding it.
+                </Text>
 
-            <Flex mt={4} w='100%' grow>
-                <UploadBox addFiles={addFiles} />
-                <FilesBox files={files} />
-            </Flex>
-        </ModalSection>
+                <Flex mt={4} w='100%' grow>
+                    <UploadBox addFiles={addFiles} />
+                    <FilesBox files={files} />
+                </Flex>
+            </ModalSection>
+        </>
     );
 }
 
@@ -86,7 +92,11 @@ function UploadBox({ addFiles }) {
     const { hovering, handleUpload, startDrag, endDrag } =
         useFileUpload(addFiles);
 
-    const openFileDialog = useFilePicker(addFiles);
+    const openFileDialog = useFilePicker({
+        onChange: addFiles,
+        multiple: true,
+        accept: ACCEPT_BOTH,
+    });
 
     const onLeaveDragBox = event => {
         const enteredElement = event.relatedTarget;
@@ -135,9 +145,9 @@ function UploadBox({ addFiles }) {
                     <Bold>ACCEPTED FILES</Bold>
                 </Text>
                 <Text color='gray.400'>
-                    <Bold>Shapefiles:</Bold> .SHP, .SHX and .DBF
+                    <Bold>Shapes:</Bold> Shapefile ZIP, GEOJSON
                     <br />
-                    <Bold>Other map files:</Bold> JPEG, PNG
+                    <Bold>Reference Images:</Bold> JPEG, PNG
                 </Text>
             </Flex>
         </Box>
@@ -224,7 +234,7 @@ function FilesBox({ files }) {
     return (
         <Box w='50%' pl={4}>
             <Heading pb={4} size='small'>
-                Uploaded Files
+                Selected Files
             </Heading>
             <List>
                 {files.map(({ name }) => (

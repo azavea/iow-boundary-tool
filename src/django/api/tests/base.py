@@ -1,20 +1,22 @@
 from datetime import datetime, timezone
 
 from django.test import TestCase
-from django.utils.log import request_logger
-from django.urls import reverse
 
-from rest_framework import status
 from rest_framework.test import APIClient
 
-from api.models import Utility, User
-from api.models.boundary import Boundary
-from api.models.user import Roles, State
-from api.models.reference_image import ReferenceImage
-from api.models.submission import Approval, Submission, Review, Annotation
+from api.models import (
+    Annotation,
+    Approval,
+    Boundary,
+    Review,
+    Roles,
+    State,
+    Submission,
+    Utility,
+    User,
+)
 
-
-from .management.test_shapes import (
+from .data.shapes import (
     RALEIGH_FAKE_RECTANGLE,
     RALEIGH_FAKE_TRIANGLE,
     RALEIGH_FAKE_ZIGZAG,
@@ -259,80 +261,6 @@ class BoundarySyncAPITestCase(TestCase):
             approved_by=cls.validator,
         )
 
-        cls.reference_image = ReferenceImage.objects.create(
-            filename="test_file.jpg",
-            is_visible=True,
-            boundary=cls.boundary_1,
-            uploaded_by=cls.contributor,
-        )
-
     def setUp(self):
         self.client = APIClient()
         self.client.force_login(self.contributor)
-
-
-class ReferenceImageViewTests(BoundarySyncAPITestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.new_image = {
-            "filename": "test_file.jpg",
-            "is_visible": True,
-            "distortion": {},
-            "opacity": 100,
-            "uploaded_by": cls.contributor.pk,
-        }
-        cls.updated_image = {**cls.new_image, "is_visible": False}
-
-    def test_no_image_list_endpoint(self):
-        url = reverse("upload_image", args=[1])
-        with self.assertLogs(request_logger, "WARNING"):
-            response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    # Contributor actions
-    def test_contributor_upload_and_update_image(self):
-        url = reverse("upload_image", args=[2])
-        response = self.client.post(url, self.new_image, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(ReferenceImage.objects.filter(boundary__pk=2).count(), 1)
-
-        update_url = reverse("update_image", args=[2, 1])
-        # Attempt to alter the uploaded_by field, which is illegitimate.
-        updated_image_illegitimate = {
-            **self.updated_image,
-            "uploaded_by": self.administrator.pk,
-        }
-
-        response = self.client.put(
-            update_url, updated_image_illegitimate, format="json"
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        ri = ReferenceImage.objects.filter(boundary__pk=2).first()
-        self.assertIs(ri.is_visible, False)
-        self.assertEqual(ri.uploaded_by.pk, self.contributor.pk)
-
-    def test_contributor_cannot_upload_for_invalid_boundary(self):
-        url = reverse("upload_image", args=[2400])
-        with self.assertLogs(request_logger, "WARNING"):
-            response = self.client.post(url, self.new_image, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    # Validator actions
-    def test_validator_cannot_upload_or_update_image(self):
-        self.client.force_login(self.validator)
-        url = reverse("upload_image", args=[1])
-        with self.assertLogs(request_logger, "WARNING"):
-            response = self.client.post(url, self.new_image, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-        url = reverse("update_image", args=[1, 1])
-        with self.assertLogs(request_logger, "WARNING"):
-            response = self.client.put(url, self.updated_image, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

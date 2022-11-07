@@ -6,7 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 
 from ..models import Boundary, ReferenceImage
 from ..models.user import Roles
-from ..serializers.reference_image import ReferenceImageSerializer
+from ..serializers.reference_image import (
+    ReferenceImageSerializer,
+    ReferenceImageUpdateSerializer,
+)
 from ..views.boundary import get_boundary_queryset_for_user
 
 
@@ -38,7 +41,7 @@ class ReferenceImageList(generics.CreateAPIView):
 
 class ReferenceImageDetail(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ReferenceImageSerializer
+    serializer_class = ReferenceImageUpdateSerializer
 
     def get_queryset(self):
         if self.request.user.role == Roles.VALIDATOR:
