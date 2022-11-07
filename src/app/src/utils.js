@@ -126,50 +126,77 @@ export function fileIsShapeFile(file) {
     );
 }
 
-export function getBoundaryPermissions({ boundary, user }) {
-    const permissions = {
-        canWrite: false,
-        canReview: false,
-        canApprove: false,
-        canCreateDraft: false,
-    };
+/**
+ * @typedef {{
+ *  canWrite: T,
+ *  canReview: T,
+ *  canApprove: T,
+ *  canUnapprove: T,
+ *  canCreateDraft: T,
+ * }} Permissions - an object with "can" keys
+ * @template T
+ */
 
+/**
+ * @returns {Permissions<boolean>}
+ */
+export function getBoundaryPermissions({ boundary, user }) {
     const status = boundary?.status;
     const role = user?.role;
 
     if (!status || !role) {
-        return permissions;
+        return {};
     }
 
-    const boundaryInReviewMode = [
-        BOUNDARY_STATUS.SUBMITTED,
-        BOUNDARY_STATUS.IN_REVIEW,
-    ].includes(status);
+    return Object.fromEntries(
+        Object.entries(getBoundaryPermissionForRole(role)).map(
+            ([permissionType, validStatuses]) => [
+                permissionType,
+                validStatuses?.includes(status) ?? false,
+            ]
+        )
+    );
+}
 
-    if (role === ROLES.ADMINISTRATOR) {
-        return {
-            canWrite: status === BOUNDARY_STATUS.DRAFT,
-            canReview: boundaryInReviewMode,
-            canApprove: boundaryInReviewMode,
-            canCreateDraft: status === BOUNDARY_STATUS.NEEDS_REVISIONS,
-        };
+/**
+ * @param {ROLES} role
+ * @returns {Permissions<BOUNDARY_STATUS[]>}
+ */
+function getBoundaryPermissionForRole(role) {
+    switch (role) {
+        case ROLES.CONTRIBUTOR:
+            return {
+                canWrite: [BOUNDARY_STATUS.DRAFT],
+                canCreateDraft: [BOUNDARY_STATUS.NEEDS_REVISIONS],
+            };
+
+        case ROLES.VALIDATOR:
+            return {
+                canReview: [
+                    BOUNDARY_STATUS.SUBMITTED,
+                    BOUNDARY_STATUS.IN_REVIEW,
+                ],
+                canApprove: [BOUNDARY_STATUS.SUBMITTED],
+                canUnapprove: [BOUNDARY_STATUS.APPROVED],
+            };
+
+        case ROLES.ADMINISTRATOR:
+            return {
+                canWrite: [BOUNDARY_STATUS.DRAFT],
+                canReview: [
+                    BOUNDARY_STATUS.SUBMITTED,
+                    BOUNDARY_STATUS.IN_REVIEW,
+                ],
+                canApprove: [
+                    BOUNDARY_STATUS.SUBMITTED,
+                    BOUNDARY_STATUS.IN_REVIEW,
+                    BOUNDARY_STATUS.NEEDS_REVISIONS,
+                ],
+                canUnapprove: [BOUNDARY_STATUS.APPROVED],
+                canCreateDraft: [BOUNDARY_STATUS.NEEDS_REVISIONS],
+            };
+
+        default:
+            throw Error(`Invalid role ${role}`);
     }
-
-    if (role === ROLES.CONTRIBUTOR && status === BOUNDARY_STATUS.DRAFT) {
-        permissions.canWrite = true;
-    }
-
-    if (role === ROLES.VALIDATOR && boundaryInReviewMode) {
-        permissions.canReview = true;
-        permissions.canApprove = true;
-    }
-
-    if (
-        role === ROLES.CONTRIBUTOR &&
-        status === BOUNDARY_STATUS.NEEDS_REVISIONS
-    ) {
-        permissions.canCreateDraft = true;
-    }
-
-    return permissions;
 }
