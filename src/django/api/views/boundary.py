@@ -275,9 +275,12 @@ class BoundaryApproveView(BoundaryView):
                 )
 
         elif user_role == Roles.VALIDATOR:
-            if boundary.status != BOUNDARY_STATUS.SUBMITTED:
+            if boundary.status not in [
+                BOUNDARY_STATUS.SUBMITTED,
+                BOUNDARY_STATUS.IN_REVIEW,
+            ]:
                 raise BadRequestException(
-                    'This boundary must be submitted to be approved.',
+                    'This boundary must be submitted or in review to be approved.',
                 )
 
         else:

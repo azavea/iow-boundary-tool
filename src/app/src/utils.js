@@ -176,7 +176,10 @@ function getBoundaryPermissionForRole(role) {
                     BOUNDARY_STATUS.SUBMITTED,
                     BOUNDARY_STATUS.IN_REVIEW,
                 ],
-                canApprove: [BOUNDARY_STATUS.SUBMITTED],
+                canApprove: [
+                    BOUNDARY_STATUS.SUBMITTED,
+                    BOUNDARY_STATUS.IN_REVIEW,
+                ],
                 canUnapprove: [BOUNDARY_STATUS.APPROVED],
             };
 
