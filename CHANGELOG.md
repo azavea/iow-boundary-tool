@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add unapproving to data model [#178](https://github.com/azavea/iow-boundary-tool/pull/178)
 - Add ability to submit reviews [#181](https://github.com/azavea/iow-boundary-tool/pull/181)
 - Add ability to resubmit boundaries [#185](https://github.com/azavea/iow-boundary-tool/pull/185)
+- Add support for approving/unapproving boundaries [#186](https://github.com/azavea/iow-boundary-tool/pull/186)
 
 ### Changed
 
