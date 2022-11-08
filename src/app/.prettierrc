@@ -1,10 +1,18 @@
 {
     "arrowParens": "avoid",
     "bracketSpacing": true,
+    "bracketSameLine": false,
     "htmlWhitespaceSensitivity": "css",
     "insertPragma": false,
-    "jsxBracketSameLine": false,
     "jsxSingleQuote": true,
+    "overrides": [
+        {
+            "files": "*.css",
+            "options": {
+                "parser": "css"
+            }
+        }
+    ],
     "parser": "babel",
     "printWidth": 80,
     "proseWrap": "always",

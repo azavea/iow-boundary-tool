@@ -20,6 +20,11 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
     if [ "${1:-}" = "--help" ]; then
         usage
     else
+        # Format JavaScript app
+        docker-compose \
+            run --rm --no-TTY --entrypoint yarn app \
+            prettier --loglevel warn --write src/
+
         # Format Django app
 
         # Get a list of changed ".py" files and trim "src/django"
