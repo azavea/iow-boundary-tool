@@ -70,12 +70,14 @@
     font-weight: bold;
     font-size: var(--chakra-fontSizes-sm);
     color: var(--chakra-colors-purple-900);
-    text-shadow: 0 0 0.2em var(--chakra-colors-purple-50), 0 0 0.2em var(--chakra-colors-purple-50);
+    text-shadow: 0 0 0.2em var(--chakra-colors-purple-50),
+        0 0 0.2em var(--chakra-colors-purple-50);
 }
 
 .muni-label-light {
     color: var(--chakra-colors-purple-50);
-    text-shadow: 0 0 0.2em var(--chakra-colors-purple-900), 0 0 0.2em var(--chakra-colors-purple-900);
+    text-shadow: 0 0 0.2em var(--chakra-colors-purple-900),
+        0 0 0.2em var(--chakra-colors-purple-900);
 }
 
 .annotation-popup-div .leaflet-popup-content-wrapper {
