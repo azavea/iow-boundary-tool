@@ -152,7 +152,7 @@ export function getBoundaryPermissions({ boundary, user }) {
         Object.entries(getBoundaryPermissionForRole(role)).map(
             ([permissionType, validStatuses]) => [
                 permissionType,
-                validStatuses?.includes(status) ?? false,
+                validStatuses.includes(status),
             ]
         )
     );
