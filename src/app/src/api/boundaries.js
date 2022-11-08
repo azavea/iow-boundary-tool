@@ -159,6 +159,14 @@ const boundaryApi = api.injectEndpoints({
             }),
             invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
         }),
+
+        createDraft: build.mutation({
+            query: boundaryId => ({
+                url: `/boundaries/${boundaryId}/draft/`,
+                method: 'POST',
+            }),
+            invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
+        }),
     }),
 });
 
@@ -170,4 +178,5 @@ export const {
     useReplaceBoundaryShapeMutation,
     useDeleteBoundaryShapeMutation,
     useSubmitBoundaryMutation,
+    useCreateDraftMutation,
 } = boundaryApi;

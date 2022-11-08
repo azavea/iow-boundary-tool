@@ -7,6 +7,7 @@ from .views.boundary import (
     BoundaryListView,
     BoundaryShapeView,
     BoundarySubmitView,
+    BoundaryDraftView,
 )
 from .views.reference_image import ReferenceImageList, ReferenceImageDetail
 from .views.review import ReviewCreateView, ReviewFinishView
@@ -49,6 +50,11 @@ urlpatterns = [
         "boundaries/<int:boundary_id>/review/annotations/<int:annotation_id>/",
         AnnotationUpdateView.as_view(),
         name='update_annotation',
+    ),
+    path(
+        "boundaries/<int:boundary_id>/draft/",
+        BoundaryDraftView.as_view(),
+        name='start_draft',
     ),
 ]
 

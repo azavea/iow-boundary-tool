@@ -8,11 +8,19 @@ import { AnnotationIcon } from '@heroicons/react/solid';
 
 import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
 
-import { PANES } from '../../constants';
+import { BOUNDARY_STATUS, PANES } from '../../constants';
 import { DeleteAnnotationModal, ViewAnnotationModal } from './AnnotationModals';
 
 export default function AnnotationMarkers() {
-    const annotations = useDrawBoundary().submission?.review?.annotations;
+    const boundary = useDrawBoundary();
+
+    const annotations =
+        boundary.status === BOUNDARY_STATUS.IN_REVIEW ||
+        boundary.status === BOUNDARY_STATUS.NEEDS_REVISIONS
+            ? boundary.submission.review.annotations
+            : boundary.status === BOUNDARY_STATUS.DRAFT
+            ? boundary?.previous_submission?.review.annotations
+            : null;
 
     const [annotationToDelete, setAnnotationToDelete] = useState(null);
     const [annotationToView, setAnnotationToView] = useState(null);

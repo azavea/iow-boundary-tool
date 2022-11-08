@@ -20,6 +20,7 @@ import Info from './Info';
 import Map from './Map';
 import { useEndpointToastError } from '../../../hooks';
 import { useStartReviewMutation } from '../../../api/reviews';
+import { useCreateDraftMutation } from '../../../api/boundaries';
 import { NAVBAR_HEIGHT } from '../../../constants';
 import { useSelector } from 'react-redux';
 import { getBoundaryPermissions, heroToChakraIcon } from '../../../utils';
@@ -45,12 +46,22 @@ export default function SubmissionDetail() {
         { isLoading: isStartingReview, error: startReviewError },
     ] = useStartReviewMutation();
 
+    const [
+        createDraft,
+        { isLoading: isCreatingDraft, error: createDraftMutationError },
+    ] = useCreateDraftMutation();
+
     useEndpointToastError(
         startReviewError,
         'There was an error starting a review.'
     );
 
-    if (isFetching || isStartingReview) {
+    useEndpointToastError(
+        createDraftMutationError,
+        'There was an error creating a new submission.'
+    );
+
+    if (isFetching || isStartingReview || isCreatingDraft) {
         return <CenteredSpinner />;
     }
 
@@ -104,7 +115,11 @@ export default function SubmissionDetail() {
                         borderColor='gray.200'
                         borderRadius={6}
                     >
-                        <Map boundary={boundary} startReview={startReview} />
+                        <Map
+                            boundary={boundary}
+                            startReview={startReview}
+                            createDraft={createDraft}
+                        />
                     </Box>
                 </Flex>
             </Flex>

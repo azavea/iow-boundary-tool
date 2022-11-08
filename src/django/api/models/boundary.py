@@ -74,3 +74,11 @@ class Boundary(models.Model):
     @cached_property
     def latest_submission(self):
         return self.submissions.latest()
+
+    @cached_property
+    def previous_submission(self):
+        recent_submissions = self.submissions.order_by('-created_at')[:2]
+        if recent_submissions.count() == 2:
+            return recent_submissions[1]
+
+        return None

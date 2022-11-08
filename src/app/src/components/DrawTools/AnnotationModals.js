@@ -100,7 +100,7 @@ function ReadOnlyAnnotationModal({ annotation, onClose }) {
             headerText='View comment'
             isOpen={!!annotation}
             onClose={onClose}
-            body={<Textarea value={annotation?.comment} disabled />}
+            body={<Text color='gray.900'>{annotation?.comment}</Text>}
         />
     );
 }
@@ -180,19 +180,25 @@ function AnnotationModalBase({
                                 variant='secondary'
                                 onClick={onClose}
                                 disabled={isLoading}
+                                width={onSubmit ? undefined : '100%'}
                             >
                                 Back
                             </Button>
-                            <Spacer />
-                            <Button
-                                variant='cta'
-                                onClick={() => {
-                                    onSubmit();
-                                }}
-                                isLoading={isLoading}
-                            >
-                                {ctaLabel}
-                            </Button>
+
+                            {onSubmit && (
+                                <>
+                                    <Spacer />
+                                    <Button
+                                        variant='cta'
+                                        onClick={() => {
+                                            onSubmit();
+                                        }}
+                                        isLoading={isLoading}
+                                    >
+                                        {ctaLabel}
+                                    </Button>
+                                </>
+                            )}
                         </Flex>
                     </ModalFooter>
                 </ModalContent>
