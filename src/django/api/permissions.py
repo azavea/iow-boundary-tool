@@ -25,3 +25,13 @@ class UserCanWriteBoundaries(BasePermission):
             request.user.role == Roles.CONTRIBUTOR
             or request.user.role == Roles.ADMINISTRATOR
         )
+
+
+class UserCanUnapproveBoundaries(BasePermission):
+    message = 'You are not able to unapprove boundaries.'
+
+    def has_permission(self, request, view):
+        return request_is_read_only(request) or (
+            request.user.role == Roles.VALIDATOR
+            or request.user.role == Roles.ADMINISTRATOR
+        )

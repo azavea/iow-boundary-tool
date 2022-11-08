@@ -167,6 +167,22 @@ const boundaryApi = api.injectEndpoints({
             }),
             invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
         }),
+
+        approveBoundary: build.mutation({
+            query: boundaryId => ({
+                url: `/boundaries/${boundaryId}/approve/`,
+                method: 'POST',
+            }),
+            invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
+        }),
+
+        unapproveBoundary: build.mutation({
+            query: boundaryId => ({
+                url: `/boundaries/${boundaryId}/unapprove/`,
+                method: 'POST',
+            }),
+            invalidatesTags: getUpdateItemTagInvalidator(TAGS.BOUNDARY),
+        }),
     }),
 });
 
@@ -179,4 +195,6 @@ export const {
     useDeleteBoundaryShapeMutation,
     useSubmitBoundaryMutation,
     useCreateDraftMutation,
+    useApproveBoundaryMutation,
+    useUnapproveBoundaryMutation,
 } = boundaryApi;
