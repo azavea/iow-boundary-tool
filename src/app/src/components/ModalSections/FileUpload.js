@@ -6,13 +6,14 @@ import {
     Flex,
     Heading,
     Icon,
+    IconButton,
     List,
     ListItem,
     Text,
     useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { CloudUploadIcon } from '@heroicons/react/outline';
+import { CloudUploadIcon, TrashIcon } from '@heroicons/react/outline';
 
 import LoadingModal from '../LoadingModal';
 import ModalSection from './ModalSection';
@@ -36,6 +37,11 @@ export default function FileUpload({ PreviousButton }) {
 
     const [files, setFiles] = useState([]);
     const addFiles = newFiles => setFiles(files => [...files, ...newFiles]);
+    const removeFile = index =>
+        setFiles(files => [
+            ...files.slice(0, index),
+            ...files.slice(index + 1),
+        ]);
 
     const handleContinue = () => {
         const referenceImages = files.filter(fileIsImageFile);
@@ -81,7 +87,7 @@ export default function FileUpload({ PreviousButton }) {
 
                 <Flex mt={4} w='100%' grow>
                     <UploadBox addFiles={addFiles} />
-                    <FilesBox files={files} />
+                    <FilesBox files={files} removeFile={removeFile} />
                 </Flex>
             </ModalSection>
         </>
@@ -228,7 +234,7 @@ function Bold({ children }) {
     );
 }
 
-function FilesBox({ files }) {
+function FilesBox({ files, removeFile }) {
     if (files.length === 0) return null;
 
     return (
@@ -237,11 +243,24 @@ function FilesBox({ files }) {
                 Selected Files
             </Heading>
             <List>
-                {files.map(({ name }) => (
-                    <ListItem key={name} mb={6}>
-                        <Text mb={2} p={2} color='gray.700' bg='gray.50'>
-                            {name}
-                        </Text>
+                {files.map(({ name }, index) => (
+                    <ListItem key={name} mb={4}>
+                        <Flex>
+                            <Text
+                                p={2}
+                                flexGrow={1}
+                                color='gray.700'
+                                bg='gray.50'
+                            >
+                                {name}
+                            </Text>
+                            <IconButton
+                                ml={2}
+                                icon={<Icon as={TrashIcon} />}
+                                variant='ghost'
+                                onClick={() => removeFile(index)}
+                            />
+                        </Flex>
                     </ListItem>
                 ))}
             </List>
