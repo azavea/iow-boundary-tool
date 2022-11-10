@@ -7,10 +7,12 @@ import {
     Heading,
     Icon,
     IconButton,
+    Image,
     List,
     ListItem,
     Text,
     useToast,
+    VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { CloudUploadIcon, TrashIcon } from '@heroicons/react/outline';
@@ -25,6 +27,7 @@ import {
 import { useEndpointToastError, useFilePicker } from '../../hooks';
 import { useStartNewBoundaryMutation } from '../../api/boundaries';
 import { ACCEPT_BOTH } from '../../constants';
+import FileTypesImage from '../../img/img-filetypes.png';
 
 export default function FileUpload({ PreviousButton }) {
     const toast = useToast();
@@ -235,10 +238,62 @@ function Bold({ children }) {
 }
 
 function FilesBox({ files, removeFile }) {
-    if (files.length === 0) return null;
-
     return (
         <Box w='50%' pl={4}>
+            {files.length === 0 ? (
+                <NoFiles />
+            ) : (
+                <FilesList files={files} removeFile={removeFile} />
+            )}
+        </Box>
+    );
+}
+function NoFiles() {
+    return (
+        <VStack ml='5%' mr='5%' pt='1.5rem' pb='1.5rem'>
+            <TextBlock
+                header='Upload a scanned map'
+                subheader='You can use a JPEG or PNG fileas a drawing reference.'
+            />
+
+            <Image
+                src={FileTypesImage}
+                width='234px'
+                height='100px'
+                style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}
+            />
+
+            <TextBlock
+                header='Upload a shapefile'
+                subheader='Skip drawing and submit a ZIP or GeoJSON file if you already have a digital boundary.'
+            />
+        </VStack>
+    );
+
+    function TextBlock({ header, subheader }) {
+        return (
+            <Box style={{ textAlign: 'center' }}>
+                <Text
+                    color='gray.500'
+                    style={{ fontWeight: 600, fontSize: '18px' }}
+                    mb={0}
+                >
+                    {header}
+                </Text>
+                <Text
+                    color='gray.500'
+                    subheader={{ fontWeight: 400, fontSize: '16px' }}
+                >
+                    {subheader}
+                </Text>
+            </Box>
+        );
+    }
+}
+
+function FilesList({ files, removeFile }) {
+    return (
+        <>
             <Heading pb={4} size='small'>
                 Selected Files
             </Heading>
@@ -264,6 +319,6 @@ function FilesBox({ files, removeFile }) {
                     </ListItem>
                 ))}
             </List>
-        </Box>
+        </>
     );
 }
