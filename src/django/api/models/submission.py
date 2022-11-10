@@ -1,9 +1,8 @@
-from datetime import datetime, timezone
-
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as gis_models
 from django.utils.functional import cached_property
+from django.utils import timezone
 
 from .boundary import Boundary
 from .user import User, Roles
@@ -84,7 +83,7 @@ class Review(models.Model):
         super().clean()
 
     def finish(self, reviewed_by):
-        self.reviewed_at = datetime.now(tz=timezone.utc)
+        self.reviewed_at = timezone.now()
         self.reviewed_by = reviewed_by
 
 
@@ -122,7 +121,7 @@ class Approval(models.Model):
         return self.unapproved_at is not None
 
     def unapprove(self, unapproved_by):
-        self.unapproved_at = datetime.now(tz=timezone.utc)
+        self.unapproved_at = timezone.now()
         self.unapproved_by = unapproved_by
 
 
@@ -143,4 +142,4 @@ class Annotation(models.Model):
         return self.resolved_at is not None
 
     def resolve(self):
-        self.resolved_at = datetime.now(tz=timezone.utc)
+        self.resolved_at = timezone.now()
