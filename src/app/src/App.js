@@ -71,7 +71,16 @@ function PrivateRoutes() {
                 <Route path='/submissions/*' element={<Submissions />} />
                 <Route
                     path='*'
-                    element={<Navigate to={'/submissions'} replace />}
+                    element={
+                        <Navigate
+                            to={
+                                hasWelcomePageAccess
+                                    ? '/welcome'
+                                    : '/submissions'
+                            }
+                            replace
+                        />
+                    }
                 />
             </Routes>
         </>
