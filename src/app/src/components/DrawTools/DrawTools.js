@@ -28,6 +28,8 @@ export default function DrawTools() {
     const { status } = useDrawBoundary();
     const { canWrite, canReview } = useDrawPermissions();
 
+    const afterSubmitDialogController = useDialogController(false);
+
     const draftMode = status === BOUNDARY_STATUS.DRAFT && canWrite;
     const reviewMode = status === BOUNDARY_STATUS.IN_REVIEW && canReview;
 
@@ -36,17 +38,26 @@ export default function DrawTools() {
             <EditToolbar />
             <MapControlButtons />
 
-            {draftMode && <DraftTools />}
+            {draftMode && (
+                <DraftTools onSuccess={afterSubmitDialogController.open} />
+            )}
+
             {reviewMode && <ReviewTools />}
+
+            {status === BOUNDARY_STATUS.SUBMITTED && (
+                <AfterSubmitModal
+                    isOpen={afterSubmitDialogController.isOpen}
+                    onClose={afterSubmitDialogController.close}
+                />
+            )}
 
             <AnnotationMarkers />
         </>
     );
 }
 
-function DraftTools() {
+function DraftTools({ onSuccess }) {
     const submitDialogController = useDialogController(false);
-    const afterSubmitDialogController = useDialogController(false);
 
     return (
         <>
@@ -55,11 +66,7 @@ function DraftTools() {
             <SubmitModal
                 isOpen={submitDialogController.isOpen}
                 onClose={submitDialogController.close}
-                onSuccess={afterSubmitDialogController.open}
-            />
-            <AfterSubmitModal
-                isOpen={afterSubmitDialogController.isOpen}
-                onClose={afterSubmitDialogController.close}
+                onSuccess={onSuccess}
             />
 
             <ReviewAndSaveButton
