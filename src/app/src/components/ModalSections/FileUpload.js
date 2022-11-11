@@ -6,13 +6,16 @@ import {
     Flex,
     Heading,
     Icon,
+    IconButton,
+    Image,
     List,
     ListItem,
     Text,
     useToast,
+    VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { CloudUploadIcon } from '@heroicons/react/outline';
+import { CloudUploadIcon, TrashIcon } from '@heroicons/react/outline';
 
 import LoadingModal from '../LoadingModal';
 import ModalSection from './ModalSection';
@@ -24,6 +27,7 @@ import {
 import { useEndpointToastError, useFilePicker } from '../../hooks';
 import { useStartNewBoundaryMutation } from '../../api/boundaries';
 import { ACCEPT_BOTH } from '../../constants';
+import FileTypesImage from '../../img/img-filetypes.png';
 
 export default function FileUpload({ PreviousButton }) {
     const toast = useToast();
@@ -36,6 +40,11 @@ export default function FileUpload({ PreviousButton }) {
 
     const [files, setFiles] = useState([]);
     const addFiles = newFiles => setFiles(files => [...files, ...newFiles]);
+    const removeFile = index =>
+        setFiles(files => [
+            ...files.slice(0, index),
+            ...files.slice(index + 1),
+        ]);
 
     const handleContinue = () => {
         const referenceImages = files.filter(fileIsImageFile);
@@ -81,7 +90,7 @@ export default function FileUpload({ PreviousButton }) {
 
                 <Flex mt={4} w='100%' grow>
                     <UploadBox addFiles={addFiles} />
-                    <FilesBox files={files} />
+                    <FilesBox files={files} removeFile={removeFile} />
                 </Flex>
             </ModalSection>
         </>
@@ -228,23 +237,88 @@ function Bold({ children }) {
     );
 }
 
-function FilesBox({ files }) {
-    if (files.length === 0) return null;
-
+function FilesBox({ files, removeFile }) {
     return (
         <Box w='50%' pl={4}>
+            {files.length === 0 ? (
+                <NoFiles />
+            ) : (
+                <FilesList files={files} removeFile={removeFile} />
+            )}
+        </Box>
+    );
+}
+function NoFiles() {
+    return (
+        <VStack ml='5%' mr='5%' pt='1.5rem' pb='1.5rem'>
+            <TextBlock
+                header='Upload a scanned map'
+                subheader='You can use a JPEG or PNG fileas a drawing reference.'
+            />
+
+            <Image
+                src={FileTypesImage}
+                width='234px'
+                height='100px'
+                style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}
+            />
+
+            <TextBlock
+                header='Upload a shapefile'
+                subheader='Skip drawing and submit a ZIP or GeoJSON file if you already have a digital boundary.'
+            />
+        </VStack>
+    );
+
+    function TextBlock({ header, subheader }) {
+        return (
+            <Box style={{ textAlign: 'center' }}>
+                <Text
+                    color='gray.500'
+                    style={{ fontWeight: 600, fontSize: '18px' }}
+                    mb={0}
+                >
+                    {header}
+                </Text>
+                <Text
+                    color='gray.500'
+                    subheader={{ fontWeight: 400, fontSize: '16px' }}
+                >
+                    {subheader}
+                </Text>
+            </Box>
+        );
+    }
+}
+
+function FilesList({ files, removeFile }) {
+    return (
+        <>
             <Heading pb={4} size='small'>
                 Selected Files
             </Heading>
             <List>
-                {files.map(({ name }) => (
-                    <ListItem key={name} mb={6}>
-                        <Text mb={2} p={2} color='gray.700' bg='gray.50'>
-                            {name}
-                        </Text>
+                {files.map(({ name }, index) => (
+                    <ListItem key={name} mb={4}>
+                        <Flex>
+                            <Text
+                                p={2}
+                                flexGrow={1}
+                                color='gray.700'
+                                bg='gray.50'
+                            >
+                                {name}
+                            </Text>
+                            <IconButton
+                                ml={2}
+                                icon={<Icon as={TrashIcon} />}
+                                variant='ghost'
+                                onClick={() => removeFile(index)}
+                            />
+                        </Flex>
                     </ListItem>
                 ))}
             </List>
-        </Box>
+        </>
     );
 }
