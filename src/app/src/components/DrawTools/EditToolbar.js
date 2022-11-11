@@ -132,7 +132,7 @@ function PolygonButton({ openEditDialog }) {
     if (!canWrite) {
         return (
             <Button variant='toolbar' minW={POLYGON_BUTTON_WIDTH} disabled>
-                {boundary.name}
+                {boundary.utility.name}
             </Button>
         );
     }
@@ -156,7 +156,7 @@ function PolygonButton({ openEditDialog }) {
                 variant='toolbar'
                 minW={POLYGON_BUTTON_WIDTH}
             >
-                {boundary.name}
+                Replace polygon
             </Button>
         );
     }
