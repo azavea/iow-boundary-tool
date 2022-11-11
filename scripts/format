@@ -30,26 +30,9 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
         # Get a list of changed ".py" files and trim "src/django"
         changed_files=$(git status --porcelain | grep ".py" | awk -F'src/django/' '{print $2}' | xargs)
         if [[ -n "${changed_files}" ]]; then
-            # Run isort --check-only before fixing to ensure a failure code is emitted
-            if ! docker-compose \
-                run --rm --no-TTY --no-deps --entrypoint isort django ${changed_files} --check-only; then
-
-                docker-compose \
-                    run --rm --no-TTY --no-deps --entrypoint isort django ${changed_files}
-            fi
-            # Run black with --check before fixing to ensure a failure code is emitted
-            if ! docker-compose \
-                run --rm --no-TTY --no-deps --entrypoint black django \
-                --skip-string-normalization \
-                --extend-exclude migrations ${changed_files} \
-                --quiet --check; then
-
-                docker-compose \
-                    run --rm --no-TTY --no-deps --entrypoint black django \
-                    --skip-string-normalization \
-                    --extend-exclude migrations \
-                    --quiet ${changed_files}
-            fi
+            docker-compose \
+                run --rm --no-TTY --no-deps --entrypoint ./format.sh django \
+                ${changed_files}
         fi
     fi
 fi
