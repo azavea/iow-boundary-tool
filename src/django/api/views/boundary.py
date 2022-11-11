@@ -1,10 +1,8 @@
 import json
 
-from datetime import datetime, timezone
-
-from django.conf import settings
 from django.db.models import Prefetch, functions
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -146,7 +144,7 @@ class BoundarySubmitView(APIView):
                 "Cannot submit boundary with status: {}".format(boundary.status.value),
             )
 
-        now = datetime.now(tz=timezone(settings.TIME_ZONE))
+        now = timezone.now()
         yyyy_mm_dd = now.isoformat()[:10]
         fp = f"{boundary.utility.pwsid}_{boundary.utility.address_city}_{yyyy_mm_dd}"
 

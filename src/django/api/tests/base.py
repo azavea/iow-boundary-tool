@@ -1,6 +1,5 @@
-from datetime import datetime, timezone
-
 from django.test import TestCase
+from django.utils import timezone
 
 from rest_framework.test import APIClient
 
@@ -147,31 +146,31 @@ class BoundarySyncAPITestCase(TestCase):
 
         # submitted
         Submission.objects.filter(pk=submission_2.pk).update(
-            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_at=timezone.now(),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
 
         Submission.objects.filter(pk=submission_3.pk).update(
-            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_at=timezone.now(),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
 
         Submission.objects.filter(pk=submission_4.pk).update(
-            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_at=timezone.now(),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
 
         Submission.objects.filter(pk=submission_5.pk).update(
-            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_at=timezone.now(),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
 
         Submission.objects.filter(pk=submission_6.pk).update(
-            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_at=timezone.now(),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
@@ -181,53 +180,53 @@ class BoundarySyncAPITestCase(TestCase):
             submission=submission_3,
             reviewed_by=cls.validator,
             notes="Notes for the review.",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=timezone.now(),
         )
 
         review_submission_4 = Review.objects.create(
             submission=submission_4,
             reviewed_by=cls.validator,
             notes="Notes for the review.",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=timezone.now(),
         )
 
         review_submission_6 = Review.objects.create(
             submission=submission_6,
             reviewed_by=cls.validator,
             notes="Notes for the review.",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=timezone.now(),
         )
 
         Annotation.objects.create(
             review=review_submission_3,
             location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
             comment="Comment on review",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=timezone.now(),
         )
 
         Annotation.objects.create(
             review=review_submission_4,
             location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
             comment="Comment on review",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=timezone.now(),
         )
 
         Annotation.objects.create(
             review=review_submission_6,
             location=POINT_IN_RALEIGH_FAKE_TRIANGLE,
             comment="Comment on review",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=timezone.now(),
         )
 
         # needs revision
         Review.objects.filter(pk=review_submission_4.pk).update(
-            reviewed_at=datetime.now(tz=timezone.utc),
+            reviewed_at=timezone.now(),
             reviewed_by=cls.validator,
             notes="Final notes for the review.",
         )
 
         Review.objects.filter(pk=review_submission_6.pk).update(
-            reviewed_at=datetime.now(tz=timezone.utc),
+            reviewed_at=timezone.now(),
             reviewed_by=cls.validator,
             notes="Final notes for the review.",
         )
@@ -243,7 +242,7 @@ class BoundarySyncAPITestCase(TestCase):
         # re-submit for review
 
         Submission.objects.filter(pk=resubmission_6.pk).update(
-            submitted_at=datetime.now(tz=timezone.utc),
+            submitted_at=timezone.now(),
             submitted_by=cls.contributor,
             notes="Notes for the test submission.",
         )
@@ -251,17 +250,17 @@ class BoundarySyncAPITestCase(TestCase):
         # approved
         approval_6 = Approval.objects.create(
             submission=resubmission_6,
-            approved_at=datetime.now(tz=timezone.utc),
+            approved_at=timezone.now(),
             approved_by=cls.validator,
         )
 
         approval_6.unapproved_by = cls.validator
-        approval_6.unapproved_at = datetime.now(tz=timezone.utc)
+        approval_6.unapproved_at = timezone.now()
         approval_6.save()
 
         Approval.objects.create(
             submission=submission_5,
-            approved_at=datetime.now(tz=timezone.utc),
+            approved_at=timezone.now(),
             approved_by=cls.validator,
         )
 
