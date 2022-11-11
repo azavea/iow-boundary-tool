@@ -51,7 +51,6 @@ export default function ReferenceImageLayer() {
                     L.RotateAction,
                     L.FreeRotateAction,
                     L.LockAction,
-                    L.OpacityAction,
                     L.BorderAction,
                 ],
                 selected: true,
