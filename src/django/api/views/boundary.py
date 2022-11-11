@@ -10,6 +10,7 @@ from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from ..exceptions import BadRequestException
+from ..mail import send_validator_update_email
 from ..models import ReferenceImage, Roles, Submission
 from ..models.boundary import BOUNDARY_STATUS, Boundary
 from ..models.submission import Approval
@@ -155,6 +156,8 @@ class BoundarySubmitView(APIView):
         boundary.latest_submission.submitted_by = request.user
         boundary.latest_submission.submitted_at = now
         boundary.latest_submission.save()
+
+        send_validator_update_email(request, boundary)
 
         return Response(status=HTTP_204_NO_CONTENT)
 
