@@ -17,7 +17,7 @@ import { DownloadIcon, LogoutIcon } from '@heroicons/react/outline';
 import { CheckCircleIcon } from '@heroicons/react/solid';
 
 import { useBoundaryId } from '../hooks';
-import { downloadData, getBoundaryShapeFilename } from '../utils';
+import { downloadData } from '../utils';
 import { logout } from '../store/authSlice';
 import { useDrawBoundary } from './DrawContext';
 
@@ -80,7 +80,7 @@ export default function AfterSubmitModal({ isOpen, onClose }) {
                             onClick={() => {
                                 downloadData(
                                     JSON.stringify(boundary.submission.shape),
-                                    getBoundaryShapeFilename(boundary)
+                                    `${boundary.official_name}.geojson`
                                 );
                             }}
                         >

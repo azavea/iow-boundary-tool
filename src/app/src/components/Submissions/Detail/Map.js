@@ -23,11 +23,7 @@ import {
     ROLES,
 } from '../../../constants';
 import { useMapLayer } from '../../../hooks';
-import {
-    downloadData,
-    getBoundaryShapeFilename,
-    getBoundaryPermissions,
-} from '../../../utils';
+import { downloadData, getBoundaryPermissions } from '../../../utils';
 
 export default function Map({ boundary, startReview, createDraft }) {
     const StatusBar = useSubmissionStatusBar(boundary);
@@ -85,7 +81,7 @@ function MapButtons({ boundary, startReview, createDraft }) {
                         onClick={() =>
                             downloadData(
                                 JSON.stringify(boundary.submission.shape),
-                                getBoundaryShapeFilename(boundary)
+                                `${boundary.official_name}.geojson`
                             )
                         }
                     >
