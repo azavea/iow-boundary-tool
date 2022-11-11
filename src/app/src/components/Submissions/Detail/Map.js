@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Flex, HStack, Icon, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -24,6 +24,7 @@ import {
 } from '../../../constants';
 import { useMapLayer } from '../../../hooks';
 import { downloadData, getBoundaryPermissions } from '../../../utils';
+import { setHasZoomedToShape } from '../../../store/mapSlice';
 
 export default function Map({ boundary, startReview, createDraft }) {
     const StatusBar = useSubmissionStatusBar(boundary);
@@ -95,13 +96,17 @@ function MapButtons({ boundary, startReview, createDraft }) {
 
 function DrawButton({ boundary, startReview, createDraft }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
     const { canWrite, canReview, canCreateDraft } = getBoundaryPermissions({
         boundary,
         user,
     });
 
-    const goToDrawPage = () => navigate(`/draw/${boundary.id}`);
+    const goToDrawPage = () => {
+        dispatch(setHasZoomedToShape(false));
+        navigate(`/draw/${boundary.id}`);
+    };
 
     let label = 'View boundary';
     let icon = EyeIcon;
