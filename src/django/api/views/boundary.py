@@ -137,7 +137,7 @@ class BoundarySubmitView(APIView):
 
     def patch(self, request, id, format=None):
         boundary_set = get_boundary_queryset_for_user(request.user)
-        boundary_set = boundary_set.prefetch_related("submissions")
+        boundary_set = boundary_set.select_related('utility__state')
         boundary = get_object_or_404(boundary_set, pk=id)
         if boundary.status != BOUNDARY_STATUS.DRAFT:
             raise BadRequestException(
