@@ -2,18 +2,18 @@ from django.urls import include, path
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import Login, Logout
+from .views.annotations import AnnotationCreateView, AnnotationUpdateView
 from .views.boundary import (
+    BoundaryApproveView,
     BoundaryDetailView,
+    BoundaryDraftView,
     BoundaryListView,
     BoundaryShapeView,
     BoundarySubmitView,
-    BoundaryDraftView,
-    BoundaryApproveView,
     BoundaryUnapproveView,
 )
-from .views.reference_image import ReferenceImageList, ReferenceImageDetail
+from .views.reference_image import ReferenceImageDetail, ReferenceImageList
 from .views.review import ReviewCreateView, ReviewFinishView
-from .views.annotations import AnnotationCreateView, AnnotationUpdateView
 
 urlpatterns = [
     path("auth/login/", Login.as_view()),

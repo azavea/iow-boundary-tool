@@ -1,16 +1,15 @@
 from django.shortcuts import get_object_or_404
-
-from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.views import APIView
 
-from ..permissions import UserCanReviewBoundaries
-from .boundary import get_boundary_queryset_for_user
-from ..models.boundary import BOUNDARY_STATUS
 from ..exceptions import BadRequestException
-from ..serializers.annotation import NewAnnotationSerializer, UpdateAnnotationSerializer
+from ..models.boundary import BOUNDARY_STATUS
 from ..models.submission import Annotation
+from ..permissions import UserCanReviewBoundaries
+from ..serializers.annotation import NewAnnotationSerializer, UpdateAnnotationSerializer
+from .boundary import get_boundary_queryset_for_user
 
 
 class AnnotationAPIView(APIView):

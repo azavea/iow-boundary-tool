@@ -3,25 +3,24 @@ import json
 from django.db.models import Prefetch, functions
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.exceptions import NotAuthenticated
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.views import APIView
 
-from ..serializers import (
-    BoundaryListSerializer,
-    BoundaryDetailSerializer,
-    ShapeUpdateSerializer,
-    NewBoundarySerializer,
-)
-from ..parsers import NewBoundaryParser
-from ..models import Roles, Submission, ReferenceImage
+from ..exceptions import BadRequestException
+from ..models import ReferenceImage, Roles, Submission
 from ..models.boundary import BOUNDARY_STATUS, Boundary
 from ..models.submission import Approval
-from ..exceptions import BadRequestException
-from ..permissions import UserCanWriteBoundaries, UserCanUnapproveBoundaries
+from ..parsers import NewBoundaryParser
+from ..permissions import UserCanUnapproveBoundaries, UserCanWriteBoundaries
+from ..serializers import (
+    BoundaryDetailSerializer,
+    BoundaryListSerializer,
+    NewBoundarySerializer,
+    ShapeUpdateSerializer,
+)
 
 
 def get_boundary_queryset_for_user(user):

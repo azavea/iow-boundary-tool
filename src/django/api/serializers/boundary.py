@@ -1,33 +1,31 @@
 from operator import itemgetter
 
 from django.db import transaction
-
 from rest_framework.serializers import (
-    ModelSerializer,
     CharField,
     ChoiceField,
     DateTimeField,
     FileField,
-    SerializerMethodField,
+    ModelSerializer,
     PrimaryKeyRelatedField,
+    SerializerMethodField,
 )
 
-from ..models.boundary import Boundary, BOUNDARY_STATUS
-from ..models.utility import Utility
-from ..models.submission import Submission, Review, Annotation
-from ..models.user import User
-from ..models.reference_image import ReferenceImage
-
-from .reference_image import ReferenceImageSerializer
 from ..fields import ShapefileField
+from ..models.boundary import BOUNDARY_STATUS, Boundary
+from ..models.reference_image import ReferenceImage
+from ..models.submission import Annotation, Review, Submission
+from ..models.user import User
+from ..models.utility import Utility
 from .activity_log import (
-    ActivityDraftedSerializer,
-    ActivitySubmittedSerializer,
-    ActivityReviewStartedSerializer,
-    ActivityReviewedSerializer,
     ActivityApprovedSerializer,
+    ActivityDraftedSerializer,
+    ActivityReviewedSerializer,
+    ActivityReviewStartedSerializer,
+    ActivitySubmittedSerializer,
     ActivityUnapprovedSerializer,
 )
+from .reference_image import ReferenceImageSerializer
 
 
 class StatusField(ChoiceField):

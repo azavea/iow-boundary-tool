@@ -1,15 +1,14 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.response import Response
+from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.views import APIView
 
-from .boundary import get_boundary_queryset_for_user
 from ..exceptions import BadRequestException
-from ..models.submission import Review
 from ..models.boundary import BOUNDARY_STATUS
+from ..models.submission import Review
 from ..permissions import UserCanReviewBoundaries
+from .boundary import get_boundary_queryset_for_user
 
 
 class ReviewView(APIView):

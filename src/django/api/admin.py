@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from rest_framework.authtoken.models import TokenProxy
-from .models.user import User, Utility
-from .models.state import State
+
 from .models.boundary import Boundary
-from .models.submission import Submission, Approval, Review, Annotation
 from .models.reference_image import ReferenceImage
+from .models.state import State
+from .models.submission import Annotation, Approval, Review, Submission
+from .models.user import User, Utility
 
 
 class EmailAsUsernameUserAdmin(UserAdmin):
