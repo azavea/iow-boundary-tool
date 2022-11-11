@@ -91,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix user authentication [#170](https://github.com/azavea/iow-boundary-tool/pull/170)
 - Fix view submission details link destination [#174](https://github.com/azavea/iow-boundary-tool/pull/174)
 - Fix submit boundary [#195](https://github.com/azavea/iow-boundary-tool/pull/195)
+- Fix contributor welcome redirect [#197](https://github.com/azavea/iow-boundary-tool/pull/197)
 
 ### Deprecated
 

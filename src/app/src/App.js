@@ -56,10 +56,9 @@ function PrivateRoutes() {
     return (
         <>
             <Routes>
-                {hasWelcomePageAccess && (
-                    <Route path='/welcome' element={<Outlet />} />
-                )}
-                <Route path='*' element={<NavBar />} />
+                <Route path='/draw/*' element={<NavBar />} />
+                <Route path='/submissions/*' element={<NavBar />} />
+                <Route path='*' element={<Outlet />} />
             </Routes>
 
             <Routes>
@@ -71,7 +70,16 @@ function PrivateRoutes() {
                 <Route path='/submissions/*' element={<Submissions />} />
                 <Route
                     path='*'
-                    element={<Navigate to={'/submissions'} replace />}
+                    element={
+                        <Navigate
+                            to={
+                                hasWelcomePageAccess
+                                    ? '/welcome'
+                                    : '/submissions'
+                            }
+                            replace
+                        />
+                    }
                 />
             </Routes>
         </>
