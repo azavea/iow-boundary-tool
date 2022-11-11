@@ -53,3 +53,26 @@ resource "aws_iam_role_policy" "scoped_email_sending" {
   role   = aws_iam_role.ecs_task_role.name
   policy = data.aws_iam_policy_document.scoped_email_sending.json
 }
+
+data "aws_iam_policy_document" "s3_read_write_data_bucket" {
+    statement {
+        effect = "Allow"
+
+        resources = [
+            aws_s3_bucket.data.arn,
+            "${aws_s3_bucket.data.arn}/*",
+        ]
+
+        actions = [
+            "s3:GetObject",
+            "s3:ListBucket",
+            "s3:PutObject",
+        ]
+    }
+}
+
+resource "aws_iam_role_policy" "s3_read_write_data_bucket" {
+    name   = "S3ReadWriteData"
+    role   = aws_iam_role.ecs_task_role.name
+    policy = data.aws_iam_policy_document.s3_read_write_data_bucket.json
+}

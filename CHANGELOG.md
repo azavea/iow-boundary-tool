@@ -62,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add format script and pre-commit hook [#179](https://github.com/azavea/iow-boundary-tool/pull/179)
 - Add ability to resubmit boundaries [#185](https://github.com/azavea/iow-boundary-tool/pull/185)
 - Add support for approving/unapproving boundaries [#186](https://github.com/azavea/iow-boundary-tool/pull/186)
+- Add S3 Permissions to ECS Tasks [#199](https://github.com/azavea/iow-boundary-tool/pull/199)
 
 ### Changed
 
