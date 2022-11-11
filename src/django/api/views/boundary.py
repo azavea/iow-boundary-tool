@@ -10,6 +10,7 @@ from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from ..exceptions import BadRequestException
+from ..mail import send_boundary_submitted_validator_email
 from ..models import ReferenceImage, Roles, Submission
 from ..models.boundary import BOUNDARY_STATUS, Boundary
 from ..models.submission import Approval
@@ -136,7 +137,7 @@ class BoundarySubmitView(APIView):
 
     def patch(self, request, id, format=None):
         boundary_set = get_boundary_queryset_for_user(request.user)
-        boundary_set = boundary_set.prefetch_related("submissions")
+        boundary_set = boundary_set.select_related('utility__state')
         boundary = get_object_or_404(boundary_set, pk=id)
         if boundary.status != BOUNDARY_STATUS.DRAFT:
             raise BadRequestException(
@@ -155,6 +156,8 @@ class BoundarySubmitView(APIView):
         boundary.latest_submission.submitted_by = request.user
         boundary.latest_submission.submitted_at = now
         boundary.latest_submission.save()
+
+        send_boundary_submitted_validator_email(request, boundary)
 
         return Response(status=HTTP_204_NO_CONTENT)
 
