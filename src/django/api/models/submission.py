@@ -1,11 +1,11 @@
-from django.db import models
-from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models as gis_models
-from django.utils.functional import cached_property
+from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
 
 from .boundary import Boundary
-from .user import User, Roles
+from .user import Roles, User
 
 __all__ = ["Submission", "Approval", "Review", "Annotation"]
 

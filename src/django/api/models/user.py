@@ -1,4 +1,3 @@
-from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -6,10 +5,11 @@ from django.contrib.auth.models import (
 )
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from django.db import models
 from django.utils import timezone
 
-from .utility import Utility
 from .state import State
+from .utility import Utility
 
 __all__ = ["EmailAsUsernameUserManager", "User"]
 

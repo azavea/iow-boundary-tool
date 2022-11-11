@@ -11,7 +11,7 @@ DIR="$(dirname "${0}")/../"
 function usage() {
     echo -n \
         "Usage: $(basename "$0")
-Update environment variables file.
+Update environment variables file and install pre-commit hooks.
 "
 }
 
@@ -27,5 +27,10 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
         fi
 
         popd
+
+        if [[ -z "${CI}" ]]; then
+            python3 -m pip install pre-commit
+            pre-commit install
+        fi
     fi
 fi

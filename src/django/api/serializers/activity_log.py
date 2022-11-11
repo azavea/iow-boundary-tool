@@ -1,12 +1,8 @@
-from rest_framework.serializers import (
-    ModelSerializer,
-    CharField,
-    DateTimeField,
-)
+from rest_framework.serializers import CharField, DateTimeField, ModelSerializer
 
 from ..models import Submission
 from ..models.boundary import BOUNDARY_STATUS
-from ..models.submission import Review, Approval
+from ..models.submission import Approval, Review
 
 
 class EventSerializer(ModelSerializer):

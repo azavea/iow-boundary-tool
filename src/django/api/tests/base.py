@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.utils import timezone
-
 from rest_framework.test import APIClient
 
 from api.models import (
@@ -11,15 +10,15 @@ from api.models import (
     Roles,
     State,
     Submission,
-    Utility,
     User,
+    Utility,
 )
 
 from .data.shapes import (
+    POINT_IN_RALEIGH_FAKE_TRIANGLE,
     RALEIGH_FAKE_RECTANGLE,
     RALEIGH_FAKE_TRIANGLE,
     RALEIGH_FAKE_ZIGZAG,
-    POINT_IN_RALEIGH_FAKE_TRIANGLE,
 )
 
 

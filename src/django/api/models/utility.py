@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.contrib.gis.geos import Point
+from django.db import models
+
 from .state import State
 
 RALEIGH = Point(-78.6382, 35.7796)

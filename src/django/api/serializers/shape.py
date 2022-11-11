@@ -1,6 +1,6 @@
-from rest_framework.serializers import Serializer
-from rest_framework.fields import ListField, FileField, FloatField
 from django.contrib.gis.geos import Polygon
+from rest_framework.fields import FileField, FloatField, ListField
+from rest_framework.serializers import Serializer
 
 from api.fields import ShapefileField
 

@@ -1,6 +1,6 @@
-from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.contrib.postgres.fields import CICharField
+from django.db import models
 
 __all__ = ["State"]
 

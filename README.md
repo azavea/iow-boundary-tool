@@ -35,6 +35,9 @@ Municipal data can be downloaded with a script:
 ./scripts/fetch-data
 ```
 
+A pre-commit hook that runs the format script before any commit will be
+installed but can always be ignored with `git commit --no-verify`.
+
 #### Development
 
 Rebuild Docker images and run application.

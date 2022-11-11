@@ -1,9 +1,9 @@
-import os
-import fiona
 import json
+import os
 import tempfile
-
 from pathlib import Path
+
+import fiona
 from django.contrib.gis.geos import GEOSGeometry
 from rest_framework.fields import FileField
 from rest_framework.serializers import ValidationError

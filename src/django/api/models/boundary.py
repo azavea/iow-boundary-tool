@@ -1,6 +1,7 @@
 from enum import Enum
-from django.utils.functional import cached_property
+
 from django.db import models
+from django.utils.functional import cached_property
 
 from .utility import Utility
 

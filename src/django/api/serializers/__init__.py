@@ -1,11 +1,11 @@
 # flake8: noqa: F401
-from .user import UserSerializer
-from .utility import UtilitySerializer
-from .state import StateIDSerializer
 from .boundary import (
-    BoundaryListSerializer,
     BoundaryDetailSerializer,
+    BoundaryListSerializer,
     NewBoundarySerializer,
 )
-from .shape import ShapeSerializer, ShapeUpdateSerializer
 from .reference_image import ReferenceImageSerializer
+from .shape import ShapeSerializer, ShapeUpdateSerializer
+from .state import StateIDSerializer
+from .user import UserSerializer
+from .utility import UtilitySerializer
