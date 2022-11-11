@@ -10,7 +10,11 @@ from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from ..exceptions import BadRequestException
-from ..mail import send_boundary_submitted_validator_email
+from ..mail import (
+    send_boundary_approved_email,
+    send_boundary_submitted_contributor_email,
+    send_boundary_submitted_validator_email,
+)
 from ..models import ReferenceImage, Roles, Submission
 from ..models.boundary import BOUNDARY_STATUS, Boundary
 from ..models.submission import Approval
@@ -158,6 +162,7 @@ class BoundarySubmitView(APIView):
         boundary.latest_submission.save()
 
         send_boundary_submitted_validator_email(request, boundary)
+        send_boundary_submitted_contributor_email(request, boundary)
 
         return Response(status=HTTP_204_NO_CONTENT)
 
@@ -260,6 +265,8 @@ class BoundaryApproveView(BoundaryView):
         self.check_boundary_is_approvable(boundary, request.user.role)
 
         boundary.latest_submission.approvals.create(approved_by=request.user)
+
+        send_boundary_approved_email(request, boundary)
 
         return Response(status=HTTP_204_NO_CONTENT)
 

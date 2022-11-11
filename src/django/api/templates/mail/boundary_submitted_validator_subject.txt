@@ -1,1 +1,1 @@
-Submission for review - {{city}} {{pwsid}}
+Submission for review - {{utility_name}} {{pwsid}}
