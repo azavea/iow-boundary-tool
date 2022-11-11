@@ -83,3 +83,14 @@ class Boundary(models.Model):
             return recent_submissions[1]
 
         return None
+
+    @cached_property
+    def official_name(self):
+        prefix = f"{self.utility.pwsid}_{self.utility.compact_name}"
+
+        if self.status == BOUNDARY_STATUS.DRAFT:
+            suffix = "UNSUBMITTED"
+        else:
+            suffix = self.latest_submission.submitted_at.strftime('%Y%m%d')
+
+        return f"{prefix}_{suffix}"

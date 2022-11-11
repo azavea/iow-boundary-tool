@@ -126,6 +126,7 @@ class BoundaryDetailSerializer(ModelSerializer):
         model = Boundary
         fields = [
             'name',
+            'official_name',
             'utility',
             'status',
             'submission',

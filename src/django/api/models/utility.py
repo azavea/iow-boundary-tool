@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models as gis_models
 from django.contrib.gis.geos import Point
 from django.db import models
+from django.utils.functional import cached_property
 
 from .state import State
 
@@ -26,3 +27,10 @@ class Utility(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.pwsid})"
+
+    @cached_property
+    def compact_name(self):
+        alphanum_name = "".join(c for c in self.name if c.isalnum())
+        alphanum_city = "".join(c for c in self.address_city if c.isalnum())
+
+        return f"{alphanum_name}{alphanum_city}"
