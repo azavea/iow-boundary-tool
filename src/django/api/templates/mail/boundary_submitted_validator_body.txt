@@ -1,0 +1,6 @@
+Submission for review - {{city}} {{pwsid}}
+
+A new boundary has been submitted for review.
+
+Review submission:
+{{ details_link }}
