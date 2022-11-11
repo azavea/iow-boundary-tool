@@ -79,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Limit boundary list by contributor's selected utility [#148](https://github.com/azavea/iow-boundary-tool/pull/148)
 - Guard Draw Page Actions [#156](https://github.com/azavea/iow-boundary-tool/pull/156)
 - Only redirect to /welcome for new boundaries [#175](https://github.com/azavea/iow-boundary-tool/pull/175)
+- Update File Upload UI [#198](https://github.com/azavea/iow-boundary-tool/pull/198)
 
 ### Fixed
 
