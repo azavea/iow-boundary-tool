@@ -7,6 +7,7 @@ import {
     AlertDialogFooter,
     Button,
     Flex,
+    Heading,
     Spacer,
 } from '@chakra-ui/react';
 import { useBoundaryId, useEndpointToastError } from '../../hooks';
@@ -30,7 +31,9 @@ export default function DeletePolygonConfirmModal({ isOpen, onClose }) {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader textAlign='center' m={4} mb={2}>
-                        Are you sure you want to delete the current polygon?
+                        <Heading size='md'>
+                            Are you sure you want to delete the current polygon?
+                        </Heading>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <Flex w='100%' m={4} mt={2}>

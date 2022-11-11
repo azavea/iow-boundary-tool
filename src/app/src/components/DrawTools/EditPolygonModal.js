@@ -2,6 +2,7 @@ import {
     Button,
     Flex,
     Spacer,
+    Heading,
     Icon,
     Modal,
     ModalOverlay,
@@ -33,7 +34,7 @@ export default function EditPolygonModal({ isOpen, onClose }) {
             <ModalOverlay>
                 <ModalContent>
                     <ModalHeader textAlign='center' m={4} mb={2}>
-                        Replace polygon
+                        <Heading size='md'>Replace polygon</Heading>
                     </ModalHeader>
                     <ModalFooter>
                         <Flex w='100%' m={4} mt={2}>
