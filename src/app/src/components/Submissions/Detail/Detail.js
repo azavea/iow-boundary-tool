@@ -122,7 +122,7 @@ export default function SubmissionDetail() {
                             onClick={() => navigate('/submissions')}
                         />
                         <Heading size='lg' mr={6}>
-                            {boundary.name}
+                            {boundary.utility.name}
                         </Heading>
                         <StatusBadge status={boundary.status} fixedHeight />
                     </Flex>

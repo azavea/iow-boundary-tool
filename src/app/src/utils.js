@@ -97,21 +97,6 @@ export function downloadData(data, filename = null) {
     a.remove();
 }
 
-export function getBoundaryShapeFilename(boundary) {
-    const now = new Date();
-
-    const year = now.getFullYear();
-    const month = now.getMonth().toString().padStart(2, '0');
-    const date = now.getDate().toString().padStart(2, '0');
-
-    return `${[
-        year,
-        month,
-        date,
-        boundary.utility.name.replaceAll(/\s+/g, '_'),
-    ].join('_')}.geojson`;
-}
-
 export function fileIsImageFile(file) {
     return (
         REFERENCE_IMAGE_FILE_EXTENSIONS.some(extension =>

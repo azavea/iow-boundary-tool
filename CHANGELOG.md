@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for approving/unapproving boundaries [#186](https://github.com/azavea/iow-boundary-tool/pull/186)
 - Add S3 Permissions to ECS Tasks [#199](https://github.com/azavea/iow-boundary-tool/pull/199)
 - Add submit boundary validator email [#201](https://github.com/azavea/iow-boundary-tool/pull/201)
+- Add Yellow color for In Review submissions [#202](https://github.com/azavea/iow-boundary-tool/pull/202)
 
 ### Changed
 
@@ -81,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Guard Draw Page Actions [#156](https://github.com/azavea/iow-boundary-tool/pull/156)
 - Only redirect to /welcome for new boundaries [#175](https://github.com/azavea/iow-boundary-tool/pull/175)
 - Update File Upload UI [#198](https://github.com/azavea/iow-boundary-tool/pull/198)
+- Update Download, Replace Polygon Workflows [#202](https://github.com/azavea/iow-boundary-tool/pull/202)
 
 ### Fixed
 
