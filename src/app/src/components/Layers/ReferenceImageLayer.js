@@ -67,7 +67,7 @@ export default function ReferenceImageLayer() {
                     distortion: layer._corners.map(convertCornerToStateFormat),
                     mode: layer.editing._mode,
                     is_visible: true, // because layer must be visible to be updated
-                    opacity: layer.editing._transparent ? 50 : 100,
+                    opacity: Math.floor(layer._image.style.opacity * 100),
                 });
             };
 
@@ -135,4 +135,12 @@ export default function ReferenceImageLayer() {
             }
         }
     }, [visibleImages, map, createLayer]);
+
+    useEffect(() => {
+        for (const id of Object.keys(referenceImageLayers.current)) {
+            referenceImageLayers.current[id].setOpacity(
+                visibleImages[id].opacity / 100
+            );
+        }
+    }, [visibleImages]);
 }

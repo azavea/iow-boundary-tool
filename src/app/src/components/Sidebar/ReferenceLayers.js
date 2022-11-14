@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDebounce } from 'react-use';
 import {
     Box,
     Button,
@@ -118,6 +119,14 @@ function OpacitySlider({ value: defaultValue, onChange }) {
         setValue(defaultValue);
     }, [defaultValue]);
 
+    useDebounce(
+        () => {
+            onChange(value);
+        },
+        30,
+        [value, onChange]
+    );
+
     return (
         <Flex w='100%' mb={1}>
             <Slider
@@ -126,8 +135,7 @@ function OpacitySlider({ value: defaultValue, onChange }) {
                 step={1}
                 defaultValue={value}
                 onChange={setValue}
-                onChangeEnd={onChange}
-                flexGrow={1}
+                w='lg'
             >
                 <SliderTrack bg='white'>
                     <SliderFilledTrack bg='gray.500' />
@@ -135,6 +143,7 @@ function OpacitySlider({ value: defaultValue, onChange }) {
                 <SliderThumb border='1px solid var(--chakra-colors-gray-300);' />
             </Slider>
             <Text
+                w='8rem'
                 color='gray.50'
                 style={{
                     fontWeight: 400,
