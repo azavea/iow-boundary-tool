@@ -105,7 +105,7 @@ function DrawButton({ boundary, startReview, createDraft }) {
 
     const goToDrawPage = () => {
         dispatch(setHasZoomedToShape(false));
-        navigate(`/draw/${boundary.id}`);
+        navigate(`/submissions/${boundary.id}/draw`);
     };
 
     let label = 'View boundary';

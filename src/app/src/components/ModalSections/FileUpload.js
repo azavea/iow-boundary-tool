@@ -66,7 +66,7 @@ export default function FileUpload({ PreviousButton }) {
             shape: shapeFiles?.[0],
         })
             .unwrap()
-            .then(id => navigate(`/draw/${id}`));
+            .then(id => navigate(`/submissions/${id}/draw`));
     };
 
     return (

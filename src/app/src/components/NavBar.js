@@ -8,26 +8,20 @@ import {
     Spacer,
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, CogIcon, LogoutIcon } from '@heroicons/react/outline';
 import apiClient from '../api/client';
 import { API_URLS, NAVBAR_HEIGHT } from '../constants';
 import { logout } from '../store/authSlice';
 import UtilityControl from './UtilityControl';
+import { useBoundaryId } from '../hooks';
 
-const NAVBAR_VARIANTS = {
+export const NAVBAR_VARIANTS = {
     DRAW: 'draw',
     SUBMISSION: 'submission',
 };
 
-export default function NavBar() {
-    const location = useLocation();
-
-    let variant = NAVBAR_VARIANTS.SUBMISSION;
-    if (location.pathname.startsWith('/draw')) {
-        variant = NAVBAR_VARIANTS.DRAW;
-    }
-
+export default function NavBar({ variant }) {
     return (
         <SimpleGrid
             columns={3}
@@ -73,9 +67,7 @@ function SettingsButton({ variant }) {
 function ExitButton({ variant }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { '*': params } = useParams();
-
-    const boundaryId = params.startsWith('draw/') ? params.substring(5) : '';
+    const boundaryId = useBoundaryId();
 
     return variant === NAVBAR_VARIANTS.SUBMISSION ? (
         <Button
