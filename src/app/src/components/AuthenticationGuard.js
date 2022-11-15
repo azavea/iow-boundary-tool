@@ -35,7 +35,12 @@ export default function AuthenticationGuard({ children }) {
         return (
             <Navigate
                 to='/login'
-                state={{ pathname: location.pathname, search: location.search }}
+                state={
+                    location.pathname !== '/' && {
+                        pathname: location.pathname,
+                        search: location.search,
+                    }
+                }
             />
         );
     }
