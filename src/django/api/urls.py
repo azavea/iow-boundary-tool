@@ -3,6 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from .views import Login, Logout
 from .views.annotations import AnnotationCreateView, AnnotationUpdateView
+from .views.auth import SendPasswordResetEmailView
 from .views.boundary import (
     BoundaryApproveView,
     BoundaryDetailView,
@@ -18,6 +19,11 @@ from .views.review import ReviewCreateView, ReviewFinishView
 urlpatterns = [
     path("auth/login/", Login.as_view()),
     path("auth/logout/", Logout.as_view()),
+    path(
+        "auth/user/<int:user_id>/reset-password/",
+        SendPasswordResetEmailView.as_view(),
+        name='send-password-reset',
+    ),
     path("auth/", include("dj_rest_auth.urls")),
     path("boundaries/", BoundaryListView.as_view(), name="boundary_list"),
     path("boundaries/<int:id>/", BoundaryDetailView.as_view()),

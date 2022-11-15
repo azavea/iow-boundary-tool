@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.urls import reverse
+from django.utils.html import format_html
 from rest_framework.authtoken.models import TokenProxy
 
 from .models.boundary import Boundary
@@ -15,7 +17,19 @@ class EmailAsUsernameUserAdmin(UserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("email", "password", "role", "utilities", "states")}),
+        (
+            None,
+            {
+                "fields": (
+                    "email",
+                    "password",
+                    "role",
+                    "utilities",
+                    "states",
+                    "send_password_reset_email",
+                )
+            },
+        ),
         (
             "Permissions",
             {
@@ -42,6 +56,14 @@ class EmailAsUsernameUserAdmin(UserAdmin):
             },
         ),
     )
+    readonly_fields = ('send_password_reset_email',)
+
+    def send_password_reset_email(self, user):
+        props = 'href="{}" style="padding: 8px;" class="button"'.format(
+            reverse('send-password-reset', kwargs={"user_id": user.id})
+        )
+
+        return format_html(f'<a {props}>Send password reset email</a>')
 
 
 submission_stage_models = [
