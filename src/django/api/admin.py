@@ -10,6 +10,17 @@ from .models.state import State
 from .models.submission import Annotation, Approval, Review, Submission
 from .models.user import User, Utility
 
+contact_info_field_set = (
+    "Contact Info",
+    {
+        "fields": (
+            "full_name",
+            "phone_number",
+            "job_title",
+        )
+    },
+)
+
 
 class EmailAsUsernameUserAdmin(UserAdmin):
     list_display = ("email", "is_staff")
@@ -40,6 +51,7 @@ class EmailAsUsernameUserAdmin(UserAdmin):
                 ),
             },
         ),
+        contact_info_field_set,
     )
     add_fieldsets = (
         (
@@ -55,6 +67,7 @@ class EmailAsUsernameUserAdmin(UserAdmin):
                 ),
             },
         ),
+        contact_info_field_set,
     )
     readonly_fields = ('send_password_reset_email',)
 
