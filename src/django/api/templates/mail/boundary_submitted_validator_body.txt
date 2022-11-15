@@ -1,4 +1,4 @@
-Submission for review - {{city}} {{pwsid}}
+Submission for review - {{utility_name}} {{pwsid}}
 
 A new boundary has been submitted for review.
 

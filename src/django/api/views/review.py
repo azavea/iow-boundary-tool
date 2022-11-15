@@ -5,6 +5,7 @@ from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from ..exceptions import BadRequestException
+from ..mail import send_boundary_needs_revision_email
 from ..models.boundary import BOUNDARY_STATUS
 from ..models.submission import Review
 from ..permissions import UserCanReviewBoundaries
@@ -48,5 +49,7 @@ class ReviewFinishView(ReviewView):
         review.notes = request.data.get('notes', '')
         review.finish(request.user)
         review.save()
+
+        send_boundary_needs_revision_email(request, boundary)
 
         return Response(status=HTTP_204_NO_CONTENT)

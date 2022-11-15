@@ -1,0 +1,6 @@
+Submission has been approved - {{utility_name}} {{pwsid}}
+
+The boundary you submitted has been approved!
+
+View details:
+{{ details_link }}

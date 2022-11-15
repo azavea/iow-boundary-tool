@@ -66,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add submit boundary validator email [#201](https://github.com/azavea/iow-boundary-tool/pull/201)
 - Add Yellow color for In Review submissions [#202](https://github.com/azavea/iow-boundary-tool/pull/202)
 - Add reference image opacity slider [#204](https://github.com/azavea/iow-boundary-tool/pull/204)
+- Add contributor email notifications [#203](https://github.com/azavea/iow-boundary-tool/pull/203)
 
 ### Changed
 
