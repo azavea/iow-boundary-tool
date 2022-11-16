@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.urls import reverse
+from django.utils.html import format_html
 from rest_framework.authtoken.models import TokenProxy
 
 from .models.boundary import Boundary
@@ -8,6 +10,17 @@ from .models.state import State
 from .models.submission import Annotation, Approval, Review, Submission
 from .models.user import User, Utility
 
+contact_info_field_set = (
+    "Contact Info",
+    {
+        "fields": (
+            "full_name",
+            "phone_number",
+            "job_title",
+        )
+    },
+)
+
 
 class EmailAsUsernameUserAdmin(UserAdmin):
     list_display = ("email", "is_staff")
@@ -15,7 +28,19 @@ class EmailAsUsernameUserAdmin(UserAdmin):
     ordering = ("email",)
 
     fieldsets = (
-        (None, {"fields": ("email", "password", "role", "utilities", "states")}),
+        (
+            None,
+            {
+                "fields": (
+                    "email",
+                    "password",
+                    "role",
+                    "utilities",
+                    "states",
+                    "send_password_reset_email",
+                )
+            },
+        ),
         (
             "Permissions",
             {
@@ -26,6 +51,7 @@ class EmailAsUsernameUserAdmin(UserAdmin):
                 ),
             },
         ),
+        contact_info_field_set,
     )
     add_fieldsets = (
         (
@@ -41,7 +67,16 @@ class EmailAsUsernameUserAdmin(UserAdmin):
                 ),
             },
         ),
+        contact_info_field_set,
     )
+    readonly_fields = ('send_password_reset_email',)
+
+    def send_password_reset_email(self, user):
+        props = 'href="{}" style="padding: 8px;" class="button"'.format(
+            reverse('send-password-reset', kwargs={"user_id": user.id})
+        )
+
+        return format_html(f'<a {props}>Send password reset email</a>')
 
 
 submission_stage_models = [
