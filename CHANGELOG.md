@@ -86,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Only redirect to /welcome for new boundaries [#175](https://github.com/azavea/iow-boundary-tool/pull/175)
 - Update File Upload UI [#198](https://github.com/azavea/iow-boundary-tool/pull/198)
 - Update Download, Replace Polygon Workflows [#202](https://github.com/azavea/iow-boundary-tool/pull/202)
+- Change draw page URL [#209](https://github.com/azavea/iow-boundary-tool/pull/209)
 
 ### Fixed
 
