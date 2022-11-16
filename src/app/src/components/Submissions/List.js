@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
     HStack,
     Box,
@@ -28,34 +27,42 @@ import {
     LocationMarkerIcon,
 } from '@heroicons/react/solid';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { heroToChakraIcon } from '../../utils';
 import { useGetBoundariesQuery } from '../../api/boundaries';
 
 import { StatusBadge } from './Badges';
 import { ROLES } from '../../constants';
+import CenteredSpinner from '../CenteredSpinner';
 
 export default function SubmissionsList() {
     const navigate = useNavigate();
     const location = useLocation();
     const user = useSelector(state => state.auth.user);
     const utilityId = useSelector(state => state.auth.utility?.id);
+    const userIsContributor = user.role === ROLES.CONTRIBUTOR;
 
     const {
         isFetching,
+        isLoading,
         data: boundaries,
         error,
     } = useGetBoundariesQuery({
-        utilities: user.role === ROLES.CONTRIBUTOR ? utilityId : undefined,
+        utilities: userIsContributor ? utilityId : undefined,
     });
 
-    // Navigate to /welcome if coming from /login and no boundaries already
-    useEffect(() => {
-        if (boundaries?.length === 0 && location.state?.pathname === '/login') {
-            navigate('/welcome');
-        }
-    }, [location.state, boundaries, navigate]);
+    if (isLoading) {
+        return <CenteredSpinner />;
+    }
+
+    if (
+        userIsContributor &&
+        boundaries?.length === 0 &&
+        location.state?.pathname === '/login'
+    ) {
+        return <Navigate to='/welcome' replace />;
+    }
 
     return (
         <Box paddingLeft={8} paddingRight={8} mt={6}>

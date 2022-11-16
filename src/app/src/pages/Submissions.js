@@ -1,11 +1,44 @@
 import { Routes, Route } from 'react-router-dom';
+import NavBar, { NAVBAR_VARIANTS } from '../components/NavBar';
 import { List, Detail } from '../components/Submissions';
+import Draw from './Draw';
 
 export default function Submissions() {
     return (
         <Routes>
-            <Route index element={<List />} />
-            <Route path=':id' element={<Detail />} />
+            <Route
+                index
+                element={
+                    <WithNavbar>
+                        <List />
+                    </WithNavbar>
+                }
+            />
+            <Route
+                path=':boundaryId'
+                element={
+                    <WithNavbar>
+                        <Detail />
+                    </WithNavbar>
+                }
+            />
+            <Route
+                path=':boundaryId/draw'
+                element={
+                    <WithNavbar variant={NAVBAR_VARIANTS.DRAW}>
+                        <Draw />
+                    </WithNavbar>
+                }
+            />
         </Routes>
+    );
+}
+
+function WithNavbar({ variant = NAVBAR_VARIANTS.SUBMISSION, children }) {
+    return (
+        <>
+            <NavBar variant={variant} />
+            {children}
+        </>
     );
 }

@@ -9,7 +9,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { ArrowLeftIcon } from '@heroicons/react/outline';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     useApproveBoundaryMutation,
     useGetBoundaryDetailsQuery,
@@ -22,7 +22,7 @@ import ActivityLog from '../ActivityLog';
 import { StatusBadge } from '../Badges';
 import Info from './Info';
 import Map from './Map';
-import { useEndpointToastError } from '../../../hooks';
+import { useBoundaryId, useEndpointToastError } from '../../../hooks';
 import { useStartReviewMutation } from '../../../api/reviews';
 import { useCreateDraftMutation } from '../../../api/boundaries';
 import { NAVBAR_HEIGHT } from '../../../constants';
@@ -31,7 +31,7 @@ import { getBoundaryPermissions, heroToChakraIcon } from '../../../utils';
 
 export default function SubmissionDetail() {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const id = useBoundaryId();
     const user = useSelector(state => state.auth.user);
 
     const {

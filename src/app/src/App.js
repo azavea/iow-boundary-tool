@@ -1,21 +1,12 @@
 import { useSelector } from 'react-redux';
-import {
-    BrowserRouter,
-    Outlet,
-    Navigate,
-    Routes,
-    Route,
-} from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 
 import './App.css';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Welcome from './pages/Welcome';
-import Draw from './pages/Draw';
 import Submissions from './pages/Submissions';
-import NotFound from './pages/NotFound';
-import NavBar from './components/NavBar';
 
 import AuthenticationGuard from './components/AuthenticationGuard';
 import UtilityGuard from './components/UtilityGuard';
@@ -54,35 +45,15 @@ function PrivateRoutes() {
     const hasWelcomePageAccess = userRole === ROLES.CONTRIBUTOR;
 
     return (
-        <>
-            <Routes>
-                <Route path='/draw/*' element={<NavBar />} />
-                <Route path='/submissions/*' element={<NavBar />} />
-                <Route path='*' element={<Outlet />} />
-            </Routes>
+        <Routes>
+            {hasWelcomePageAccess && (
+                <Route path='/welcome' element={<Welcome />} />
+            )}
 
-            <Routes>
-                {hasWelcomePageAccess && (
-                    <Route path='/welcome' element={<Welcome />} />
-                )}
-                <Route path='/draw' element={<NotFound />} />
-                <Route path='/draw/:boundaryId' element={<Draw />} />
-                <Route path='/submissions/*' element={<Submissions />} />
-                <Route
-                    path='*'
-                    element={
-                        <Navigate
-                            to={
-                                hasWelcomePageAccess
-                                    ? '/welcome'
-                                    : '/submissions'
-                            }
-                            replace
-                        />
-                    }
-                />
-            </Routes>
-        </>
+            <Route path='/submissions/*' element={<Submissions />} />
+
+            <Route path='*' element={<Navigate to='/submissions' replace />} />
+        </Routes>
     );
 }
 
