@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-draw';
@@ -63,21 +63,27 @@ export default function useEditingPolygon() {
     const [updateShape] = useUpdateBoundaryShapeMutation();
 
     const updatePolygonFromDrawEvent = useTrailingDebounceCallback({
-        callback: event => {
-            updateShape({ id, shape: getShapeFromDrawEvent(event) });
-        },
-        immediateCallback: event => {
-            dispatch(
-                api.util.updateQueryData(
-                    'getBoundaryDetails',
-                    id,
-                    draftDetails => {
-                        draftDetails.submission.shape =
-                            getShapeFromDrawEvent(event);
-                    }
-                )
-            );
-        },
+        callback: useCallback(
+            event => {
+                updateShape({ id, shape: getShapeFromDrawEvent(event) });
+            },
+            [id, updateShape]
+        ),
+        immediateCallback: useCallback(
+            event => {
+                dispatch(
+                    api.util.updateQueryData(
+                        'getBoundaryDetails',
+                        id,
+                        draftDetails => {
+                            draftDetails.submission.shape =
+                                getShapeFromDrawEvent(event);
+                        }
+                    )
+                );
+            },
+            [id, dispatch]
+        ),
         interval: DEBOUNCE_INTERVAL,
     });
 
