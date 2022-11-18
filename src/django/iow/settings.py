@@ -266,7 +266,25 @@ ECSMANAGE_ENVIRONMENTS = {
             'Project': 'iow',
         },
         'AWS_REGION': 'us-east-1',
-    }
+    },
+    'production': {
+        'TASK_DEFINITION_NAME': 'ProductionAppCLI',
+        'CONTAINER_NAME': 'django',
+        'CLUSTER_NAME': 'ecsProductionCluster',
+        'LAUNCH_TYPE': 'FARGATE',
+        'PLATFORM_VERSION': '1.4.0',
+        'SECURITY_GROUP_TAGS': {
+            'Name': 'sgProductionAppEcsService',
+            'Environment': 'Production',
+            'Project': 'iow',
+        },
+        'SUBNET_TAGS': {
+            'Name': 'PrivateSubnet',
+            'Environment': 'Production',
+            'Project': 'iow',
+        },
+        'AWS_REGION': 'us-east-1',
+    },
 }
 
 # Email
