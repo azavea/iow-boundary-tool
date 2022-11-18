@@ -68,6 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add reference image opacity slider [#204](https://github.com/azavea/iow-boundary-tool/pull/204)
 - Add contributor email notifications [#203](https://github.com/azavea/iow-boundary-tool/pull/203)
 - Add contact info and send password reset email to user admin page [#208](https://github.com/azavea/iow-boundary-tool/pull/208)
+- Add production enviroment for ecsmanage [#214](https://github.com/azavea/iow-boundary-tool/pull/214)
 
 ### Changed
 
