@@ -19,6 +19,9 @@ STATE_BOUNDARIES_SHAPE_DIR=state_boundaries_shape
 STATE_BOUNDARIES_SHAPE_FILE=cb_2021_us_state_20m.shp
 STATE_BOUNDARIES_FILENAME=state_boundaries.geojson
 
+IOW_INITIALIZATION_BUCKET=s3://iow-boundary-tool-initialization-us-east-1
+UTILITIES_SQL=api_utility_20221121.sql
+
 while [[ $# -gt 0 ]]; do
   case $1 in
     --force)
@@ -29,10 +32,14 @@ while [[ $# -gt 0 ]]; do
         DEV_MODE=Yes
         shift
         ;;
+    --utilities)
+        UTILITIES_MODE=Yes
+        shift
+        ;;
     --help)
         SHOW_USAGE=Yes
         shift
-        ;;      
+        ;;
   esac
 done
 
@@ -41,6 +48,7 @@ function usage() {
         "Usage: $(basename "$0")
     --force Force refetch of data even if it already exists.
     --dev   Fetch data not needed for build
+    --utilities Fetch utilities used in production
 Fetch data for this project.
 "
 }
@@ -100,6 +108,13 @@ function fetchMunicipalBoundariesData() {
     || : # Don't exit script if non-zero exit code
 }
 
+function fetchUtilities() {
+    aws --profile=iow-boundary-tool s3 cp $IOW_INITIALIZATION_BUCKET/$UTILITIES_SQL $DJANGO_DATA_DIR/
+    docker-compose run --entrypoint "/bin/bash -c" --rm django \
+        "PGHOST=\$POSTGRES_HOST PGDATABASE=\$POSTGRES_DB PGUSER=\$POSTGRES_USER PGPASSWORD=\$POSTGRES_PASSWORD \
+         psql --single-transaction --file=$DATA_DIR/$UTILITIES_SQL"
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     if [ "$SHOW_USAGE" = "Yes" ]; then
         usage
@@ -109,6 +124,10 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 
         if [ "$DEV_MODE" = "Yes" ]; then
             fetchStateBoundariesData
+        fi
+
+        if [ "$UTILITIES_MODE" = "Yes" ]; then
+            fetchUtilities
         fi
     fi
 fi
