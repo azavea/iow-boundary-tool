@@ -13,7 +13,6 @@ export const POLYGON_LAYER_OPTIONS = {
 export const DATA_LAYERS = {
     PARCELS: { label: 'Parcel data', minZoom: 14 },
     MUNICIPAL_BOUNDARIES: { label: 'Municipal boundaries' },
-    POINTS_OF_INTEREST: { label: 'Points of interest' },
 };
 
 export const ESRI_ATTRIBUTION =
