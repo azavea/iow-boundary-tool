@@ -79,6 +79,14 @@ class EmailAsUsernameUserAdmin(UserAdmin):
         return format_html(f'<a {props}>Send password reset email</a>')
 
 
+class UtilityAdmin(admin.ModelAdmin):
+    model = Utility
+    list_display = ('pwsid', 'name', 'address_city', 'state')
+    list_filter = (('state', admin.RelatedOnlyFieldListFilter),)
+    search_fields = ('name', 'pwsid', 'address_city')
+    ordering = ('pwsid',)
+
+
 submission_stage_models = [
     Boundary,
     ReferenceImage,
@@ -89,7 +97,7 @@ submission_stage_models = [
 ]
 
 admin.site.register(User, EmailAsUsernameUserAdmin)
-admin.site.register(Utility)
+admin.site.register(Utility, UtilityAdmin)
 admin.site.unregister(TokenProxy)
 admin.site.register(State)
 admin.site.register(submission_stage_models)
