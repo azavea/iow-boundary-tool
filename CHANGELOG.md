@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Populate National Utilities [#215](https://github.com/azavea/iow-boundary-tool/pull/215)
+
 ### Changed
 
 ### Fixed
