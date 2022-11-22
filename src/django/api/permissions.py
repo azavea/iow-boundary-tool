@@ -35,3 +35,13 @@ class UserCanUnapproveBoundaries(BasePermission):
             request.user.role == Roles.VALIDATOR
             or request.user.role == Roles.ADMINISTRATOR
         )
+
+
+class UserIsAdmin(BasePermission):
+    message = 'You are not an administrator.'
+
+    def has_permission(self, request, view):
+        if not request.user.is_active:
+            return False
+
+        return request.user.role == Roles.ADMINISTRATOR
