@@ -5,6 +5,7 @@ import {
     Flex,
     Heading,
     Icon,
+    Link,
     Spacer,
     Spinner,
     Tabs,
@@ -69,13 +70,22 @@ export default function SubmissionsList() {
             <Flex>
                 <Heading size='lg'>Submissions</Heading>
                 <Spacer />
-                <Button
-                    mr={4}
-                    disabled={boundaries?.length > 0}
-                    onClick={() => navigate('/welcome')}
-                >
-                    Add map
-                </Button>
+                {user.role === ROLES.ADMINISTRATOR && (
+                    <Link href='/api/export/boundaries/approved/' isExternal>
+                        <Button as='a' mr={4}>
+                            Export approved boundaries
+                        </Button>
+                    </Link>
+                )}
+                {userIsContributor && (
+                    <Button
+                        mr={4}
+                        disabled={boundaries?.length > 0}
+                        onClick={() => navigate('/welcome')}
+                    >
+                        Add map
+                    </Button>
+                )}
             </Flex>
             <Tabs mt={3} isLazy>
                 <TabList borderBottom='0' mb={6}>
