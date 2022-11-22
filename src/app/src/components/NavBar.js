@@ -4,12 +4,11 @@ import {
     SimpleGrid,
     Heading,
     Icon,
-    IconButton,
     Spacer,
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, CogIcon, LogoutIcon } from '@heroicons/react/outline';
+import { ArrowLeftIcon, LogoutIcon } from '@heroicons/react/outline';
 import apiClient from '../api/client';
 import { API_URLS, NAVBAR_HEIGHT } from '../constants';
 import { logout } from '../store/authSlice';
@@ -43,25 +42,10 @@ export default function NavBar({ variant }) {
 
             <Flex align='center' gap={4}>
                 <Spacer />
-                <SettingsButton variant={variant} />
                 <ExitButton variant={variant} />
             </Flex>
         </SimpleGrid>
     );
-}
-
-function SettingsButton({ variant }) {
-    const navigate = useNavigate();
-
-    return variant === NAVBAR_VARIANTS.SUBMISSION ? (
-        <IconButton
-            icon={<Icon as={CogIcon} />}
-            aria-label='Settings'
-            onClick={() => {
-                navigate('/settings');
-            }}
-        />
-    ) : null;
 }
 
 function ExitButton({ variant }) {
