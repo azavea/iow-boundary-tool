@@ -17,7 +17,8 @@ import { useBoundaryId } from '../hooks';
 
 export const NAVBAR_VARIANTS = {
     DRAW: 'draw',
-    SUBMISSION: 'submission',
+    DETAIL: 'detail',
+    LIST: 'list',
 };
 
 export default function NavBar({ variant }) {
@@ -31,7 +32,7 @@ export default function NavBar({ variant }) {
             bg='gray.700'
         >
             <Flex align='center'>
-                <UtilityControl readOnly={variant === NAVBAR_VARIANTS.DRAW} />
+                <UtilityControl readOnly={variant !== NAVBAR_VARIANTS.LIST} />
             </Flex>
 
             <Flex align='center' justify='center'>
@@ -53,24 +54,38 @@ function ExitButton({ variant }) {
     const dispatch = useDispatch();
     const boundaryId = useBoundaryId();
 
-    return variant === NAVBAR_VARIANTS.SUBMISSION ? (
-        <Button
-            onClick={() => {
-                apiClient.post(API_URLS.LOGOUT, {}).then(() => {
-                    dispatch(logout());
-                    navigate('/login');
-                });
-            }}
-            rightIcon={<Icon as={LogoutIcon} />}
-        >
-            Log out
-        </Button>
-    ) : (
-        <Button
-            onClick={() => navigate(`/submissions/${boundaryId}`)}
-            rightIcon={<Icon as={ArrowLeftIcon} />}
-        >
-            Back
-        </Button>
-    );
+    switch (variant) {
+        case NAVBAR_VARIANTS.DRAW:
+            return (
+                <Button
+                    onClick={() => navigate(`/submissions/${boundaryId}`)}
+                    rightIcon={<Icon as={ArrowLeftIcon} />}
+                >
+                    Back
+                </Button>
+            );
+        case NAVBAR_VARIANTS.DETAIL:
+            return (
+                <Button
+                    onClick={() => navigate('/submissions/')}
+                    rightIcon={<Icon as={ArrowLeftIcon} />}
+                >
+                    Back
+                </Button>
+            );
+        default:
+            return (
+                <Button
+                    onClick={() => {
+                        apiClient.post(API_URLS.LOGOUT, {}).then(() => {
+                            dispatch(logout());
+                            navigate('/login');
+                        });
+                    }}
+                    rightIcon={<Icon as={LogoutIcon} />}
+                >
+                    Log out
+                </Button>
+            );
+    }
 }

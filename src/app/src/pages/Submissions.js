@@ -9,7 +9,7 @@ export default function Submissions() {
             <Route
                 index
                 element={
-                    <WithNavbar>
+                    <WithNavbar variant={NAVBAR_VARIANTS.LIST}>
                         <List />
                     </WithNavbar>
                 }
@@ -17,7 +17,7 @@ export default function Submissions() {
             <Route
                 path=':boundaryId'
                 element={
-                    <WithNavbar>
+                    <WithNavbar variant={NAVBAR_VARIANTS.DETAIL}>
                         <Detail />
                     </WithNavbar>
                 }
@@ -34,7 +34,7 @@ export default function Submissions() {
     );
 }
 
-function WithNavbar({ variant = NAVBAR_VARIANTS.SUBMISSION, children }) {
+function WithNavbar({ variant, children }) {
     return (
         <>
             <NavBar variant={variant} />
