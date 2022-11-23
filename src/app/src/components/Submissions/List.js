@@ -6,6 +6,10 @@ import {
     Heading,
     Icon,
     Link,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
     Spacer,
     Spinner,
     Tabs,
@@ -23,6 +27,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import {
+    ChevronDownIcon,
     ClockIcon,
     FlagIcon,
     LocationMarkerIcon,
@@ -70,13 +75,7 @@ export default function SubmissionsList() {
             <Flex>
                 <Heading size='lg'>Submissions</Heading>
                 <Spacer />
-                {user.role === ROLES.ADMINISTRATOR && (
-                    <Link href='/api/export/boundaries/approved/' isExternal>
-                        <Button as='a' mr={4}>
-                            Export approved boundaries
-                        </Button>
-                    </Link>
-                )}
+                {user.role === ROLES.ADMINISTRATOR && <ExportControl />}
                 {userIsContributor && (
                     <Button
                         mr={4}
@@ -203,5 +202,26 @@ function ErrorRow({ error }) {
             <Td>There was an error fetching data. Details: {error}</Td>
             <Td />
         </Tr>
+    );
+}
+
+function ExportControl() {
+    return (
+        <Menu>
+            <MenuButton
+                as={Button}
+                rightIcon={<Icon as={heroToChakraIcon(ChevronDownIcon)} />}
+            >
+                Export
+            </MenuButton>
+            <MenuList>
+                <Link href='/api/export/boundaries/all/' isExternal>
+                    <MenuItem>All boundaries</MenuItem>
+                </Link>
+                <Link href='/api/export/boundaries/approved/' isExternal>
+                    <MenuItem>Approved boundaries only</MenuItem>
+                </Link>
+            </MenuList>
+        </Menu>
     );
 }

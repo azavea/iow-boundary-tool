@@ -13,7 +13,7 @@ from .views.boundary import (
     BoundarySubmitView,
     BoundaryUnapproveView,
 )
-from .views.export import boundaries_approved
+from .views.export import boundaries_all, boundaries_approved
 from .views.reference_image import ReferenceImageDetail, ReferenceImageList
 from .views.review import ReviewCreateView, ReviewFinishView
 
@@ -74,6 +74,11 @@ urlpatterns = [
         "boundaries/<int:boundary_id>/unapprove/",
         BoundaryUnapproveView.as_view(),
         name='unapprove_boundary',
+    ),
+    path(
+        "export/boundaries/all/",
+        boundaries_all,
+        name='export_boundaries_all',
     ),
     path(
         "export/boundaries/approved/",
