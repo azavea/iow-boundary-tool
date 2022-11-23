@@ -8,7 +8,11 @@ import {
     StackDivider,
     VStack,
 } from '@chakra-ui/react';
-import { ArrowLeftIcon } from '@heroicons/react/outline';
+import {
+    ArrowLeftIcon,
+    CheckCircleIcon,
+    XCircleIcon,
+} from '@heroicons/react/outline';
 import { useNavigate } from 'react-router-dom';
 import {
     useApproveBoundaryMutation,
@@ -16,7 +20,6 @@ import {
     useUnapproveBoundaryMutation,
 } from '../../../api/boundaries';
 import CenteredSpinner from '../../CenteredSpinner';
-import { CheckCircleIcon } from '@heroicons/react/outline';
 
 import ActivityLog from '../ActivityLog';
 import { StatusBadge } from '../Badges';
@@ -146,7 +149,7 @@ export default function SubmissionDetail() {
                         <Button
                             mb={4}
                             alignSelf='flex-end'
-                            rightIcon={heroToChakraIcon(CheckCircleIcon)()}
+                            rightIcon={heroToChakraIcon(XCircleIcon)()}
                             onClick={() => unapproveBoundary(boundary.id)}
                         >
                             Mark unapproved
