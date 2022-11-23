@@ -88,6 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update File Upload UI [#198](https://github.com/azavea/iow-boundary-tool/pull/198)
 - Update Download, Replace Polygon Workflows [#202](https://github.com/azavea/iow-boundary-tool/pull/202)
 - Change draw page URL [#209](https://github.com/azavea/iow-boundary-tool/pull/209)
+- Upgrading to terraform 1.1.9 and creating deployment README [#213](https://github.com/azavea/iow-boundary-tool/pull/213)
 
 ### Fixed
 
