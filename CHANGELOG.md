@@ -105,6 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix submit boundary [#195](https://github.com/azavea/iow-boundary-tool/pull/195)
 - Fix contributor welcome redirect [#197](https://github.com/azavea/iow-boundary-tool/pull/197)
 - Memoize shape update functions [#210](https://github.com/azavea/iow-boundary-tool/pull/210)
+- GitHub Actions permissions issue workaround [#219](https://github.com/azavea/iow-boundary-tool/pull/219)
 
 ### Deprecated
 
