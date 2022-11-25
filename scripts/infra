@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+git config --global --add safe.directory /usr/local/src
 
 if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
     set -x
