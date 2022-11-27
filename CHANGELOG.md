@@ -69,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add contributor email notifications [#203](https://github.com/azavea/iow-boundary-tool/pull/203)
 - Add contact info and send password reset email to user admin page [#208](https://github.com/azavea/iow-boundary-tool/pull/208)
 - Add production enviroment for ecsmanage [#214](https://github.com/azavea/iow-boundary-tool/pull/214)
+- Add Support for Exporting Boundaries [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
 
 ### Changed
 
@@ -89,6 +90,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Download, Replace Polygon Workflows [#202](https://github.com/azavea/iow-boundary-tool/pull/202)
 - Change draw page URL [#209](https://github.com/azavea/iow-boundary-tool/pull/209)
 - Upgrading to terraform 1.1.9 and creating deployment README [#213](https://github.com/azavea/iow-boundary-tool/pull/213)
+- Hide Add Map button for Validators [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
+- Automatically determine utility at utility-specific URLs [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
 
 ### Fixed
 
@@ -106,6 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix contributor welcome redirect [#197](https://github.com/azavea/iow-boundary-tool/pull/197)
 - Memoize shape update functions [#210](https://github.com/azavea/iow-boundary-tool/pull/210)
 - GitHub Actions permissions issue workaround [#219](https://github.com/azavea/iow-boundary-tool/pull/219)
+- Show correct utility in NavBar [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
 
 ### Deprecated
 
