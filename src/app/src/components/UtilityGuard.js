@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Text } from '@chakra-ui/react';
 
+import { useGetBoundaryDetailsQuery } from '../api/boundaries';
 import apiClient from '../api/client';
 import LoginForm from '../components/LoginForm';
 import { UtilitySelector } from './UtilityControl';
+import CenteredSpinner from './CenteredSpinner';
 
 import { logout, setUtilityByPwsid } from '../store/authSlice';
 
@@ -25,6 +27,15 @@ export default function UtilityGuard({ children }) {
 
 function ContributorUtilityGuard({ children }) {
     const dispatch = useDispatch();
+    const { pathname } = useLocation();
+
+    const boundaryId = pathname.match(/^\/submissions\/(\d+)/)?.[1];
+
+    const {
+        isLoading,
+        data: boundary,
+        error,
+    } = useGetBoundaryDetailsQuery(boundaryId, { skip: !boundaryId });
 
     const {
         user: { utilities },
@@ -39,11 +50,28 @@ function ContributorUtilityGuard({ children }) {
         utilities.length === 1 ? utilities[0].pwsid : null;
 
     // Set the utility automatically if the user has only one
+    // Or set it to the given boundaryId's
     useEffect(() => {
         if (!utility && utilityToAutoSelect) {
             dispatch(setUtilityByPwsid(utilityToAutoSelect));
         }
-    }, [utility, utilityToAutoSelect, dispatch]);
+
+        if (boundaryId && !isLoading && !error && boundary) {
+            dispatch(setUtilityByPwsid(boundary?.utility?.pwsid));
+        }
+    }, [
+        boundaryId,
+        isLoading,
+        boundary,
+        error,
+        utility,
+        utilityToAutoSelect,
+        dispatch,
+    ]);
+
+    if (isLoading) {
+        return <CenteredSpinner />;
+    }
 
     if (utility) {
         return children;
