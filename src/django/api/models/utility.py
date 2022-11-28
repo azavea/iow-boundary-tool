@@ -26,7 +26,7 @@ class Utility(models.Model):
         verbose_name_plural = "utilities"
 
     def __str__(self):
-        return f"{self.name} ({self.pwsid})"
+        return f"{self.pwsid} - {self.name}"
 
     @cached_property
     def compact_name(self):
