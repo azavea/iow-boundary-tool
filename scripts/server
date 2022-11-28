@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -n "${PROJECT_NAME_DEBUG}" ]]; then
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
     set -x
 fi
 
@@ -17,6 +17,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     if [[ "${1:-}" = "--help" ]]; then
         usage
     else
-        docker-compose up app
+        docker-compose up database django app
     fi
 fi

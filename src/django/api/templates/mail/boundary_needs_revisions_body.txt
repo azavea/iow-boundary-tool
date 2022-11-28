@@ -1,0 +1,8 @@
+Submission needs revisions - {{utility_name}} {{pwsid}}
+
+The boundary you submitted has been marked-up with revisions.
+
+    {{ review_notes }}
+
+Follow the link below to refine the boundary drawing.
+{{ details_link }}

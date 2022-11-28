@@ -1,0 +1,6 @@
+Boundary submitted - {{utility_name}} {{pwsid}}
+
+Your boundary has been submitted.
+
+View details:
+{{ details_link }}

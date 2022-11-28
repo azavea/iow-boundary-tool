@@ -1,0 +1,114 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
+    set -x
+fi
+
+DATA_DIR=data
+APP_DATA_DIR="src/app/public/${DATA_DIR}"
+DJANGO_DATA_DIR="src/django/${DATA_DIR}"
+
+MUNICIPAL_BOUNDARIES_DATA_LOCATION="https://linc.osbm.nc.gov/explore/dataset/municipalities-2020/download/?format=geojson&lang=en"
+MUNICIPAL_BOUNDARIES_FILENAME=muni.geo.json
+
+STATE_BOUNDARIES_DATA_LOCATION="https://www2.census.gov/geo/tiger/GENZ2021/shp/cb_2021_us_state_20m.zip"
+STATE_BOUNDARIES_ZIP_FILENAME=state_boundaries.zip
+STATE_BOUNDARIES_SHAPE_DIR=state_boundaries_shape
+STATE_BOUNDARIES_SHAPE_FILE=cb_2021_us_state_20m.shp
+STATE_BOUNDARIES_FILENAME=state_boundaries.geojson
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --force)
+        FORCE=Yes
+        shift
+        ;;
+    --dev)
+        DEV_MODE=Yes
+        shift
+        ;;
+    --help)
+        SHOW_USAGE=Yes
+        shift
+        ;;      
+  esac
+done
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+    --force Force refetch of data even if it already exists.
+    --dev   Fetch data not needed for build
+Fetch data for this project.
+"
+}
+
+function initializeDirectories() {
+    if [ ! -d "$DJANGO_DATA_DIR" ]; then
+        mkdir -p "$DJANGO_DATA_DIR"
+    fi
+
+    if [ ! -d "$APP_DATA_DIR" ]; then
+        mkdir -p "$APP_DATA_DIR"
+    fi
+}
+
+function fetchData() {
+    # $1: URL
+    # $2: Output location
+    # $3: label
+
+    if [[ -f "$2" ]]; then
+        if [ "$FORCE" = "Yes" ]; then
+            echo -n "(Warning: force refresh) "
+        else
+            echo "Skipping fetching $3: file exists"
+            return 1
+        fi
+    fi
+
+    echo "Fetching $3 from: $1"
+    curl "$1" -o "$2"
+}
+
+function fetchStateBoundariesData() {
+    fetchData "$STATE_BOUNDARIES_DATA_LOCATION" \
+        "$DJANGO_DATA_DIR/$STATE_BOUNDARIES_ZIP_FILENAME" \
+        "default state boundary geojson data" \
+        && unzipStateBoundaryData
+}
+
+function unzipStateBoundaryData() {
+    rm -rf "${DJANGO_DATA_DIR:?}/$STATE_BOUNDARIES_SHAPE_DIR"
+    unzip "$DJANGO_DATA_DIR/$STATE_BOUNDARIES_ZIP_FILENAME" \
+        -d "$DJANGO_DATA_DIR/$STATE_BOUNDARIES_SHAPE_DIR"
+
+    rm -f "$DJANGO_DATA_DIR/$STATE_BOUNDARIES_FILENAME"
+
+    # Run ogr2ogr in docker container
+    docker-compose run --entrypoint "/bin/bash -c" --rm django \
+        "ogr2ogr -f geojson $DATA_DIR/$STATE_BOUNDARIES_FILENAME \\
+            $DATA_DIR/$STATE_BOUNDARIES_SHAPE_DIR/$STATE_BOUNDARIES_SHAPE_FILE"
+}
+
+function fetchMunicipalBoundariesData() {
+    fetchData "$MUNICIPAL_BOUNDARIES_DATA_LOCATION" \
+        "$APP_DATA_DIR/$MUNICIPAL_BOUNDARIES_FILENAME" \
+        "municipal boundaries geojson data" \
+    || : # Don't exit script if non-zero exit code
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    if [ "$SHOW_USAGE" = "Yes" ]; then
+        usage
+    else
+        initializeDirectories
+        fetchMunicipalBoundariesData
+
+        if [ "$DEV_MODE" = "Yes" ]; then
+            fetchStateBoundariesData
+        fi
+    fi
+fi

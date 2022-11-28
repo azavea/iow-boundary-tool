@@ -1,14 +1,33 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import { ChakraProvider } from '@chakra-ui/react';
+import { Provider as ReduxProvider } from 'react-redux';
+
+import '@fontsource/quicksand/700.css';
+import '@fontsource/quicksand/500.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
+
+import '../node_modules/leaflet/dist/leaflet.css';
+import '../node_modules/leaflet-toolbar/dist/leaflet.toolbar.css';
+import '../node_modules/leaflet-draw/dist/leaflet.draw.css';
+import '../node_modules/leaflet-distortableimage/dist/leaflet.distortableimage.css';
+
 import './index.css';
 import App from './App';
+import theme from './theme';
 import * as serviceWorker from './serviceWorker';
+import store from './store';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+root.render(
     <React.StrictMode>
-        <App />
-    </React.StrictMode>,
-    document.getElementById('root')
+        <ReduxProvider store={store}>
+            <ChakraProvider theme={theme}>
+                <App />
+            </ChakraProvider>
+        </ReduxProvider>
+    </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Run a Django management command
+"
+}
+
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+    if [[ "${1:-}" = "--help" ]]; then
+        usage
+    else
+        if [[ -n "${CI}" ]]; then
+            GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+                -f docker-compose.yml \
+                -f docker-compose.ci.yml \
+                run --rm --entrypoint python \
+                django \
+                manage.py "$@"
+        else
+            docker-compose \
+                run --rm --entrypoint python \
+                django \
+                manage.py "$@"
+        fi
+    fi
+fi

@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -n "${PROJECT_NAME_DEBUG}" ]]; then
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
     set -x
 fi
 
@@ -23,15 +23,17 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
     if [ "${1:-}" = "--help" ]; then
         usage
     else
-        ./scripts/lint
-        ./scripts/test
+        ./scripts/fetch-data
+        ./scripts/update
 
-        # Build static asset bundle
-        docker-compose \
-            run --rm --no-deps \
-            -e NODE_ENV="${NODE_ENV:-production}" \
-            -e INSTALL_ENV="${INSTALL_ENV:-internal}" \
-            -e REACT_APP_GIT_COMMIT="${GIT_COMMIT}" app \
-            yarn build
+        # Build tagged container images
+        GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+            -f docker-compose.yml \
+            -f docker-compose.ci.yml \
+            build django
+
+        # Test using tagged container images
+        GIT_COMMIT="${GIT_COMMIT}" \
+            ./scripts/test
     fi
 fi

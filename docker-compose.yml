@@ -1,8 +1,20 @@
 # As of yet, more modern compose file versions (v3) do not support waiting for another container to be "healthy"
-version: "2.4"
+# version : "2.4"
 services:
+  database:
+    image: postgis/postgis:12-3.1
+    environment:
+      - POSTGRES_USER=iow-boundary-tool
+      - POSTGRES_PASSWORD=iow-boundary-tool
+      - POSTGRES_DB=iow-boundary-tool
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "iow-boundary-tool", "-h", "database" ]
+      interval: 3s
+      timeout: 3s
+      retries: 6
+
   app:
-    image: node:12-slim
+    image: node:18-slim
     stdin_open: true
     working_dir: /usr/local/src
     environment:
@@ -10,15 +22,52 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=100
       - PORT=4545
+      - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
-        - ./src/app:/usr/local/src
-        - ./dist:/usr/local/src/build
-        # Ensure node_modules cache doesn't clash with other jobs on CI.
-        - /var/cache/iow-boundary-tool-node-modules:/usr/local/src/node_modules
+      - ./src/app:/usr/local/src
+      - ./src/django/static:/usr/local/src/build
+      # Ensure node_modules cache doesn't clash with other jobs on CI.
+      - node-modules-volume:/usr/local/src/node_modules
     command: yarn start
+
+  django:
+    image: iow-django
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-iow-boundary-tool}
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=iow-boundary-tool
+      - POSTGRES_PASSWORD=iow-boundary-tool
+      - POSTGRES_DB=iow-boundary-tool
+      - DJANGO_ENV=Development
+      - DJANGO_SECRET_KEY=secret
+      - DJANGO_LOG_LEVEL=INFO
+      - DJANGO_ALLOWED_HOSTS=localhost,django
+    build:
+      context: ./src/django
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/django:/usr/local/src
+      - $HOME/.aws:/root/.aws:ro
+    working_dir: /usr/local/src
+    command:
+      - "-b :8181"
+      - "--workers=2"
+      - "--reload"
+      - "--timeout=90"
+      - "--access-logfile=-"
+      - "--error-logfile=-"
+      - "--log-level=debug"
+      - "iow.wsgi"
+    depends_on:
+      database:
+        condition: service_healthy
 
   shellcheck:
     image: koalaman/shellcheck:stable
     volumes:
       - ./:/usr/local/src
     working_dir: /usr/local/src
+
+volumes:
+  node-modules-volume:

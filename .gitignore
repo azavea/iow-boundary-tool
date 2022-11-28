@@ -1,10 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Terraform
+.terraform
+.terraform/
+*.tfplan
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
 # Ansible
 deployment/ansible/roles/azavea.*
-
 *.retry
 
 # Vagrant
-.vagrant
+.vagrant/
+
+# Django
+/src/django/static/
+/src/django/data/
+/src/django/media/
+/.venv
 
 # JS
 node_modules/
@@ -14,12 +32,14 @@ vendor.bundle.js
 bundle.js.map
 dist/
 yarn-error.log
+src/app/public/data
+
+# Bundled JS
+src/app/build
 
 # macOS
 .DS_Store
 
-# Terraform
-deployment/terraform/.terraform
-*.tfvars
-*.tfstate*
-*.tfplan
+# Config
+.env
+.envrc

@@ -1,5 +1,3 @@
-reactHotReloadPlugin = require('craco-plugin-react-hot-reload');
-
 module.exports = {
     webpack: {
         configure: (webpackConfig, { env }) => {
@@ -15,17 +13,7 @@ module.exports = {
                 exclude: /node_modules/,
             });
 
-            // Set up a webpack alias for react-dom to get hook support when hot
-            // reloading
-            // https://github.com/gaearon/react-hot-loader#hot-loaderreact-dom
-            webpackConfig.resolve.alias['react-dom'] = '@hot-loader/react-dom';
-
             return webpackConfig;
         },
     },
-    plugins: [
-        {
-            plugin: reactHotReloadPlugin,
-        },
-    ],
 };

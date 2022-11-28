@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
+    set -x
+fi
+
+DIR="$(dirname "${0}")/../"
+
+function usage() {
+    echo -n \
+        "Usage: $(basename "$0")
+Update environment variables file and install pre-commit hooks.
+"
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    if [ "${1:-}" = "--help" ]; then
+        usage
+    else
+        pushd "${DIR}"
+
+        if [[ ! -f ".env" ]]; then
+            cp .env.sample .env
+            echo "Updated environment variables file from .env.sample"
+        fi
+
+        popd
+
+        if [[ -z "${CI}" ]]; then
+            python3 -m pip install pre-commit
+            pre-commit install
+        fi
+    fi
+fi

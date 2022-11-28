@@ -1,0 +1,38 @@
+#!/bin/bash
+# Disable "double quote to prevent globbing and word splitting"
+# ${changed_files} is a list that needs to be split on words 
+# shellcheck disable=SC2086
+
+set -e
+
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n "Usage: $(basename "$0")
+
+Run formatters on the project's code
+"
+}
+
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    if [ "${1:-}" = "--help" ]; then
+        usage
+    else
+        # Format JavaScript app
+        docker-compose \
+            run --rm --no-TTY --entrypoint yarn app \
+            prettier --loglevel warn --write src/
+
+        # Format Django app
+
+        # Get a list of changed ".py" files and trim "src/django"
+        changed_files=$(git status --porcelain | grep ".py" | awk -F'src/django/' '{print $2}' | xargs)
+        if [[ -n "${changed_files}" ]]; then
+            docker-compose \
+                run --rm --no-TTY --no-deps --entrypoint ./format.sh django \
+                ${changed_files}
+        fi
+    fi
+fi

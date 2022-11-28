@@ -2,4 +2,7 @@ version: "2.4"
 services:
   app:
     ports:
-      - 4567:4567
+      - 4545:4545
+  django:
+    ports:
+      - 8181:8181
