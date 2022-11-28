@@ -9,8 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Populate National Utilities [#215](https://github.com/azavea/iow-boundary-tool/pull/215)
-
 ### Changed
 
 ### Fixed
@@ -20,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Security
+
+## [0.9.1] - 2022-11-28
+
+### Added
+
+- Populate National Utilities [#215](https://github.com/azavea/iow-boundary-tool/pull/215)
 
 ## [0.9.0] - 2022-11-28
 
@@ -128,5 +132,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show correct utility in NavBar [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
 
 
-[Unreleased]: https://github.com/azavea/iow-boundary-tool/compare/0.9.0...HEAD
+[Unreleased]: https://github.com/azavea/iow-boundary-tool/compare/0.9.1...HEAD
+[0.9.1]: https://github.com/azavea/iow-boundary-tool/compare/0.9.0...0.9.1
 [0.9.0]: https://github.com/azavea/iow-boundary-tool/compare/0a16671...0.9.0
