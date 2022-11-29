@@ -9,6 +9,36 @@ from rest_framework.fields import FileField
 from rest_framework.serializers import ValidationError
 
 
+def get_polygon_geometry(geojson):
+    if isinstance(geojson, (str, bytes)):
+        try:
+            geojson = json.loads(geojson)
+        except Exception:
+            raise ValidationError("Could not parse GeoJSON: Decoding error")
+
+    t = geojson.get("type")
+    g = None
+
+    if t not in ["FeatureCollection", "Feature", "Polygon"]:
+        raise ValidationError(f"Could not parse GeoJSON: Invalid type '{t}'")
+
+    if t == "FeatureCollection":
+        features = geojson.get("features", [])
+        features = [f for f in features if f["geometry"]["type"] == "Polygon"]
+        g = features[0]["geometry"] if features else None
+
+    if t == "Feature":
+        g = geojson["geometry"]
+
+    if t == "Polygon":
+        g = geojson
+
+    if not g:
+        raise ValidationError("Could not parse geometry from given GeoJSON")
+
+    return json.dumps(g)
+
+
 class ShapefileField(FileField):
     def to_internal_value(self, data):
         if data.name.endswith(".zip"):
@@ -36,7 +66,8 @@ class ShapefileField(FileField):
 
         if data.name.endswith(".geojson"):
             geojson = data.read()
-            return GEOSGeometry(geojson)
+            geom = get_polygon_geometry(geojson)
+            return GEOSGeometry(geom)
 
         raise ValidationError(
             f"Incompatible file: {data.name}."

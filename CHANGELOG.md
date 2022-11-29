@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix geojson uploads [#223](https://github.com/azavea/iow-boundary-tool/pull/223)
+
 ### Deprecated
 
 ### Removed
