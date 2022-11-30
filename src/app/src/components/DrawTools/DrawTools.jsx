@@ -5,7 +5,7 @@ import EditToolbar from './EditToolbar';
 import MapControlButtons from './MapControlButtons';
 
 import { useDialogController } from '../../hooks';
-import { useDrawBoundary, useDrawPermissions } from '../DrawContext.js';
+import { useDrawBoundary, useDrawPermissions } from '../DrawContext';
 
 import useEditingPolygon from './useEditingPolygon';
 import useGeocoderResult from './useGeocoderResult';
