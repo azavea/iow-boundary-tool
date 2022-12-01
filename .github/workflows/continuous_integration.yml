@@ -52,11 +52,3 @@ jobs:
           startsWith(github.ref, 'refs/heads/hotfix/') ||
           startsWith(github.ref, 'refs/heads/release/') ||
           startsWith(github.ref, 'refs/heads/test/')
-
-      # Kick off an ECS task to display any outstanding migrations.
-      - run: ./scripts/manage ecsmanage showmigrations
-        if: |
-          github.ref == 'refs/heads/develop' ||
-          startsWith(github.ref, 'refs/heads/hotfix/') ||
-          startsWith(github.ref, 'refs/heads/release/') ||
-          startsWith(github.ref, 'refs/heads/test/')

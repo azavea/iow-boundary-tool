@@ -34,6 +34,3 @@ jobs:
             ./scripts/infra plan
             ./scripts/infra apply
           "
-
-      # Kick off an ECS task to display any outstanding migrations.
-      - run: ./scripts/manage ecsmanage -e production showmigrations
