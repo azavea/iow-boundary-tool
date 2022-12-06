@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.9.2] - 2022-12-06
+
+### Fixed
+
+- Fix geojson uploads [#223](https://github.com/azavea/iow-boundary-tool/pull/223)
+- Fix adding annotations on top of boundary [#226](https://github.com/azavea/iow-boundary-tool/pull/226)
+
+### Removed
+
+- Remove `showmigrations` step from CI / Release pipelines [#224](https://github.com/azavea/iow-boundary-tool/pull/224)
+- Remove Archived tab [#226](https://github.com/azavea/iow-boundary-tool/pull/226)
+
 ## [0.9.1] - 2022-11-28
 
 ### Added
@@ -132,6 +144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show correct utility in NavBar [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
 
 
-[Unreleased]: https://github.com/azavea/iow-boundary-tool/compare/0.9.1...HEAD
+[Unreleased]: https://github.com/azavea/iow-boundary-tool/compare/0.9.2...HEAD
+[0.9.2]: https://github.com/azavea/iow-boundary-tool/compare/0.9.0...0.9.2
 [0.9.1]: https://github.com/azavea/iow-boundary-tool/compare/0.9.0...0.9.1
 [0.9.0]: https://github.com/azavea/iow-boundary-tool/compare/0a16671...0.9.0
