@@ -12,11 +12,6 @@ import {
     MenuList,
     Spacer,
     Spinner,
-    Tabs,
-    TabList,
-    TabPanels,
-    Tab,
-    TabPanel,
     Table,
     Thead,
     Tbody,
@@ -86,31 +81,18 @@ export default function SubmissionsList() {
                     </Button>
                 )}
             </Flex>
-            <Tabs mt={3} isLazy>
-                <TabList borderBottom='0' mb={6}>
-                    <Tab>Active</Tab>
-                    <Tab isDisabled>Archived</Tab>
-                </TabList>
-
-                <TabPanels>
-                    <TabPanel>
-                        <TableContainer borderRadius='2px'>
-                            <Table variant='submissions'>
-                                <TableHeader />
-                                <Tbody>
-                                    <TableRows
-                                        isFetching={isFetching}
-                                        error={error}
-                                        boundaries={boundaries}
-                                    />
-                                </Tbody>
-                            </Table>
-                        </TableContainer>
-                    </TabPanel>
-                    {/* TODO Implement Archived Tab */}
-                    <TabPanel></TabPanel>
-                </TabPanels>
-            </Tabs>
+            <TableContainer mt={6} borderRadius='2px'>
+                <Table variant='submissions'>
+                    <TableHeader />
+                    <Tbody>
+                        <TableRows
+                            isFetching={isFetching}
+                            error={error}
+                            boundaries={boundaries}
+                        />
+                    </Tbody>
+                </Table>
+            </TableContainer>
         </Box>
     );
 }

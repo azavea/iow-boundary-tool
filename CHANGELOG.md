@@ -14,12 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix geojson uploads [#223](https://github.com/azavea/iow-boundary-tool/pull/223)
+- Fix adding annotations on top of boundary [#226](https://github.com/azavea/iow-boundary-tool/pull/226)
 
 ### Deprecated
 
 ### Removed
 
 - Remove `showmigrations` step from CI / Release pipelines [#224](https://github.com/azavea/iow-boundary-tool/pull/224)
+- Remove Archived tab [#226](https://github.com/azavea/iow-boundary-tool/pull/226)
 
 ### Security
 

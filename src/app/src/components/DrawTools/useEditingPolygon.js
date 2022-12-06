@@ -89,6 +89,7 @@ export default function useEditingPolygon() {
 
     useEffect(() => {
         if (shape && polygonIsVisible) {
+            const interactive = canWrite && editMode;
             const polygonLayer = new L.Polygon(
                 shape.coordinates[0].map(
                     point => new L.latLng(point[1], point[0])
@@ -96,10 +97,11 @@ export default function useEditingPolygon() {
                 {
                     ...POLYGON_LAYER_OPTIONS,
                     color: basemapType === 'satellite' ? 'white' : 'black',
+                    interactive,
                 }
             );
 
-            if (canWrite && editMode) {
+            if (interactive) {
                 polygonLayer.editing.enable();
             }
 
