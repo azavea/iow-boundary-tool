@@ -1,6 +1,5 @@
 black==22.3.0
 boto3==1.24.3
-django==3.2.13
 django-ecsmanage==2.0.1
 django-extensions==3.1.5
 django-simple-history==3.1.1
@@ -15,9 +14,7 @@ factory-boy==3.2.1
 filetype==1.0.13
 fiona==1.8.22
 flake8==4.0.1
-gunicorn==20.1.0
 isort==5.10.1
-psycopg2==2.9.3
 pycodestyle==2.8.0
 pyflakes==2.4.0
 python-jose==3.3

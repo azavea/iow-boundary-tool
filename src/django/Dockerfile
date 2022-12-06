@@ -1,27 +1,11 @@
-FROM python:3.8-slim-buster
+FROM quay.io/azavea/django:3.2-python3.8-slim
 
 RUN mkdir -p /usr/local/src
 WORKDIR /usr/local/src
 COPY requirements.txt /usr/local/src/
 
 RUN set -ex \
-    && buildDeps=" \
-       build-essential \
-       libgdal-dev \
-       libpq-dev \
-    " \
-    && deps=" \
-       gdal-bin \
-       gettext \
-       postgresql-client \
-    " \
-    && apt-get update && apt-get install -y $buildDeps $deps --no-install-recommends \
-    && pip install --no-cache-dir -r requirements.txt \
-    && apt-get purge -y --auto-remove $buildDeps \
-       $(! command -v gpg > /dev/null || echo 'gnupg dirmngr') \
-    && rm -rf requirements.txt /var/lib/apt/lists/*
-
-ENTRYPOINT ["/usr/local/bin/gunicorn"]
+    && pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/local/src
 
