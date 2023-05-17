@@ -64,7 +64,7 @@ resource "aws_s3_bucket" "data" {
 
 resource "aws_s3_bucket" "tiles" {
   bucket = "${lower(replace(var.project, " ", ""))}-${lower(var.environment)}-tiles-${var.aws_region}"
-  acl    = "private"
+  acl    = "public-read"
 
   cors_rule {
     allowed_headers = ["*"]
