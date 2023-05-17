@@ -110,3 +110,15 @@ resource "aws_route53_record" "ses_dkim" {
   ttl     = "300"
   records = ["${aws_ses_domain_dkim.app.dkim_tokens[count.index]}.dkim.amazonses.com"]
 }
+
+resource "aws_route53_record" "tiles" {
+  zone_id = aws_route53_zone.external.zone_id
+  name    = "tiles.${var.r53_public_hosted_zone}"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.tiles.domain_name
+    zone_id                = aws_cloudfront_distribution.tiles.hosted_zone_id
+    evaluate_target_health = false
+  }
+}

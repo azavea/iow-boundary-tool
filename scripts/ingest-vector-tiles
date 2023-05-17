@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+
+if [[ -n "${IOW_BOUNDARY_TOOL_DEBUG}" ]]; then
+    set -x
+fi
+
+function usage() {
+    echo -n "Usage: $(basename "$0") INPUT_GEOJSON_FILE
+
+Ingests a given GeoJSON file into Vector Tiles.
+Requires tippecanoe and ogr2ogr.
+"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    if [[ "${1:-}" = "--help" ]]; then
+        usage
+    else
+        INPUT_GEOJSON_FILE=${1%%.*}
+
+        ogr2ogr -f GeoJSON ${INPUT_GEOJSON_FILE}_4326.geojson -t_srs EPSG:4326 $(basename -- "$1")
+        tippecanoe -zg -e ${INPUT_GEOJSON_FILE} --drop-densest-as-needed --extend-zooms-if-still-dropping ${INPUT_GEOJSON_FILE}_4326.geojson
+    fi
+fi
