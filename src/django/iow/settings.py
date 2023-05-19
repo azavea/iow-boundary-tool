@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'watchman',
     "ecsmanage",
     "api",
+    "web",
     "simple_history",
 ]
 
