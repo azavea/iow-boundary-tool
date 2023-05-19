@@ -304,3 +304,9 @@ if ENVIRONMENT != 'Development':
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = f"/media/"
 AWS_STORAGE_BUCKET_NAME = f'iow-{ENVIRONMENT.lower()}-data-us-east-1'
+
+# IOW Settings
+
+IOW_TILES_HOST = os.getenv("IOW_TILES_HOST")
+if IOW_TILES_HOST is None:
+    raise ImproperlyConfigured("Invalid IOW_TILES_HOST provided, must be set")

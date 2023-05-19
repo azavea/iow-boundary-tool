@@ -125,6 +125,8 @@ resource "aws_ecs_task_definition" "app" {
     # aws_storage_bucket_name = aws_s3_bucket.media.id
     default_from_email = var.default_from_email
 
+    iow_tiles_host = "tiles.${var.r53_public_hosted_zone}"
+
     port = local.django_container_port
 
     project     = var.project
@@ -192,6 +194,8 @@ resource "aws_ecs_task_definition" "app_cli" {
     r53_public_hosted_zone = var.r53_public_hosted_zone
     # aws_storage_bucket_name = aws_s3_bucket.media.id
     default_from_email = var.default_from_email
+
+    iow_tiles_host = "tiles.${var.r53_public_hosted_zone}"
 
     project     = var.project
     environment = var.environment
