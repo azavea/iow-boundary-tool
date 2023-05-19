@@ -89,10 +89,6 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 }
 
-# resource "aws_cloudfront_origin_access_identity" "tiles" {
-#   comment = "${var.environment} tiles origin access identity"
-# }
-
 resource "aws_cloudfront_origin_access_control" "tiles" {
   name                              = "${var.environment}-tile-cloudfront-access-control"
   description                       = "origin access control"
@@ -108,9 +104,6 @@ resource "aws_cloudfront_distribution" "tiles" {
     domain_name              = aws_s3_bucket.tiles.bucket_regional_domain_name
     origin_id                = "S3-${aws_s3_bucket.tiles.id}"
     origin_access_control_id = aws_cloudfront_origin_access_control.tiles.id
-    # s3_origin_config {
-    #   origin_access_identity = aws_cloudfront_origin_access_identity.tiles.cloudfront_access_identity_path
-    # }
   }
 
   enabled             = true
