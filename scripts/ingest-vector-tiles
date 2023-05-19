@@ -10,7 +10,7 @@ function usage() {
     echo -n "Usage: $(basename "$0") INPUT_GEOJSON_FILE
 
 Ingests a given GeoJSON file into Vector Tiles.
-Requires tippecanoe and ogr2ogr.
+Requires ogr2ogr and tippecanoe.
 "
 }
 
@@ -20,7 +20,10 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     else
         INPUT_GEOJSON_FILE=${1%%.*}
 
-        ogr2ogr -f GeoJSON "${INPUT_GEOJSON_FILE}_4326.geojson" -t_srs EPSG:4326 $(basename -- "$1")
+        ogr2ogr \
+            -f GeoJSON "${INPUT_GEOJSON_FILE}_4326.geojson" \
+            -t_srs EPSG:4326 \
+            $(basename -- "$1")
         tippecanoe \
             --maximum-zoom=12 \
             --output-to-directory="${INPUT_GEOJSON_FILE}" \

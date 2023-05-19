@@ -31,6 +31,11 @@ assignees: ''
     ```bash
     ./scripts/manage ecsmanage -e production migrate
     ```
+- [ ] If necessary, publish any new tiles by SSHing into the Bastion and copying them over:
+    ```bash
+    ssh iow-production
+    aws s3 cp s3://iow-staging-tiles-us-east-1/example/ s3://iow-production-tiles-us-east-1/example/ --recursive
+    ```
 - [ ] Finish and publish the release branch:
     - When prompted, keep default commit messages
     - Use `X.Y.Z` as the tag message
