@@ -116,7 +116,7 @@ resource "aws_cloudfront_distribution" "tiles" {
   enabled             = true
   is_ipv6_enabled     = true
   http_version        = "http2"
-#   aliases             = ["tiles.${var.r53_public_hosted_zone}"]
+  aliases             = ["tiles.${var.r53_public_hosted_zone}"]
 
   default_cache_behavior {
     target_origin_id = "S3-${aws_s3_bucket.tiles.id}"
@@ -146,7 +146,8 @@ resource "aws_cloudfront_distribution" "tiles" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = module.cert.arn
+    ssl_support_method  = "sni-only"
   }
 
   tags = {
