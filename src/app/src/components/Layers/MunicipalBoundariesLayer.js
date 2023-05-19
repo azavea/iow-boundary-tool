@@ -1,68 +1,37 @@
-import { useEffect, useMemo, useState } from 'react';
 import L from 'leaflet';
+import 'leaflet.vectorgrid';
+
+import { useToken } from '@chakra-ui/react';
 
 import { useLayerVisibility, useMapLayer } from '../../hooks';
-import { useSelector } from 'react-redux';
-import { MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL } from '../../constants';
-import { PANES } from '../../constants';
-
-const MUNICIPAL_BOUNDARIES_LAYER_STYLE = {
-    color: '#553C9A', // var(--chakra-colors-purple-700)
-    weight: 1,
-    fillOpacity: '0.1',
-    dashArray: '4',
-};
+import { MUNICIPAL_BOUNDARIES, PANES } from '../../constants';
 
 export default function MunicipalBoundariesLayer() {
     const showLayer = useLayerVisibility('MUNICIPAL_BOUNDARIES');
 
-    const [layerData, setLayerData] = useState({
-        type: 'FeatureCollection',
-        features: [],
-    });
-
-    useEffect(() => {
-        fetch(`${process.env.PUBLIC_URL}/data/muni.geo.json`)
-            .then(response => response.json())
-            .then(setLayerData);
-    }, []);
-
-    return showLayer && layerData ? <RenderGeoJson json={layerData} /> : null;
+    return showLayer ? <VectorGrid /> : null;
 }
 
-function RenderGeoJson({ json }) {
-    const { basemapType, mapZoom } = useSelector(state => state.map);
+function VectorGrid() {
+    const [purple700] = useToken('colors', ['purple.700']);
 
-    // Separating this condition to its own memoized value prevents
-    // re-creation of the layer on every zoom change
-    const shouldShowLabels = useMemo(
-        () => mapZoom > MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL,
-        [mapZoom]
-    );
-
-    const layer = useMemo(
-        () =>
-            L.geoJSON(json, {
-                style: () => MUNICIPAL_BOUNDARIES_LAYER_STYLE,
-                pane: PANES.MUNICIPAL_BOUNDARIES.label,
-                onEachFeature: shouldShowLabels
-                    ? (feature, layer) => {
-                          layer.bindTooltip(feature.properties.name20, {
-                              permanent: true,
-                              direction: 'center',
-                              className: `muni-label${
-                                  basemapType === 'satellite'
-                                      ? ' muni-label-light'
-                                      : ''
-                              }`,
-                              pane: PANES.MUNICIPAL_BOUNDARY_LABELS.label,
-                          });
-                      }
-                    : null,
-                interactive: false,
+    const layer = L.vectorGrid.protobuf(MUNICIPAL_BOUNDARIES.URL, {
+        vectorTileLayerStyles: {
+            places_simple: (properties, zoom) => ({
+                // Fill
+                fill: true,
+                fillColor: purple700,
+                fillOpacity: '0.1',
+                // Stroke, should vary with Zoom
+                // Linear equation where f(12) = 0.5, f(14) = 0.4, etc
+                weight: zoom * -0.1 + 1.7,
+                color: purple700,
+                dashArray: '4',
             }),
-        [json, basemapType, shouldShowLabels]
-    );
+        },
+        maxNativeZoom: MUNICIPAL_BOUNDARIES.MAX_NATIVE_ZOOM,
+        pane: PANES.MUNICIPAL_BOUNDARIES.label,
+    });
 
     useMapLayer(layer);
 }

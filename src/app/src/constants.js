@@ -33,9 +33,12 @@ export const NC_SOUTH = 33.851169;
 export const PARCELS_LAYER_URL =
     'https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/MapServer';
 
-export const SIDEBAR_TEXT_TOOLTIP_THRESHOLD = 30;
+export const MUNICIPAL_BOUNDARIES = {
+    URL: `https://${window.ENVIRONMENT.IOW_TILES_HOST}/places_simple/{z}/{x}/{y}.pbf`,
+    MAX_NATIVE_ZOOM: 12,
+};
 
-export const MUNICIPAL_BOUNDARY_LABELS_MIN_ZOOM_LEVEL = 9;
+export const SIDEBAR_TEXT_TOOLTIP_THRESHOLD = 30;
 
 export const NAVBAR_HEIGHT = 68;
 export const UTILITY_CONTROL_WIDTH = 320;

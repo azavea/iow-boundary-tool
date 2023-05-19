@@ -43,6 +43,7 @@ services:
       - DJANGO_SECRET_KEY=secret
       - DJANGO_LOG_LEVEL=INFO
       - DJANGO_ALLOWED_HOSTS=localhost,django
+      - IOW_TILES_HOST=${IOW_TILES_HOST:-d2zg6ws4gkjrj4.cloudfront.net}
     build:
       context: ./src/django
       dockerfile: Dockerfile
