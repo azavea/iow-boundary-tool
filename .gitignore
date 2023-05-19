@@ -43,3 +43,7 @@ src/app/build
 # Config
 .env
 .envrc
+
+# Data
+data/
+!data/README.md
