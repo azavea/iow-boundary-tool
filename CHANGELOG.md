@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Document AWS Architecture [#231](https://github.com/azavea/iow-boundary-tool/pull/231)
 - Document Business Logic [#232](https://github.com/azavea/iow-boundary-tool/pull/232)
+- Add Ingested Tile Support, National Municipal Layer [#234](https://github.com/azavea/iow-boundary-tool/pull/234)
 
 ### Changed
 

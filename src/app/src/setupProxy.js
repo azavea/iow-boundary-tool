@@ -1,6 +1,6 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const pathsToProxy = Object.freeze(['/api', '/media']);
+const pathsToProxy = Object.freeze(['/api', '/media', '/web']);
 const djangoProxyTarget = Object.freeze({ target: 'http://django:8181' });
 
 const createProxies = app =>

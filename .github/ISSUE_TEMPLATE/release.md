@@ -31,6 +31,7 @@ assignees: ''
     ```bash
     ./scripts/manage ecsmanage -e production migrate
     ```
+- [ ] If necessary, [publish any new tiles](https://github.com/azavea/iow-boundary-tool/blob/develop/data/README.md#deployment)
 - [ ] Finish and publish the release branch:
     - When prompted, keep default commit messages
     - Use `X.Y.Z` as the tag message
