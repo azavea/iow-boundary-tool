@@ -23,6 +23,7 @@ urlpatterns = (
     [
         path("admin/", admin.site.urls),
         path("api/", include("api.urls")),
+        path("web/", include("web.urls")),
         path("health-check/", include("watchman.urls")),
         path("confirm_password_reset/", include("django.contrib.auth.urls")),
     ]

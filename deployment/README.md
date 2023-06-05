@@ -61,3 +61,15 @@ This file lives at `s3://iow-boundary-tool-production-config-us-east-1/terraform
 GitHub Actions will deploy this project's core infrastructure.  Deploy manually by traversing to the [repo's Actions tab, selecting 'Release'](https://github.com/azavea/iow-boundary-tool/actions/workflows/release.yml), then using the 'Run workflow' dropdown menu to enter in the Short Git commit hash to deploy to production.
 
 Once the release workflow has been kicked off, the deployment can be watched by simply clicking on the run to review summary information.
+
+## Workflows
+
+We use GitHub Actions workflows for deploying to staging and production environments.
+
+Every merge to `develop` will trigger the [`continuous_integration` workflow](../.github/workflows/continuous_integration.yml). This will also be triggered for any branches that start with `release/`, `hotfix/`, or `test/`. Every commit to any such branch will result in a new container image being created and pushed to ECR, and from there deployed to the ECS Staging Cluster:
+
+![AWS Staging Deployment](../doc/diagrams/aws_staging_deployment.png)
+
+To deploy to production, create [a new Release issue](https://github.com/azavea/iow-boundary-tool/issues/new?assignees=&labels=release&template=release.md&title=Release+X.Y.Z), and replace `X.Y.Z` in the issue title and body with the version you intend to release. Then follow the checklist items until the release is finished. This will reuse an existing container image on ECR that has already been deployed to and tested on staging, and deploy it the ECS Production Cluster:
+
+![AWS Production Deployment](../doc/diagrams/aws_production_deployment.png)
