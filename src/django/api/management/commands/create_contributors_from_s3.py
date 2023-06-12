@@ -1,5 +1,6 @@
 import csv
 import logging
+import sys
 from datetime import datetime
 
 import boto3
@@ -16,7 +17,7 @@ class Command(BaseCommand):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.logger = logging.getLogger("management_command")
+        self.logger = logging.getLogger("django")
         self.logfile = f"create_contributors_from_s3_{datetime.now().isoformat()}.log"
 
         file_handler = logging.FileHandler(self.logfile)
@@ -89,10 +90,13 @@ class Command(BaseCommand):
                         f"Error occurred during contributor creation: {str(e)}"
                     )
                     transaction.set_rollback(True)
+                    sys.exit(1)
         except ClientError as e:
             self.logger.error(f"Error occurred while accessing the CSV file: {str(e)}")
-
-        if settings.ENVIRONMENT != "Development":
-            # Upload log to S3
-            log_file_key = f"management/{self.logfile}"
-            s3.upload_file(self.logfile, settings.AWS_LOGS_BUCKET_NAME, log_file_key)
+        finally:
+            if settings.ENVIRONMENT != "Development":
+                # Upload log to S3
+                log_file_key = f"management/{self.logfile}"
+                s3.upload_file(
+                    self.logfile, settings.AWS_LOGS_BUCKET_NAME, log_file_key
+                )
