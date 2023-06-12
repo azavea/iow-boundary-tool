@@ -305,6 +305,7 @@ if ENVIRONMENT != 'Development':
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = f"/media/"
 AWS_STORAGE_BUCKET_NAME = f'iow-{ENVIRONMENT.lower()}-data-us-east-1'
+AWS_LOGS_BUCKET_NAME = f'iow-{ENVIRONMENT.lower()}-logs-us-east-1'
 
 # IOW Settings
 
