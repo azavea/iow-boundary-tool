@@ -1,7 +1,10 @@
 import csv
+import logging
+from datetime import datetime
 
 import boto3
 from botocore.exceptions import ClientError
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
@@ -10,6 +13,17 @@ from api.models import Roles, User, Utility
 
 class Command(BaseCommand):
     help = "Create User models from a CSV file in S3"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.logger = logging.getLogger("management_command")
+        self.logfile = f"create_contributors_from_s3_{datetime.now().isoformat()}.log"
+
+        file_handler = logging.FileHandler(self.logfile)
+        formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
+
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
     def add_arguments(self, parser):
         parser.add_argument("bucket_name", type=str, help="Name of the S3 bucket")
@@ -20,16 +34,20 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         bucket_name = options["bucket_name"]
         csv_file_key = options["csv_file_key"]
+        s3 = boto3.client("s3")
 
         try:
-            s3 = boto3.client("s3")
+            # Fetch the specified CSV file from S3
             response = s3.get_object(Bucket=bucket_name, Key=csv_file_key)
             content = response["Body"].read().decode("utf-8")
-
             reader = csv.DictReader(content.splitlines())
+
+            # We process the CSV file atomically, so if there's any errors encountered,
+            # the entire import is cancelled
             with transaction.atomic():
                 try:
                     for row in reader:
+                        # Create a user with specified utilities for each row in CSV
                         user = User.objects.create_user(
                             email=row["email"],
                             role=Roles.CONTRIBUTOR,
@@ -49,7 +67,7 @@ class Command(BaseCommand):
                             try:
                                 utilities.append(Utility.objects.get(pwsid=pwsid))
                             except Utility.DoesNotExist:
-                                self.stderr.write(
+                                self.logger.error(
                                     f"Invalid PWSID '{pwsid}' "
                                     f"for contributor {user.email}"
                                 )
@@ -61,15 +79,20 @@ class Command(BaseCommand):
                             [str(ut) for ut in user.utilities.all()]
                         )
 
-                        self.stdout.write(
+                        self.logger.info(
                             f"Successfully created contributor {user.email}, "
                             f"associated with {utilities_str}"
                         )
 
                 except Exception as e:
-                    self.stderr.write(
+                    self.logger.error(
                         f"Error occurred during contributor creation: {str(e)}"
                     )
                     transaction.set_rollback(True)
         except ClientError as e:
-            self.stderr.write(f"Error occurred while accessing the CSV file: {str(e)}")
+            self.logger.error(f"Error occurred while accessing the CSV file: {str(e)}")
+
+        if settings.ENVIRONMENT != "Development":
+            # Upload log to S3
+            log_file_key = f"management/{self.logfile}"
+            s3.upload_file(self.logfile, settings.AWS_LOGS_BUCKET_NAME, log_file_key)
