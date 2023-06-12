@@ -93,6 +93,7 @@ class Command(BaseCommand):
                     sys.exit(1)
         except ClientError as e:
             self.logger.error(f"Error occurred while accessing the CSV file: {str(e)}")
+            sys.exit(1)
         finally:
             if settings.ENVIRONMENT != "Development":
                 # Upload log to S3
