@@ -96,3 +96,78 @@ AWS_CDN=$(aws --profile=iow-boundary-tool cloudfront list-distributions --query 
 
 aws --profile=iow-boundary-tool cloudfront create-invalidation --distribution-id $AWS_CDN --paths "/example/*"
 ```
+
+## Importing Contributors
+
+While individual Contributors can be created via the Django Admin, that can be tedious when dealing with a large set of new users.
+To make that process easier, we support bulk creation of new Contributors via a Django management command.
+
+This command can be run locally, as well as on the staging and production instances.
+
+### CSV File
+
+To begin, first create a CSV file like this:
+
+```csv
+email,password,pwsids,full_name,phone_number,job_title
+c2@element84.com,password,123456789,Contributor 2,5551234567,Engineer
+c3@element84.com,password,123456789;OTHERUTIL,Contributor 3,5558675309,Manager
+```
+
+All fields are required and must be specified.
+Multiple `pwsids` can be specified by separating them with semi-colons `;`, as shown above.
+All contributors will be prompted to set their own password after the first login.
+The administrator will have to inform the new contributors of their login email and default password once this succeeds.
+
+### S3 Bucket
+
+Then, upload the CSV file to the appropriate bucket. Here are the buckets for each environment:
+
+| Environment | S3 Bucket                        |
+|-------------|----------------------------------|
+| Development | `iow-development-logs-us-east-1` |
+| Staging     | `iow-staging-logs-us-east-1`     |
+| Production  | `iow-production-logs-us-east-1`  |
+
+The file should be placed inside the `csv/` folder in the bucket.
+
+### Running the Import
+
+The import is transactional, which means that in case of error none of the entries will have been saved to the database.
+This allows for easy re-running of the same command with a fixed file until all the rows are imported correctly.
+
+The import can be run locally in Development, or in an AWS environment like Staging or Production.
+
+#### Development
+
+The import can be run locally in Development like this:
+
+```bash
+./scripts/manage create_contributors_from_s3 iow-development-data-us-east-1 csv/test-contributors-success.csv
+```
+
+All success and errors will be logged to the console.
+
+#### Staging
+
+The import can be run on Staging like this:
+
+```bash
+./scripts/manage ecsmanage create_contributors_from_s3 iow-staging-data-us-east-1 csv/test-contributors-success.csv
+```
+
+Note the use of the staging bucket for input.
+In this case, all success and error messages will be logged to the console output of the ECS task, which can be viewed in the "Logs" tab of the Task Details in AWS, which will be linked to from the `ecsmanage` output.
+The logs will also be saved to S3, as `s3://iow-staging-logs-us-east-1/management/create_contributors_from_s3_$TIMESTAMP`, for every run of this command.
+
+#### Production
+
+The import can be run on Production like this:
+
+```bash
+./scripts/manage ecsmanage --environment production create_contributors_from_s3 iow-production-data-us-east-1 csv/$CSV_FILE
+```
+
+Note the use of the production bucket for input.
+In this case, all success and error messages will be logged to the console output of the ECS task, which can be viewed in the "Logs" tab of the Task Details in AWS, which will be linked to from the `ecsmanage` output.
+The logs will also be saved to S3, as `s3://iow-production-logs-us-east-1/management/create_contributors_from_s3_$TIMESTAMP`, for every run of this command.
