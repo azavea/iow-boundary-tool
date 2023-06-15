@@ -6,6 +6,7 @@ from datetime import datetime
 import boto3
 from botocore.exceptions import ClientError
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
@@ -49,14 +50,21 @@ class Command(BaseCommand):
                 try:
                     for row in reader:
                         # Create a user with specified utilities for each row in CSV
-                        user = User.objects.create_user(
-                            email=row["email"],
-                            role=Roles.CONTRIBUTOR,
-                            password=row["password"],
-                            full_name=row["full_name"],
-                            phone_number=row["phone_number"],
-                            job_title=row["job_title"],
-                        )
+                        try:
+                            user = User.objects.create_user(
+                                email=row["email"],
+                                role=Roles.CONTRIBUTOR,
+                                password=row["password"],
+                                full_name=row["full_name"],
+                                phone_number=row["phone_number"],
+                                job_title=row["job_title"],
+                            )
+                        except ValidationError as e:
+                            self.logger.error(
+                                f"Validation error while creating user {row['email']}: "
+                                f"{str(e)}"
+                            )
+                            raise
 
                         # Associate with utilities matching given ; separated PWSIDs.
                         # We don't use .filter(pwsid__in) here because we want to fail

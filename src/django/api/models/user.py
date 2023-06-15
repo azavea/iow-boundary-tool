@@ -19,7 +19,7 @@ class EmailAsUsernameUserManager(BaseUserManager):
 
     use_in_migrations = True
 
-    def _create_user(self, email, role, password=None, **extra_fields):
+    def _create_user(self, email, role, password=None, validate=True, **extra_fields):
         if not email:
             raise ValueError("An email address must be provided.")
         if not role:
@@ -27,6 +27,8 @@ class EmailAsUsernameUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, role=role, **extra_fields)
         user.set_password(password)
+        if validate:
+            user.full_clean()
         user.save()
         return user
 
