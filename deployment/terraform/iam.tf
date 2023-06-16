@@ -76,3 +76,24 @@ resource "aws_iam_role_policy" "s3_read_write_data_bucket" {
     role   = aws_iam_role.ecs_task_role.name
     policy = data.aws_iam_policy_document.s3_read_write_data_bucket.json
 }
+
+data "aws_iam_policy_document" "s3_write_logs_bucket" {
+    statement {
+        effect = "Allow"
+
+        resources = [
+            aws_s3_bucket.logs.arn,
+            "${aws_s3_bucket.logs.arn}/*",
+        ]
+
+        actions = [
+            "s3:PutObject",
+        ]
+    }
+}
+
+resource "aws_iam_role_policy" "s3_write_logs_bucket" {
+    name   = "S3WriteLogs"
+    role   = aws_iam_role.ecs_task_role.name
+    policy = data.aws_iam_policy_document.s3_write_logs_bucket.json
+}

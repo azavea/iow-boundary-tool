@@ -23,6 +23,7 @@ deployment/ansible/roles/azavea.*
 /src/django/data/
 /src/django/media/
 /.venv
+/src/django/**/*.log
 
 # JS
 node_modules/

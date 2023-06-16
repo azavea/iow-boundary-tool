@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add management command to bulk import contributors [#238](https://github.com/azavea/iow-boundary-tool/pull/238)
+
 ### Changed
 
 ### Fixed
