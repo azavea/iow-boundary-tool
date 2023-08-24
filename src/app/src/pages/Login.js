@@ -95,6 +95,7 @@ export default function Login() {
                 <Button variant='minimal' onClick={() => navigate('/forgot')}>
                     Forgot password?
                 </Button>
+                <Link href="https://docs.google.com/forms/d/1k7g63ODqcUkyhj7Pg2CxN9i0_XXc6SxHY5eIQDohTPI" isExternal>Want Access? Fill out the form</Link>
             </VStack>
         </LoginForm>
     );
