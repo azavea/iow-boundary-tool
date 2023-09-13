@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.9.4] - 2023-09-13
+
+### Added
+
+- Add management command to bulk import contributors [#238](https://github.com/azavea/iow-boundary-tool/pull/238)
+- Add link to Google Form to request access [#241](https://github.com/azavea/iow-boundary-tool/pull/241)
+
 ## [0.9.3] - 2023-06-05
 
 ### Added
@@ -152,7 +159,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show correct utility in NavBar [#218](https://github.com/azavea/iow-boundary-tool/pull/218)
 
 
-[Unreleased]: https://github.com/azavea/iow-boundary-tool/compare/0.9.3...HEAD
+[Unreleased]: https://github.com/azavea/iow-boundary-tool/compare/0.9.4...HEAD
+[0.9.4]: https://github.com/azavea/iow-boundary-tool/compare/0.9.3...0.9.4
 [0.9.3]: https://github.com/azavea/iow-boundary-tool/compare/0.9.2...0.9.3
 [0.9.2]: https://github.com/azavea/iow-boundary-tool/compare/0.9.1...0.9.2
 [0.9.1]: https://github.com/azavea/iow-boundary-tool/compare/0.9.0...0.9.1
