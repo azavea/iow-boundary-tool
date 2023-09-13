@@ -1,6 +1,6 @@
 #!/bin/bash
 # Disable "double quote to prevent globbing and word splitting"
-# ${changed_files} is a list that needs to be split on words 
+# ${changed_files} is a list that needs to be split on words
 # shellcheck disable=SC2086
 
 set -e
@@ -22,7 +22,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
     else
         # Format JavaScript app
         docker-compose \
-            run --rm --no-TTY --entrypoint yarn app \
+            run --rm --no-TTY app \
             prettier --loglevel warn --write src/
 
         # Format Django app

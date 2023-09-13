@@ -22,12 +22,12 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         # Update Yarn dependencies
         docker-compose \
             run --rm --no-deps app \
-            yarn install
+            bun install
 
         # Build static asset bundle for React frontend
         docker-compose \
             run --rm --no-deps app \
-            yarn run build
+            bun run build
 
         # Bring up PostgreSQL and Django in a way that respects
         # configured service health checks.

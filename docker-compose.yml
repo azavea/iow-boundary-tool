@@ -14,7 +14,7 @@ services:
       retries: 6
 
   app:
-    image: node:18-slim
+    image: oven/bun:1.0
     stdin_open: true
     working_dir: /usr/local/src
     environment:
@@ -22,13 +22,12 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=100
       - PORT=4545
-      - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
       - ./src/app:/usr/local/src
       - ./src/django/static:/usr/local/src/dist
       # Ensure node_modules cache doesn't clash with other jobs on CI.
       - node-modules-volume:/usr/local/src/node_modules
-    command: yarn start
+    command: bun start
 
   django:
     image: iow-django

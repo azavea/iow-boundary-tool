@@ -9,7 +9,7 @@ fi
 function usage() {
     echo -n \
         "Usage: $(basename "$0")
-Execute Yarn CLI commands.
+Execute Bun CLI commands.
 "
 }
 
@@ -19,6 +19,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     else
         docker-compose \
             run --rm --no-deps --entrypoint "bash -c" app \
-            "yarn ${*:1}"
+            "bun ${*:1}"
     fi
 fi

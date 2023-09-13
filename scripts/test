@@ -47,19 +47,19 @@ function test_django_ci() {
 function test_app() {
     docker-compose \
         run --rm --no-deps app \
-        yarn test --watchAll=false
+        bun test --watchAll=false
 }
 
 function test_app_watch() {
     docker-compose \
         run --rm --no-deps app \
-        yarn test
+        bun test
 }
 
 function test_app_ci() {
     docker-compose \
         run --rm --no-deps -e CI app \
-        yarn test --watchAll=false
+        bun test --watchAll=false
 }
 
 if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then

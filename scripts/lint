@@ -24,7 +24,7 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
 
         # Lint JavaScript
         docker-compose \
-            run --rm --entrypoint yarn app prettier --check src/
+            run --rm app prettier --check src/
 
         docker-compose \
             run --rm --entrypoint ./node_modules/.bin/eslint \
