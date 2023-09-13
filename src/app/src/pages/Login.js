@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Button, Input, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Input, Link, Text, VStack } from '@chakra-ui/react';
 
 import apiClient from '../api/client';
 import { API_URLS, API_STATUSES, APP_URLS } from '../constants';
@@ -95,6 +95,13 @@ export default function Login() {
                 <Button variant='minimal' onClick={() => navigate('/forgot')}>
                     Forgot password?
                 </Button>
+                <Link
+                    href='https://docs.google.com/forms/d/1k7g63ODqcUkyhj7Pg2CxN9i0_XXc6SxHY5eIQDohTPI'
+                    variant='minimal'
+                    isExternal
+                >
+                    Request access
+                </Link>
             </VStack>
         </LoginForm>
     );

@@ -120,6 +120,17 @@ const Input = {
     },
 };
 
+const Link = {
+    variants: {
+        minimal: {
+            fontWeight: 400,
+            fontSize: 'sm',
+            textDecoration: 'underline',
+            color: 'gray.800',
+        },
+    },
+};
+
 const ListItem = {
     baseStyle: {
         fontFamily: `'Inter', san-serif`,
@@ -158,6 +169,7 @@ const theme = extendTheme({
         Button,
         Heading,
         Input,
+        Link,
         ListItem,
         Tooltip,
         Table,
