@@ -22,7 +22,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         # Update Yarn dependencies
         docker-compose \
             run --rm --no-deps app \
-            bun install
+            bun install --frozen-lockfile
 
         # Build static asset bundle for React frontend
         docker-compose \
