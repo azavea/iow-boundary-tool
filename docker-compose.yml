@@ -14,7 +14,7 @@ services:
       retries: 6
 
   app:
-    image: oven/bun
+    image: oven/bun:1-alpine
     stdin_open: true
     working_dir: /usr/local/src
     environment:
