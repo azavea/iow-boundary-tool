@@ -14,7 +14,7 @@ services:
       retries: 6
 
   app:
-    image: oven/bun:1-alpine
+    image: oven/bun:1
     stdin_open: true
     working_dir: /usr/local/src
     environment:
@@ -26,7 +26,7 @@ services:
       - ./src/app:/usr/local/src
       - ./src/django/static:/usr/local/src/dist
       # Ensure node_modules cache doesn't clash with other jobs on CI.
-      - node-modules-volume:/usr/local/src/node_modules
+      # - node-modules-volume:/usr/local/src/node_modules
     command: bun start
 
   django:
