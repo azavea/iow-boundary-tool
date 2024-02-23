@@ -16,7 +16,8 @@ RUN set -ex \
        postgresql-client \
     " \
     && apt-get update && apt-get install -y $buildDeps $deps --no-install-recommends \
-    && pip install --no-cache-dir -r requirements.txt \
+    && pip install uv \
+    && VIRTUAL_ENV=$(python -c "import sys; print(sys.prefix)") uv pip install -r requirements.txt \
     && apt-get purge -y --auto-remove $buildDeps \
        $(! command -v gpg > /dev/null || echo 'gnupg dirmngr') \
     && rm -rf requirements.txt /var/lib/apt/lists/*
