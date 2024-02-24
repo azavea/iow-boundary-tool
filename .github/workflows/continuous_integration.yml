@@ -25,16 +25,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: ~/.docker
-          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile')}}
-      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Set up environment
         run: ./scripts/bootstrap
 
-      - run: ./scripts/cibuild
+      - run: ./scripts/fetch-data
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: src/django
+          push: false
+          tags: iow:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - run: ./scripts/cipublish
         if: |
