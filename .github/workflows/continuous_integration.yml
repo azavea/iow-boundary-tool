@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
+      GIT_COMMIT: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v2
 
@@ -41,6 +42,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - run: ./scripts/test
+      
       - run: ./scripts/cipublish
         if: |
           github.ref == 'refs/heads/develop' ||
