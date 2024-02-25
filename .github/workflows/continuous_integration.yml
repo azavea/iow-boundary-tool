@@ -42,10 +42,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - run: ./scripts/update
-      
+      - run: |
+          docker compose up -d database django &&
+          ./scripts/manage migrate &&
+          ./scripts/manage collectstatic --no-input &&
+          docker compose stop
+
       - run: ./scripts/test
-      
+
       - run: ./scripts/cipublish
         if: |
           github.ref == 'refs/heads/develop' ||
