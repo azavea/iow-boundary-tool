@@ -27,10 +27,12 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
         ./scripts/update
 
         # Build tagged container images
-        GIT_COMMIT="${GIT_COMMIT}" docker-compose \
+        GIT_COMMIT="${GIT_COMMIT}" docker buildx bake \
             -f docker-compose.yml \
             -f docker-compose.ci.yml \
-            build django
+            --set django.cache-from="type=gha" \
+            --set django.cache-to="type=gha,mode=max" \
+            django
 
         # Test using tagged container images
         GIT_COMMIT="${GIT_COMMIT}" \
