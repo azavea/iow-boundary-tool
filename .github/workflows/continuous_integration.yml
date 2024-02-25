@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
+      GIT_COMMIT: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v2
 
@@ -25,10 +26,29 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Set up environment
         run: ./scripts/bootstrap
 
-      - run: ./scripts/cibuild
+      - run: ./scripts/fetch-data
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: src/django
+          push: false
+          tags: iow:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - run: |
+          docker compose up -d database django &&
+          ./scripts/manage migrate &&
+          ./scripts/manage collectstatic --no-input &&
+          docker compose stop
+
+      - run: ./scripts/test
 
       - run: ./scripts/cipublish
         if: |
