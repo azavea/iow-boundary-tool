@@ -32,8 +32,20 @@ jobs:
       - name: Set up environment
         run: ./scripts/bootstrap
 
-      - run: ./scripts/cibuild
+      - run: ./scripts/fetch-data
 
+      - uses: docker/build-push-action@v5
+        with:
+          context: src/django
+          push: false
+          tags: iow:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - run: ./scripts/update
+      
+      - run: ./scripts/test
+      
       - run: ./scripts/cipublish
         if: |
           github.ref == 'refs/heads/develop' ||
