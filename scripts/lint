@@ -23,13 +23,8 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
             scripts/*
 
         # Lint JavaScript
-        docker-compose \
-            run --rm --entrypoint ./node_modules/.bin/prettier \
-            app --check src/
-
-        docker-compose \
-            run --rm --entrypoint ./node_modules/.bin/eslint \
-            app src/ --ext .js --ext .jsx
+        ./scripts/bun run prettier --check src/
+        ./scripts/bun run eslint src/ --ext .js --ext .jsx
 
         if [[ -n "${CI}" ]]; then
             # Lint Django app
