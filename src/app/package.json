@@ -34,15 +34,14 @@
     "react-redux": "^8.0.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
     "react-use": "^17.3.2",
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test"
+    "start": "vite",
+    "build": "vite build",
+    "test": "vite test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -60,10 +59,10 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.17.12",
-    "@craco/craco": "^6.4.3",
-    "babel-jest": "28.1.0",
-    "prettier": "^2.6.2",
-    "prettier-loader": "^3.3.0"
+    "@vitejs/plugin-react": "^4.0.4",
+    "eslint": "^8.25.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^3.0.3",
+    "vite": "^4.4.9"
   }
 }

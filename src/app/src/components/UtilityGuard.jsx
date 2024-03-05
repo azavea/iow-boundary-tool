@@ -5,7 +5,7 @@ import { Button, Text } from '@chakra-ui/react';
 
 import { useGetBoundaryDetailsQuery } from '../api/boundaries';
 import apiClient from '../api/client';
-import LoginForm from '../components/LoginForm';
+import LoginForm from './LoginForm';
 import { UtilitySelector } from './UtilityControl';
 import CenteredSpinner from './CenteredSpinner';
 

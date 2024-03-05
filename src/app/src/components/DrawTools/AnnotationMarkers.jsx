@@ -19,8 +19,8 @@ export default function AnnotationMarkers() {
         boundary.status === BOUNDARY_STATUS.NEEDS_REVISIONS
             ? boundary.submission.review.annotations
             : boundary.status === BOUNDARY_STATUS.DRAFT
-            ? boundary?.previous_submission?.review.annotations
-            : null;
+              ? boundary?.previous_submission?.review.annotations
+              : null;
 
     const [annotationToDelete, setAnnotationToDelete] = useState(null);
     const [annotationToView, setAnnotationToView] = useState(null);

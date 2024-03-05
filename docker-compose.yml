@@ -14,21 +14,20 @@ services:
       retries: 6
 
   app:
-    image: node:18-slim
+    image: oven/bun:1
     stdin_open: true
     working_dir: /usr/local/src
     environment:
-      - REACT_APP_GIT_COMMIT=${REACT_APP_GIT_COMMIT:-latest}
+      - VITE_GIT_COMMIT=${VITE_GIT_COMMIT:-latest}
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=100
       - PORT=4545
-      - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
       - ./src/app:/usr/local/src
-      - ./src/django/static:/usr/local/src/build
+      - ./src/django/static:/usr/local/src/dist
       # Ensure node_modules cache doesn't clash with other jobs on CI.
-      - node-modules-volume:/usr/local/src/node_modules
-    command: yarn start
+      # - node-modules-volume:/usr/local/src/node_modules
+    command: bun start
 
   django:
     image: iow-django
